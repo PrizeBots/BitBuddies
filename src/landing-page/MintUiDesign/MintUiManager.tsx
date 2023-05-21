@@ -5,16 +5,18 @@ import { Box, Typography } from '@mui/material';
 import phaserGame from '../../PhaserGame';
 import Bootstrap from '../../game/scenes/Bootstrap';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { approveWBTC2, checkAllowancePresale, mintPreSaleNFT } from '../../contract';
+import { approveUSDC, approveWBTC2, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleNFT } from '../../contract';
 import store from '../../stores';
 import { ethers } from 'ethers';
 import { randomGenaratePreSale } from '../../hooks/ApiCaller';
 import { PRESALE_CONTRACT_ADDRESS } from '../../contract/presale_constants';
-import { updatePresaleMintedCount } from '../../utils/web3_utils';
+import { parseUSDCBalance, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
 import Modal from '@mui/material/Modal';
 import ReactPlayer from 'react-player'
 import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNotificationBool, SetSuccessNotificationMessage } from '../../stores/NotificationStore';
 import NotificationMessageHelper from '../../game/Components/NotificationMessageHelper';
+import { onek_club_contract_adress } from '../../contract/onek_club_nft_constants';
+import { isNullOrUndefined } from 'util';
 
 
 
@@ -250,7 +252,7 @@ enum PageStates {
   OneKClub = "oneKClub"
 }
 
-const ratio = 55/10000
+// const ratio = 555/10000
 
 export default function MintPage() {
   const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
@@ -265,13 +267,15 @@ export default function MintPage() {
   const [openModal, setOpenModal] = useState(false);
 
   const [pageState, setPageState] = useState(PageStates.Presale)
+  const [onekClubQuantity, setOnekClubQuantity] = useState(0);
 
 
   const totalPresaleCount = 100;
-  const totalOneKClubNFTs = 10;
   const preSaleMintedNFT = useAppSelector((state) => state.bitFighters.preSaleNFTMintedCount);
-  // const onekClubMintedNFT = useAppSelector((state) => state.bitFighters.oneKClubMintedCards);
-  const onekClubMintedNFT = 1
+  const onekClubMintedNFT = useAppSelector((state) => state.bitFighters.oneKClubMintedCards);
+  const totalOneKClubNFTs = useAppSelector((state) => state.bitFighters.totalOneKClubCards);
+  const priceOfOneKCLubNFT = useAppSelector((state) => state.bitFighters.currentPriceOfOneKClubCard);
+  // const onekClubMintedNFT = 1
   
 
   const dispatch = useAppDispatch();
@@ -325,6 +329,59 @@ export default function MintPage() {
 
     updatePresaleMintedCount()
     // bootstrap.play_err_sound()
+  }
+
+  const oneKClubMint = async () => {
+    // if (!validateFields()) return;
+    setMintingBool(true);
+    setMintingState("Generating Your OneK Club Card");
+    if (isNullOrUndefined(onekClubQuantity) || onekClubQuantity < 1) {
+      setOnekClubQuantity(1)
+    }
+
+    const allowance = await checkAllowanceOneKClub(store.getState().web3store.userAddress)
+    console.log("allowance -- >", allowance.toString());
+    if (ethers.BigNumber.from("1000000000000000").gte(ethers.BigNumber.from(allowance.toString()))) {
+      console.log("less allowance")
+      if (!await approveUSDC(onek_club_contract_adress, ethers.BigNumber.from("100000000000000000"))) {
+        setMintingBool(false);
+        setMintingState("");
+
+        store.dispatch(SetFailureNotificationBool(true))
+        store.dispatch(SetFailureNotificationMessage("Approval Failed"))
+        bootstrap.play_err_sound()
+        return;
+      }
+    }
+
+    // const output = await randomGenaratePreSale(store.getState().web3store.userAddress);
+    // console.log("---output ", output)
+
+    setMintingState("Minting Your Onek Club Card");
+    let temp_quantity = 1
+    if (isNullOrUndefined(onekClubQuantity) || onekClubQuantity < 1) {
+      setOnekClubQuantity(1)
+    } else {
+      temp_quantity = onekClubQuantity;
+    }
+    const minted = await mintOneKClubCard(temp_quantity);
+    if (!minted) {
+      bootstrap.play_err_sound()
+      setMintingBool(false);
+      setMintingState("");
+
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage("Minting Failed"))
+      return;
+    } else {
+      bootstrap.play_dr_bits_success_sound()
+      store.dispatch(SetSuccessNotificationBool(true))
+      store.dispatch(SetSuccessNotificationMessage(`Success`))
+    }
+
+    setMintingBool(false);
+    setSnackBarOpen(true);
+    updateOneKClubMintedCount()
   }
 
   const handleModalClose = () => {
@@ -509,8 +566,12 @@ export default function MintPage() {
             flexDirection: 'row',
           }}>
 
+            {/* <h1>
+              Price - {(200 * ((1 - Math.pow(ratio, onekClubMintedNFT+1)) / (1- ratio) )).toFixed(2)} USDC
+            </h1> */}
+
             <h1>
-              Price - {(100 * ((1 - Math.pow(ratio, onekClubMintedNFT+1)) / (1- ratio) )).toFixed(2)} USDC
+              Price - { parseUSDCBalance(priceOfOneKCLubNFT) } USDC
             </h1>
 
             <img 
@@ -525,10 +586,27 @@ export default function MintPage() {
           </div>
 
           <div>
+
+            <input type="number" 
+              placeholder='quantity' 
+              value={onekClubQuantity}
+              onChange={(e) => {
+                setOnekClubQuantity(parseInt(e.target.value))
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+          </div>
+
+          <div>
             {
               (totalPresaleCount - preSaleMintedNFT) > 0?
                 <button
-                    onClick={() => preSaleMint()}
+                    onClick={() => oneKClubMint()}
                     style={{
                       width: '150px',
                       backgroundColor: '#ae0606',

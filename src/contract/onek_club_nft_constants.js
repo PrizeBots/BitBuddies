@@ -8,6 +8,26 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
         "internalType": "string",
         "name": "_symbol",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_systemWalletAddress1",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_systemWalletAddress2",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_treasuryWalletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_usdcAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -195,7 +215,7 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
       "name": "_userAddress",
       "type": "address"
     }],
-    "name": "fetchPreSaleCardsOfUser",
+    "name": "fetchOneKCardsForUser",
     "outputs": [{
       "internalType": "uint256[]",
       "name": "value",
@@ -221,7 +241,7 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
   },
   {
     "inputs": [],
-    "name": "getMintedCouponsCount",
+    "name": "getMintedCardsCount",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -253,9 +273,9 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
   },
   {
     "inputs": [{
-      "internalType": "string[]",
-      "name": "_tokenURIs",
-      "type": "string[]"
+      "internalType": "uint256",
+      "name": "quanity",
+      "type": "uint256"
     }],
     "name": "mintMultiOnekClubNFTFighters",
     "outputs": [],
@@ -263,11 +283,7 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
     "type": "function"
   },
   {
-    "inputs": [{
-      "internalType": "string",
-      "name": "_tokenURI",
-      "type": "string"
-    }],
+    "inputs": [],
     "name": "mintOneKClubNFTCard",
     "outputs": [{
       "internalType": "uint256",
@@ -284,6 +300,21 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
       "internalType": "string",
       "name": "",
       "type": "string"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "name": "originalMinters",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -404,7 +435,18 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
       "name": "_wallet",
       "type": "address"
     }],
-    "name": "setSystemWalletAddress",
+    "name": "setSystemWalletAddress1",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_wallet",
+      "type": "address"
+    }],
+    "name": "setSystemWalletAddress2",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -459,7 +501,18 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
   },
   {
     "inputs": [],
-    "name": "systemWalletAddress",
+    "name": "systemWalletAddress1",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "systemWalletAddress2",
     "outputs": [{
       "internalType": "address",
       "name": "",
@@ -492,6 +545,23 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
       "type": "uint256"
     }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "address",
+        "name": "send_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -551,4 +621,4 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
   }
 ]
 
-export const onek_club_contract_adress = "0x967b260cb74F2ACC81FEc55D145dfD2fec000Ce4"
+export const onek_club_contract_adress = "0x754E80519de6F1312Ce52Fb716Dadb79CC08a93f"

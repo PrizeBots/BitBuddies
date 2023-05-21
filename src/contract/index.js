@@ -9,6 +9,8 @@ import {
   gamelogic_contract_address
 } from "./gamelogic_constants";
 import {
+  USDC_ABI,
+  USDC_ADDRESS,
   WBTC_ABI,
   WBTC_ADDRESS
 } from "./wBTC_constant";
@@ -247,6 +249,22 @@ export async function checkAllowancePresale(owner) {
   return _allowance;
 }
 
+export async function checkAllowanceOneKClub(owner) {
+  // await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: USDC_ADDRESS,
+    functionName: "allowance",
+    abi: USDC_ABI,
+    params: {
+      owner,
+      spender: onek_club_contract_adress,
+    },
+  };
+  const _allowance = await Moralis.executeFunction(sendOptions);
+  console.log("_allowance --> ", _allowance, owner);
+  return _allowance;
+}
+
 export async function approveWBTC2(spender, amount) {
   const ethers = Moralis.web3Library; // get ethers.js library
   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
@@ -263,6 +281,26 @@ export async function approveWBTC2(spender, amount) {
       spender, amount, {
         gasPrice: 2 * gasPrice,
       });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in approve wbtc ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function approveUSDC(spender, amount) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  // const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(USDC_ADDRESS, USDC_ABI, signer);
+
+  try {
+    const transaction = await contract.approve(
+      spender, amount);
     await transaction.wait();
     console.log("--------------------------------");
   } catch (err) {
@@ -551,6 +589,28 @@ export async function mintPreSaleNFT(_tokenURI) {
   return true;
 }
 
+export async function mintOneKClubCard(quantity) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  // const gasPrice = await web3Provider.getGasPrice();
+  console.log("in mintOneKClubCard ", quantity)
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(onek_club_contract_adress, ONEK_CLUB_CONTRACT_ABI, signer);
+
+  try {
+    const transaction = await contract.mintMultiOnekClubNFTFighters(
+      quantity
+    );
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in mintPreSaleNFT ", err)
+    return false;
+  }
+  return true;
+}
+
 
 export async function getPreSaleCountTotal() {
   await Moralis.enableWeb3()
@@ -568,11 +628,35 @@ export async function getOneKMintedTotalCount() {
   await Moralis.enableWeb3()
   const sendOptions = {
     contractAddress: onek_club_contract_adress,
-    functionName: "getMintedCouponsCount",
+    functionName: "getMintedCardsCount",
     abi: ONEK_CLUB_CONTRACT_ABI,
   };
   const oneK_nfts_mintedCount = await Moralis.executeFunction(sendOptions);
   console.log("----- oneK_Club_minted_count ", oneK_nfts_mintedCount);
+  return oneK_nfts_mintedCount;
+}
+
+export async function getTotalOneKClubCards() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: onek_club_contract_adress,
+    functionName: "totalOneKClubNFTCards",
+    abi: ONEK_CLUB_CONTRACT_ABI,
+  };
+  const oneK_nfts_mintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- oneK_Club_total_Count ", oneK_nfts_mintedCount);
+  return oneK_nfts_mintedCount;
+}
+
+export async function getPriceOfOneKCard() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: onek_club_contract_adress,
+    functionName: "priceOf1kClubNFT",
+    abi: ONEK_CLUB_CONTRACT_ABI,
+  };
+  const oneK_nfts_mintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- oneK_Club_price ", oneK_nfts_mintedCount);
   return oneK_nfts_mintedCount;
 }
 

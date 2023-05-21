@@ -8,6 +8,8 @@ interface BitFightersCollection {
   totalNFTData: Array<any>
   preSaleNFTMintedCount: number,
   oneKClubMintedCards: number;
+  totalOneKClubCards: number;
+  currentPriceOfOneKClubCard: number;
 }
 
 const initialState: BitFightersCollection = {
@@ -16,7 +18,9 @@ const initialState: BitFightersCollection = {
   loaded: false,
   totalNFTData: [],
   preSaleNFTMintedCount: 0,
-  oneKClubMintedCards: 0
+  oneKClubMintedCards: 0,
+  totalOneKClubCards: 0,
+  currentPriceOfOneKClubCard: 0
 }
 
 export const bitFightersCollection = createSlice({
@@ -50,13 +54,21 @@ export const bitFightersCollection = createSlice({
       state.preSaleNFTMintedCount = action.payload;
     },
 
-    SetTotalOneKClubNF: (state: { oneKClubMintedCards: number; }, action: PayloadAction<number>) => {
+    SetTotalOneKClubNF: (state: { totalOneKClubCards: number; }, action: PayloadAction<number>) => {
+      state.totalOneKClubCards = action.payload;
+    },
+
+    SetTotalMintedOneKClubNF: (state: { oneKClubMintedCards: number; }, action: PayloadAction<number>) => {
       state.oneKClubMintedCards = action.payload;
+    },
+
+    SetCurrentPriceOfOnekCard: (state: { currentPriceOfOneKClubCard: number; }, action: PayloadAction<number>) => {
+      state.currentPriceOfOneKClubCard = action.payload;
     },
   },
 })
 
-export const { addIntoArray, clearArray, setArray, setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, SetTotalOneKClubNF } =
+export const { addIntoArray, clearArray, setArray, setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, SetTotalOneKClubNF, SetTotalMintedOneKClubNF, SetCurrentPriceOfOnekCard } =
   bitFightersCollection.actions
 
 export default bitFightersCollection.reducer

@@ -1,10 +1,10 @@
 import { BigNumber as BigNumberEthers } from "ethers";
-import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getOneKMintedTotalCount, getPreSaleCountTotal } from "../contract";
+import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
 import store from "../stores";
 import { SetBetBalance, SetWalletBalance, SetWbtcBalance } from "../stores/Web3StoreBalances";
 import BigNumber from "bignumber.js";
 import { isNullOrUndefined } from "util";
-import { SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
+import { SetCurrentPriceOfOnekCard, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
 
 export async function getBalances(currentUser: string) {
   console.log("in_get_balance---", currentUser)
@@ -100,11 +100,27 @@ export async function updatePresaleMintedCount() {
 
 export async function updateOneKClubMintedCount() {
   try {
-    const count = await getOneKMintedTotalCount()
+    const minted_count = await getOneKMintedTotalCount()
+    const count = await getTotalOneKClubCards()
+
+    const price_of_oneK_card = await getPriceOfOneKCard()
+
     console.log("onek club minted ... ", count);
     store.dispatch(SetTotalOneKClubNF(Number(count)))
+    store.dispatch(SetTotalMintedOneKClubNF(Number(minted_count)))
+    store.dispatch(SetCurrentPriceOfOnekCard(Number(price_of_oneK_card)))
   } catch (err) {
     console.log("error in updateOneKClubMintedCount count total ", err);
     store.dispatch(SetTotalOneKClubNF(0))
+    store.dispatch(SetTotalMintedOneKClubNF(0))
   }
+}
+
+export function parseUSDCBalance(balance: number| undefined) {
+  console.log("-----parseUSDCBalance ", balance)
+  if (isNullOrUndefined(balance)) {
+    return "0"
+  }
+  const bn = new BigNumber(balance);
+  return Math.floor(bn.dividedBy(10**6).toNumber()).toLocaleString();
 }
