@@ -1,0 +1,463 @@
+import React, { useRef, useState, useEffect } from 'react'
+import styled from 'styled-components'
+import Box from '@mui/material/Box'
+import Fab from '@mui/material/Fab'
+// import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import InputBase from '@mui/material/InputBase'
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon'
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
+import CloseIcon from '@mui/icons-material/Close'
+// import 'emoji-mart/css/emoji-mart.css'
+// import { Picker } from 'emoji-mart'
+
+import phaserGame from '../../PhaserGame'
+import Game from '../scenes/Game'
+import { Alert, Snackbar } from '@mui/material'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import store from '../../stores'
+import { v4 as uuidv4 } from 'uuid';
+import { SetFocussedOnChat, ShowChatWindow, TurnMouseClickOff } from '../../stores/UserActions'
+import { IChatObject, MessageType } from '../../stores/ChatStore'
+
+const Backdrop = styled.div`
+  position: fixed;
+  // bottom: 0px;
+  // left: 0;
+  height: 35%;
+  width: 36%;
+  bottom: 0;
+  // background-color: red;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
+
+const Wrapper2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  float: left;
+  height: 100%;
+  padding: 8px;
+`
+
+const FabWrapper = styled.div`
+  margin-top: auto;
+`
+
+const ChatHeader = styled.div`
+  position: relative;
+  height: 35px;
+  background: #000000a7;
+  border-radius: 10px 10px 0px 0px;
+
+  h3 {
+    color: #fff;
+    margin: 7px;
+    font-size: 17px;
+    text-align: center;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+`
+
+const ChatBox = styled(Box)`
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  opacity: 0.9;
+  background: #2c2c2c;
+  border: 1px solid #00000029;
+`
+
+const MessageWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0px 2px;
+  padding-bottom: 2px;
+
+  p {
+    margin: 3px;
+    text-shadow: 0.3px 0.3px black;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  span {
+    color: white;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+
+  .notification {
+    color: grey;
+    font-weight: normal;
+  }
+
+  :hover {
+    background: #3a3a3a;
+  }
+`
+
+const InputWrapper = styled.form`
+  box-shadow: 10px 10px 10px #00000018;
+  border: 1px solid #42eacb;
+  border-radius: 0px 0px 10px 10px;
+  display: flex;
+  flex-direction: row;
+  background: linear-gradient(180deg, #000000c1, #242424c0);
+`
+
+const InputTextField = styled(InputBase)`
+  border-radius: 0px 0px 10px 10px;
+  input {
+    padding: 5px;
+  }
+`
+
+const EmojiPickerWrapper = styled.div`
+  position: absolute;
+  bottom: 54px;
+  right: 16px;
+`
+
+export interface IMsgObject {
+  chatMessage : IChatObject,
+}
+
+const vertical= 'top';
+const horizontal = 'center';
+
+const CustomSplit = (text: string) => {
+  let ntext = "";
+  if (text.length > 30) {
+    for (let i =0; i< text.length; i = i + 30) {
+      ntext += text.slice(i,i+30) + "\n"
+    }
+  } else {
+    return text;
+  }
+  return ntext;
+}
+
+const Message = (messageObj: IMsgObject) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false)
+  return (
+    <MessageWrapper className={`${messageObj.chatMessage.direction}-msg`}
+      onMouseEnter={() => {
+        setTooltipOpen(true)
+      }}
+      onMouseLeave={() => {
+        setTooltipOpen(false)
+      }}
+      key= {uuidv4()}
+    > 
+    {
+      (messageObj.chatMessage.type === MessageType.Announcement) ?
+      <>
+        {/* <div className="msg-bubble"> */}
+            <div>
+              <span style={{ color: 'grey', fontSize: '16px', fontFamily: 'monospace' }}>
+                {(messageObj.chatMessage.nick_name) } { messageObj.chatMessage.message }   
+              </span> 
+            </div>
+          {/* </div> */}
+      </>:
+      <div>
+        {( messageObj.chatMessage.direction === "left")? 
+        (
+          <div className="msg-bubble">
+            <div>
+              <span style={{ color: 'red', fontSize: '18px', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                {(messageObj.chatMessage.nick_name)}   
+              </span> <span style={{paddingLeft: "20px"}}>     </span>
+              <span > {CustomSplit(messageObj.chatMessage.message)}</span> 
+            </div>
+          </div>
+        ) : (
+          <div className="msg-bubble" style={{ flexDirection: 'row-reverse', float: 'right'}}>
+            <div style= {{
+              borderBottomLeftRadius: 0
+            }}>
+              <span style={{ color: 'blue', fontSize: '18px', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                {(messageObj.chatMessage.nick_name)}   
+              </span> <span style={{paddingLeft: "20px"}}>     </span>
+              <span > {CustomSplit(messageObj.chatMessage.message)}</span> 
+            </div>
+          </div>
+        )}
+      </div>
+    }
+    </MessageWrapper>
+  )
+}
+
+export default function Chat() {
+  const [inputValue, setInputValue] = useState('')
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [chatMessages, setChatMessages] = useState([{walletAddress:"", message: "Welcome to the Chat Box of bitfighters ."}]);
+  // const [focused, setFocused] = useState(false);
+  // const [showChat, setShowChat] = useState(false);
+
+  const focussedOnChat = useAppSelector((state) => state.userActionsDataStore.focussedOnChat)
+  const showChatWindow = useAppSelector((state) => state.userActionsDataStore.showChatWindow)
+  // console.log("focused --", focussedOnChat, showChatWindow)
+  const dispatch = useAppDispatch();
+
+
+  const userAddress = useAppSelector((state) => state.web3store.userAddress)
+  const StoreChatMessage = useAppSelector((state) => state.chatStore.chatMessage)
+  const StoreChatMessageUpdate = useAppSelector((state) => state.chatStore.chatUpdate)
+
+  const [snackBarOpen , setSnackBarOpen] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("")
+  const [lastMessageSubmittedTime, setlastMessageSubMittedTime] = useState(0)
+  const [placeHolderText, setPlaceHolderText] = useState("Press Enter to chat")
+  const placeHoderTextConst = "Press Enter to chat."
+  const [timer, setTimer] = useState(0);
+
+  const handleClose = () => {
+    setSnackBarOpen(false);
+  };
+  
+  const startTimer = () => {
+    const time = 6
+    setTimer(time)
+    countDown(time)
+  };
+
+  const countDown = (time: number) => {
+    // console.log("time ", time)
+    setTimer(time - 1)
+    setPlaceHolderText(`Wait for ${time} seconds`);
+    const myTimeout = setTimeout(() => {
+      countDown(time -1)
+    }, 1000);
+    if (time === 0) { 
+      setPlaceHolderText(placeHoderTextConst);
+      clearTimeout(myTimeout);
+    }
+  }
+  const game = phaserGame.scene.keys.game as Game
+
+  const handleChange = (event: any) => {
+    inputRef.current?.focus()
+    // console.log(inputValue.length)
+    if (inputValue.length > 60) {
+      setSnackBarMessage("Message length should not exceed 60.")
+      setSnackBarOpen(true);
+      setInputValue(event.target.value)
+    } else {
+      setInputValue(event.target.value)
+    }
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // console.log("focus --")
+    if (event.key === 'Escape') {
+      // move focus back to the game
+      inputRef.current?.blur()
+      // setShowChat(false)
+      dispatch(ShowChatWindow(false));
+      dispatch(SetFocussedOnChat(false));
+      game.enableKeyBoard()
+    } 
+    else {
+      // setFocused(true);
+      dispatch(SetFocussedOnChat(true));
+      // game.myPlayer.createNewDialogBox("...")
+      game.lobbySocketConnection.send(JSON.stringify({
+        event: "typing",
+        walletAddress: userAddress,
+        room_id:"lobby",
+        message: "...",
+      }))
+      game.disableKeyBOard()
+    }
+    // console.log("pressing key in handlekey down in chat.", event.key)
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log("focus-- handle submit pressed", )
+    if (new Date().getTime() - lastMessageSubmittedTime < 6 * 1000) {
+      setSnackBarMessage("Please wait for the Slow Mode time to finish")
+      inputRef.current?.blur()
+      setSnackBarOpen(true);
+      return;
+    }
+    // move focus back to the game
+    // inputRef.current?.blur()
+
+    const val = inputValue.trim()
+    setInputValue('')
+    if (val) {
+      inputRef.current?.blur()
+      
+      setlastMessageSubMittedTime(new Date().getTime())
+      startTimer()
+      setChatMessages(arr => [...arr, {walletAddress: userAddress, message: val}])
+      // game.myPlayer.createNewDialogBox(val)
+      game.lobbySocketConnection.send(JSON.stringify({
+        event: "chat",
+        walletAddress: userAddress,
+        room_id:"lobby",
+        message: val,
+        nick_name: store.getState().playerDataStore.nick_name
+      }))
+    }
+    scrollToBottom()
+    game.enableKeyBoard()
+  }
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  if (StoreChatMessageUpdate) {
+    scrollToBottom()
+  }
+
+  useEffect(() => {
+    if (focussedOnChat) {
+      inputRef.current?.focus()
+    }
+  }, [focussedOnChat])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatMessages, showChatWindow])
+
+  return (
+    <div >
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={snackBarOpen}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        key={'top' + 'center'}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {snackBarMessage}
+          </Alert>
+      </Snackbar>
+    
+      <Backdrop>
+        
+          {showChatWindow ? (
+            <Wrapper onMouseOver={() => {
+      dispatch(TurnMouseClickOff(true))
+    }}
+    onMouseOut={() => {
+      dispatch(TurnMouseClickOff(false))
+    }}>
+
+              <ChatHeader>
+                <h3>Chat</h3>
+                <IconButton
+                  aria-label="close dialog"
+                  className="close"
+                  onClick={() => 
+                    // (setShowChat(false))
+                    {
+                      dispatch(ShowChatWindow(false))
+                      dispatch(SetFocussedOnChat(false))
+                      game.enableKeyBoard()
+                      dispatch(TurnMouseClickOff(false))
+                    }
+                  }
+                  size="small"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </ChatHeader>
+              <ChatBox>
+                {StoreChatMessage.map((chatMessage, index) => (
+                  <Message chatMessage={chatMessage} key={uuidv4()} />
+                ))}
+                <div ref={messagesEndRef} />
+                {showEmojiPicker && (
+                  <EmojiPickerWrapper>
+                    {/* <Picker
+                      theme="dark"
+                      showSkinTones={false}
+                      showPreview={false}
+                      onSelect={(emoji: any) => {
+                        setInputValue(inputValue + emoji.native)
+                        setShowEmojiPicker(!showEmojiPicker)
+                        // setFocused(true)
+                        dispatch(SetFocussedOnChat(true))
+                      }}
+                      exclude={['recent', 'flags']}
+                    /> */}
+                  </EmojiPickerWrapper>
+                )}
+              </ChatBox>
+              
+              <InputWrapper onSubmit={handleSubmit}>
+                <InputTextField
+                  inputRef={inputRef}
+                  autoFocus={focussedOnChat}
+                  fullWidth
+                  placeholder={placeHolderText}
+                  value={inputValue}
+                  onKeyDown={handleKeyDown}
+                  onChange={handleChange}
+                  onFocus={() => {
+                    if (!focussedOnChat) {
+                      console.log("on focused focused --", focussedOnChat, showChatWindow)
+                      // setFocused(true)
+                      dispatch(SetFocussedOnChat(true))
+                    }
+                  }}
+                  onBlur={() => {
+                    console.log("on blur focused --", focussedOnChat, showChatWindow)
+                    // console.log("on blur triggered,, ")
+                    // setFocused(false)
+                    // dispatch(SetFocussedOnChat(false))
+                    // game.enableKeyBoard()
+                  }}
+                />
+                <IconButton aria-label="emoji" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                  <InsertEmoticonIcon />
+                </IconButton>
+              </InputWrapper>
+
+            </Wrapper>
+          ): (
+            <Wrapper2 onMouseOver={() => {
+      dispatch(TurnMouseClickOff(true))
+    }}
+    onMouseOut={() => {
+      dispatch(TurnMouseClickOff(false))
+    }}>
+              <FabWrapper>
+                <Fab
+                  color="info"
+                  aria-label="showChat"
+                  onClick={() => {
+                    dispatch(SetFocussedOnChat(true))
+                    dispatch(ShowChatWindow(true))
+                    dispatch(TurnMouseClickOff(false))
+                  }}
+                >
+                  <ChatBubbleOutlineIcon />
+                </Fab>
+              </FabWrapper>
+            </Wrapper2>
+          )}
+      </Backdrop>
+    
+    </div>
+  )
+}

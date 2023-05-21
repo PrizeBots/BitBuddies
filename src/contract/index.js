@@ -1,0 +1,597 @@
+import {
+  ABI,
+  bitfighter_contract_adress
+} from "./bitfighter_constants";
+import {
+  GameLogicABI
+} from "./gamelogic_constants";
+import {
+  gamelogic_contract_address
+} from "./gamelogic_constants";
+import {
+  WBTC_ABI,
+  WBTC_ADDRESS
+} from "./wBTC_constant";
+import {
+  Moralis
+} from "moralis";
+import {
+  PRESALE_ABI,
+  PRESALE_CONTRACT_ADDRESS
+} from "./presale_constants";
+import {
+  onek_club_contract_adress,
+  ONEK_CLUB_CONTRACT_ABI
+} from "./onek_club_nft_constants";
+
+const appId = process.env.REACT_APP_MORALIS_APP_ID
+const serverUrl = process.env.REACT_APP_MORALIS_SERVER_URL
+
+Moralis.start({
+  serverUrl,
+  appId
+});
+
+// export async function getContractName() {
+//   const options = {
+//     chain: "bsc testnet",
+//     address: contractAddress,
+//     function_name: "name",
+//     abi: ABI,
+//   };
+//   const _name = await Moralis.Web3API.native.runContractFunction(options);
+//   console.log(_name)
+
+//   return _name;
+// }
+
+// export async function getContractName() {
+//   await Moralis.enableWeb3()
+//   const sendOptions = {
+//     contractAddress: bitfighter_contract_adress,
+//     functionName: "name",
+//     abi: ABI,
+//   };
+//   const _name = await Moralis.executeFunction(sendOptions);
+//   console.log("name --> ", _name)
+
+//   return _name;
+// }
+
+// export async function getBitFighterInfo(metamaskAddress) {
+//   // const options = {
+//   //   chain: "mumbai",
+//   //   address: contractAddress,
+//   //   function_name: "getTokensOfUser",
+//   //   abi: ABI,
+//   // params: {
+//   //   _userAddress: metamaskAddress
+//   // }
+//   // };
+//   await Moralis.enableWeb3()
+//   const sendOptions = {
+//     contractAddress: bitfighter_contract_adress,
+//     functionName: "getTokensOfUser",
+//     abi: ABI,
+//     params: {
+//       _userAddress: metamaskAddress
+//     }
+//   };
+//   const _tokenIds = await Moralis.Web3API.native.runContractFunction(sendOptions);
+//   console.log("--------------------------------");
+//   console.log(_tokenIds)
+//   return _tokenIds;
+// }
+
+// export async function getBitFighterTokenInfo(tokenId) {
+//   console.log("------********-------", tokenId)
+//   const opt = {
+//     chain: "mumbai",
+//     address: bitfighter_contract_adress,
+//     function_name: "tokenURI",
+//     abi: ABI,
+//     params: {
+//       tokenId
+//     }
+//   };
+//   let val = await Moralis.Web3API.native.runContractFunction(opt);
+//   console.log("--------------------------------");
+//   console.log(val)
+//   return val;
+// }
+
+// export async function createBitFighter(_tokenURI, referer_address, lucky_number, nick_name) {
+//   await Moralis.enableWeb3()
+//   const sendOptions = {
+//     contractAddress: bitfighter_contract_adress,
+//     functionName: "mintBitFighter",
+//     abi: ABI,
+//     params: {
+//       _tokenURI,
+//       referer_address,
+//       lucky_number,
+//       nick_name
+//     },
+//   };
+//   console.log(referer_address, "----")
+//   try {
+//     const transaction = await Moralis.executeFunction(sendOptions);
+//     console.log("--------------------------------");
+//     console.log(transaction.hash);
+//     console.log("--------------------------------");
+//     // Wait until the transaction is confirmed
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in createBitFighter ", err)
+//     return false;
+//   }
+//   return true;
+// }
+
+// export async function approveWBTC(spender, amount) {
+
+//   await Moralis.enableWeb3()
+//   const sendOptions = {
+//     contractAddress: WBTC_ADDRESS,
+//     functionName: "approve",
+//     abi: WBTC_ABI,
+//     params: {
+//       spender,
+//       amount,
+//     },
+//   };
+//   console.log("spender ", spender, amount, "----")
+//   try {
+//     const transaction = await Moralis.executeFunction(sendOptions);
+//     console.log("--------------------------------");
+//     console.log(transaction.hash);
+//     console.log("--------------------------------");
+//     // Wait until the transaction is confirmed
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in approveWBTC ", err)
+//     return false;
+//   }
+//   return true;
+// }
+
+// export async function createBitFighter2(_tokenURI, referer_address, lucky_number, nick_name) {
+//   const ethers = Moralis.web3Library; // get ethers.js library
+//   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+//   const gasPrice = await web3Provider.getGasPrice();
+//   // console.log("ethers... ", ethers)
+//   // console.log("web3Provider... ", web3Provider)
+//   // console.log("gasPrice... ", gasPrice.toNumber())
+//   const signer = web3Provider.getSigner();
+
+//   const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+//   try {
+//     const transaction = await contract.mintBitFighter(
+//       _tokenURI,
+//       referer_address,
+//       lucky_number,
+//       nick_name, {
+//         gasPrice: 2 * gasPrice,
+//       });
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in createBitFighter2 ", err)
+//     return false;
+//   }
+//   return true;
+// }
+
+export async function createBitFighter3(_tokenURI, referer_address, lucky_number, nick_name, _gen) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  // console.log("ethers... ", ethers)
+  // console.log("web3Provider... ", web3Provider)
+  console.log("in_createBitFighter3 ", _tokenURI, referer_address, lucky_number, nick_name, _gen)
+  console.log("gasPrice... ", gasPrice.toNumber())
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+  try {
+    const transaction = await contract.mintBitFighter(
+      _tokenURI,
+      referer_address,
+      lucky_number,
+      nick_name,
+      _gen, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in createBitFighter3 ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function checkAllowance(owner) {
+  // await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: WBTC_ADDRESS,
+    functionName: "allowance",
+    abi: WBTC_ABI,
+    params: {
+      owner,
+      spender: gamelogic_contract_address,
+    },
+  };
+  const _allowance = await Moralis.executeFunction(sendOptions);
+  console.log("_allowance --> ", _allowance, owner);
+  return _allowance;
+}
+
+export async function checkAllowancePresale(owner) {
+  // await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: WBTC_ADDRESS,
+    functionName: "allowance",
+    abi: WBTC_ABI,
+    params: {
+      owner,
+      spender: PRESALE_CONTRACT_ADDRESS,
+    },
+  };
+  const _allowance = await Moralis.executeFunction(sendOptions);
+  console.log("_allowance --> ", _allowance, owner);
+  return _allowance;
+}
+
+export async function approveWBTC2(spender, amount) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  // console.log("ethers... ", ethers)
+  // console.log("web3Provider... ", web3Provider)
+  // console.log("gasPrice... ", gasPrice.toNumber())
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(WBTC_ADDRESS, WBTC_ABI, signer);
+
+  try {
+    const transaction = await contract.approve(
+      spender, amount, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in approve wbtc ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function getwBTCBalance(account) {
+  const options = {
+    chain: "mumbai",
+    address: WBTC_ADDRESS,
+    function_name: "balanceOf",
+    abi: WBTC_ABI,
+    params: {
+      account
+    }
+  };
+
+  const options2 = {
+    chain: "mumbai",
+    address: WBTC_ADDRESS,
+    function_name: "decimals",
+    abi: WBTC_ABI,
+  };
+  const balanceP = Moralis.Web3API.native.runContractFunction(options);
+  const decimalsP = Moralis.Web3API.native.runContractFunction(options2);
+
+  const [balance, decimals] = await Promise.all([balanceP, decimalsP])
+  return {
+    balance,
+    decimals
+  }
+}
+
+// export async function depositFundForQueue() {
+//   const ethers = Moralis.web3Library; // get ethers.js library
+//   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+//   const gasPrice = await web3Provider.getGasPrice();
+//   const signer = web3Provider.getSigner();
+
+//   const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+//   try {
+//     const transaction = await contract.depositFundForGame({
+//       gasPrice: 2 * gasPrice,
+//     });
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in depositFundForQueue ", err)
+//     return false;
+//   }
+//   return true;
+// }
+
+// export async function leaveQueue() {
+//   const ethers = Moralis.web3Library; // get ethers.js library
+//   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+//   const gasPrice = await web3Provider.getGasPrice();
+//   const signer = web3Provider.getSigner();
+
+//   const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+//   try {
+//     const transaction = await contract.leaveQueueAndGetMoney({
+//       gasPrice: 2 * gasPrice,
+//     });
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in  leaveQueueAndGetMoney ", err)
+//     return false;
+//   }
+//   return true;
+// }
+
+// get balance of wbtc and other balances
+
+export async function checkWBTC_Balance(account) {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: WBTC_ADDRESS,
+    functionName: "balanceOf",
+    abi: WBTC_ABI,
+    params: {
+      account
+    }
+  };
+  const balance = await Moralis.executeFunction(sendOptions);
+  console.log("wbtc balance --> ", balance);
+  return balance;
+}
+
+export async function checkWalletBalance(account) {
+  try {
+    await Moralis.enableWeb3()
+    const sendOptions = {
+      contractAddress: gamelogic_contract_address,
+      functionName: "getWalletbalance",
+      abi: GameLogicABI,
+      params: {
+        account
+      }
+    };
+    const walletBalance = await Moralis.executeFunction(sendOptions);
+    console.log("wallet balance --> ", walletBalance);
+    return walletBalance;
+  } catch (err) {
+    console.log("error in checkWalletBalance--> ", err);
+    return 0;
+  }
+}
+
+export async function checkBetBalance(account) {
+  await Moralis.enableWeb3()
+  try {
+    const sendOptions = {
+      contractAddress: gamelogic_contract_address,
+      functionName: "getBetBalance",
+      abi: GameLogicABI,
+      params: {
+        account
+      }
+    };
+    const betBalance = await Moralis.executeFunction(sendOptions);
+    console.log("bet balance --> ", betBalance);
+    return betBalance;
+  } catch (err) {
+    return 0;
+  }
+}
+
+export async function getWBTCDecimals(account) {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: WBTC_ADDRESS,
+    functionName: "decimals",
+    abi: WBTC_ABI,
+  };
+  const betBalance = await Moralis.executeFunction(sendOptions);
+  console.log("decimals --> ", betBalance);
+  return betBalance;
+}
+
+export async function depositMoneyToWalletV2(_amount) {
+  console.log("in depositMoneyToWalletV2 ", _amount)
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
+
+  try {
+    const transaction = await contract.depositMoneyToWallet(
+      _amount, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in depositMoneyToWalletV2 ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function removeFromWallet() {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
+
+  try {
+    const transaction = await contract.redeemMoneyFromWallet();
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in removeFromWallet ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function BetMoneyInFight(_betInFightMoney) {
+  console.log("bet moeny in fight -- ", _betInFightMoney)
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
+
+  try {
+    const transaction = await contract.betMoneyInFight(_betInFightMoney);
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in betMoneyInFight ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function ExitFromFight() {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
+
+  try {
+    const transaction = await contract.clearBetMoneyUser();
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in ExitFromFight ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function BuyInGameAssets(quantity, item) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
+
+  try {
+    const transaction = await contract.buyAsset(quantity, item);
+    await transaction.wait();
+    console.log("--------------------------success in buyAsset------");
+  } catch (err) {
+    console.log("err in BuyInGameAssets ", err)
+    return false;
+  }
+  return true;
+}
+
+
+export async function getAssetCountOfPlayer(_user, _assetName) {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: gamelogic_contract_address,
+    functionName: "getAssetsOfUser",
+    abi: GameLogicABI,
+    params: {
+      _user,
+      _assetName
+    }
+  };
+  const betBalance = await Moralis.executeFunction(sendOptions);
+  console.log("decimals --> ", betBalance);
+  return betBalance;
+}
+
+
+export async function mintPreSaleNFT(_tokenURI) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("in mintPreSaleNFT ", _tokenURI)
+  console.log("gasPrice... ", gasPrice.toNumber())
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
+
+  try {
+    const transaction = await contract.mintPreSaleBitfighterCard(
+      _tokenURI, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in mintPreSaleNFT ", err)
+    return false;
+  }
+  return true;
+}
+
+
+export async function getPreSaleCountTotal() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: PRESALE_CONTRACT_ADDRESS,
+    functionName: "getMintedCouponsCount",
+    abi: PRESALE_ABI,
+  };
+  const presaleMintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- presalemintedcount ", presaleMintedCount);
+  return presaleMintedCount;
+}
+
+export async function getOneKMintedTotalCount() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: onek_club_contract_adress,
+    functionName: "getMintedCouponsCount",
+    abi: ONEK_CLUB_CONTRACT_ABI,
+  };
+  const oneK_nfts_mintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- oneK_Club_minted_count ", oneK_nfts_mintedCount);
+  return oneK_nfts_mintedCount;
+}
+
+
+// export async function getPreSaleCountTotal() {
+//   const ethers = Moralis.web3Library; // get ethers.js library
+//   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+//   const gasPrice = await web3Provider.getGasPrice();
+//   // console.log("in mintPreSaleNFT ", _tokenURI)
+//   // console.log("gasPrice... ", gasPrice.toNumber())
+//   const signer = web3Provider.getSigner();
+
+//   const contract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
+
+//   try {
+//     const transaction = await contract.getMintedCouponsCount();
+//     await transaction.wait();
+//     console.log("--------------------------------");
+//   } catch (err) {
+//     console.log("err in mintPreSaleNFT ", err)
+//   }
+// }
