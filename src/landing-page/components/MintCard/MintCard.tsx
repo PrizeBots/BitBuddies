@@ -8,6 +8,8 @@ import btcIcon from "../../../assets/images/btc-icon.png";
 import cardBlock from "../../../assets/images/card-block.png";
 
 import "./MintCard.scss";
+import { useDispatch } from "react-redux";
+import { setCardState } from "../../../stores/MintCardStateStore";
 
 export interface MintCardProps {
   type: "big_info" | "small_info" | "sold_out";
@@ -21,6 +23,14 @@ function MintCard({ type }: MintCardProps) {
   } else if (type === "sold_out") {
     isSoldOut = true;
   }
+
+  const dispatch = useDispatch();
+
+  const handleGo = () => {
+    if (type === "small_info") {
+      dispatch(setCardState({ cardType: "sold_out" }));
+    }
+  };
 
   return (
     <div className="mint-card__wrapper">
@@ -60,7 +70,12 @@ function MintCard({ type }: MintCardProps) {
               </div>
             </div>
             <div className="mint-card__footer">
-              <Button className="btn-mint--red btn-mint--big">GO!</Button>
+              <Button
+                onClick={handleGo}
+                className="btn-mint--red btn-mint--big"
+              >
+                GO!
+              </Button>
               <img src={cardBlock} alt="card-block" />
               <h3>M-o-M Inc.</h3>
             </div>

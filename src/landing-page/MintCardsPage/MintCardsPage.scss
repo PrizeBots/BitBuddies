@@ -1,13 +1,6 @@
 .main {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 50px;
-  overflow-y: auto;
-}
-
-// cards container
-.cards {
-  flex: 1;
-  display: flex;
-  gap: 50px;
 }
