@@ -52,6 +52,22 @@ export const updateNFTsInDB = async (userAddress: string) => {
   return output;
 }
 
+export const updateOneKclubNFTs = async (userAddress: string) => {
+  console.log("in_updateOneKclubNFTs ..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address updateNFTsInDB");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/web3/update/one_k_card/${userAddress}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  const output = await result.json();
+  return output;
+}
+
 export const randomGenarate = async (userAddress: string, referer: string, lucky_number: number, nick_name: string, user_type='web3') => {
   console.log("mint clicked..", userAddress)
   if (userAddress === "") {

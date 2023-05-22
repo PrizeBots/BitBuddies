@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { approveUSDC, approveWBTC2, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleNFT } from '../../contract';
 import store from '../../stores';
 import { ethers } from 'ethers';
-import { randomGenaratePreSale } from '../../hooks/ApiCaller';
+import { randomGenaratePreSale, updateOneKclubNFTs } from '../../hooks/ApiCaller';
 import { PRESALE_CONTRACT_ADDRESS } from '../../contract/presale_constants';
 import { parseUSDCBalance, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
 import Modal from '@mui/material/Modal';
@@ -375,6 +375,7 @@ export default function MintPage() {
       return;
     } else {
       bootstrap.play_dr_bits_success_sound()
+      updateOneKclubNFTs(store.getState().web3store.userAddress)
       store.dispatch(SetSuccessNotificationBool(true))
       store.dispatch(SetSuccessNotificationMessage(`Success`))
     }
@@ -389,8 +390,6 @@ export default function MintPage() {
   };
 
   const handleModalOpen = () => setOpenModal(true);
-
-
 
   let CustomUI;
   if (pageState === PageStates.Presale) {
