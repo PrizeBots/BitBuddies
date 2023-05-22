@@ -1,11 +1,13 @@
 import { useDispatch } from "react-redux";
 import { setCardState } from "../../../stores/MintCardStateStore";
+import { useSelector } from "react-redux";
+import { selectMintCardState } from "../../../stores/MintCardStateStore";
 import Button from "../Button/Button";
-import { MintCardProps } from "../MintCard/MintCard";
 import "./SidePanel.scss";
 
-function SidePanel({ type }: MintCardProps) {
+function SidePanel() {
   const dispatch = useDispatch();
+  const type = useSelector(selectMintCardState);
   return (
     <aside className="side-panel">
       <div className="side-panel__layer">

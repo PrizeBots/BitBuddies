@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+import { selectMintCardState } from "../../../stores/MintCardStateStore";
 import Button from "../Button/Button";
 import SidePanel from "../SidePanel/SidePanel";
 
@@ -11,11 +13,10 @@ import "./MintCard.scss";
 import { useDispatch } from "react-redux";
 import { setCardState } from "../../../stores/MintCardStateStore";
 
-export interface MintCardProps {
-  type: "big_info" | "small_info" | "sold_out";
-}
+function MintCard() {
+  const dispatch = useDispatch();
+  const type = useSelector(selectMintCardState);
 
-function MintCard({ type }: MintCardProps) {
   let isBigInfo = false;
   let isSoldOut = false;
   if (type === "big_info") {
@@ -23,8 +24,6 @@ function MintCard({ type }: MintCardProps) {
   } else if (type === "sold_out") {
     isSoldOut = true;
   }
-
-  const dispatch = useDispatch();
 
   const handleGo = () => {
     if (type === "small_info") {
@@ -82,7 +81,7 @@ function MintCard({ type }: MintCardProps) {
           </div>
         </div>
       </article>
-      <SidePanel type={type} />
+      <SidePanel />
     </div>
   );
 }
