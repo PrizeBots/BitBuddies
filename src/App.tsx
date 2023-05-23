@@ -108,6 +108,7 @@ function App() {
               <Route path="mint" element={<Landing name="mint" />} />
               <Route path="login" element={<Landing name="login" />} />
               <Route path="presale" element={<Landing name="presale" />} />
+              <Route path="mint-cards" element={<Landing name="mint-cards" />} />
             </Routes> : <InvalidUserPage />
           }
           </React.Suspense>

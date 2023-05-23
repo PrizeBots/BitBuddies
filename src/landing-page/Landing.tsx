@@ -14,6 +14,7 @@ import { FightConfirmationBox } from '../game/Components/FightConfirmationBox';
 import { Web2LoginPage } from './Web2LoginPage';
 import styled from 'styled-components';
 import { SetGameStarted } from '../stores/PlayerData';
+import MintCardsPage from './MintCardsPage/MintCardsPage';
 // import MintPage3 from './MintPage3';
 
 
@@ -92,13 +93,17 @@ const  Landing = (props: any) => {
     } else if (location.pathname === "/login"){
       View = <Web2LoginPage />
       dispatch(SetGameStarted(false));
-    } else if (location.pathname === "/game"){
-      View = <Fighters />
+    } else if (location.pathname === "/game") {
+      View = <Fighters />;
       // dispatch(setGameStarted(false));
+    } else if (location.pathname === "/mint-cards") {
+      View = <MintCardsPage />;
     } else {
-      View = <div>
-        <h1>404 Page does not exist</h1>
-      </div>
+      View = (
+        <div>
+          <h1>404 Page does not exist</h1>
+        </div>
+      );
       dispatch(SetGameStarted(false));
     }
     //  else if (location.pathname === "/game"){

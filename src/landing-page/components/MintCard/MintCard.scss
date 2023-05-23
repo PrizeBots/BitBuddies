@@ -1,0 +1,138 @@
+@import "../../../assets/sass/mixins";
+@import "../../../assets/sass/variables";
+
+.mint-card {
+  height: 575px;
+  width: 366px;
+  background-image: url("../../../assets/images/card-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  font-family: "Cooper Black";
+  line-height: 1;
+  &__wrapper {
+    display: flex;
+    .side-panel {
+      margin-top: 30px;
+    }
+  }
+  &__layer {
+    height: 100%;
+    width: 100%;
+    background-image: url("../../../assets/images/card-bg-layer.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  &__inner {
+    padding: 18px 5px 5px 30px;
+    position: relative;
+    height: 100%;
+  }
+
+  &__status {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+    &__title {
+      height: 30px;
+      width: 110px;
+      background-color: $dark;
+      color: $white;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-left: 5px;
+      p {
+        font-size: 24px;
+        letter-spacing: 1px;
+        margin: 0;
+      }
+    }
+    &__photo {
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  &__display {
+    height: 140px;
+    width: 320px;
+    @include mintcardborder;
+    &__inner {
+      background-color: $dark;
+      border: 1px solid #2d2c2c;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      p {
+        font-size: 24px;
+        margin: 0;
+        color: $white;
+      }
+      h4 {
+        font-size: 32px;
+        margin: 0;
+        color: $white;
+      }
+    }
+  }
+
+  &__info {
+    width: 320px;
+    @include mintcardborder;
+    &__inner {
+      padding: 3px 0 8px;
+      min-height: 105px;
+      background-color: $light-gray;
+      @include flexcenter;
+      flex-direction: column;
+    }
+    &__btc {
+      width: 200px;
+      height: 40px;
+      background-color: $white;
+      border-radius: 16px;
+      @include flexcenter;
+      gap: 10px;
+      span {
+        font-size: 22px;
+        color: $dark;
+      }
+    }
+    &__sold {
+      font-size: 40px;
+      color: $white;
+      text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000;
+      margin: 0;
+    }
+  }
+
+  &__footer {
+    position: absolute;
+    left: 18px;
+    bottom: 0;
+    width: calc(100% - 18px);
+    padding-right: 3px;
+    padding-bottom: 3px;
+    @include flexcenter;
+    flex-direction: column;
+    img {
+      margin-top: 14px;
+      margin-bottom: 10px;
+    }
+    h3 {
+      width: 100%;
+      text-align: right;
+      font-size: 22px;
+      color: #8a939c;
+      margin: 0;
+      line-height: 1;
+    }
+  }
+}
