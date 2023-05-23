@@ -1,0 +1,25 @@
+.side-panel {
+  height: 323px;
+  width: 169px;
+  background-image: url("../../../assets/images/side-panel-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  font-family: "Cooper Black";
+  border-left: 1px solid #433e3c;
+  transform: translateX(-2px);
+  &__layer {
+    height: 100%;
+    width: 100%;
+    background-image: url("../../../assets/images/side-panel-bg-layer.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  &__inner {
+    padding: 28px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
