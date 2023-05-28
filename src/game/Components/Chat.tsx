@@ -450,6 +450,9 @@ export default function Chat() {
                     dispatch(ShowChatWindow(true))
                     dispatch(TurnMouseClickOff(false))
                   }}
+                  style={{
+                    background: '#9c341a'
+                  }}
                 >
                   <ChatBubbleOutlineIcon />
                 </Fab>

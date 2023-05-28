@@ -28,13 +28,13 @@ const Item = styled.div`
   padding: 5px;
 
   span {
-    font-family: Monospace;
+    font-family:'Cooper Black', sans-serif;
     font-style: bold;
     font-size: 20px;
   }
 
   h2, h3 {
-    font-family: Monospace;
+    font-family:'Cooper Black', sans-serif;
     font-style: bold;
     font-size: 25px;
     color: black;
@@ -185,7 +185,9 @@ export function Inventory() {
       >
         <Grid container spacing={0} key={uuidv4()}>
           <Grid item xs={12} key={uuidv4()}>
-            <Item><h2> Inventory </h2> </Item>
+            <Item>
+              <h2> Inventory </h2> 
+            </Item>
           </Grid>
           {
             brewArr.map((el, index) => {

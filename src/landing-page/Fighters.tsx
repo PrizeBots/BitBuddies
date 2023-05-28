@@ -580,16 +580,6 @@ function Fighters() {
                 </span>
               </ButtonView>
 
-              {/* <ButtonView 
-                variant="contained" 
-                color="info"
-                onClick={(event) => startGame(event)}
-              >
-                <span>
-                    Load Servers
-                </span>
-              </ButtonView> */}
-
           </NewContent>
         </>
   }

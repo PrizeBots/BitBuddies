@@ -10,21 +10,20 @@ export function Loader() {
   }
 
   if (!gameLoading && loadingState) {
+    const ring_element = document.getElementById("ring-wrapper-id");
     setTimeout(() => {
       loadingState = false
-    }, 1000)
-    const ring_element = document.getElementById("ring-wrapper-id");
+    }, 3000)
     if (ring_element) {
+      ring_element.style.animation = "fade-out 3s forwards";
       console.log("fading out ..")
-      ring_element.style.animation = "fade-out 2s forwards";
+      setTimeout(() => {
+        ring_element.remove()
+      }, 3000)
+      
     }
   }
 
-  // const fadeOut = () => {
-  //   const ring_element = document.getElementById("ring-wrapper-id");
-  //   if (ring_element)
-  //     ring_element.style.animation = "fade-out 2s forwards";
-  // }
   return(
     <>
     {

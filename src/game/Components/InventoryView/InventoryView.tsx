@@ -12,9 +12,6 @@ import { parseWBTCBalanceV3 } from '../../../utils/web3_utils';
 
 const Backdrop = styled.div`
   position: fixed;
-  // left: 0%;
-  // margin: auto;
-  // margin-top: 10px;
 `
 
 const WrapperSecondDiv = styled.div`
@@ -30,47 +27,28 @@ const WrapperThirdDiv = styled.div`
 `
 
 const Wrapper = styled.div`
-  // display: flex;
-  // flex-direction: column;
-  
-  // opacity: 0.8;
-  // align-items: center;
-  // justify-content: center;
-
-  background-color: aliceblue;
+  background-color: #3B3B3B;
   padding: 10px;
   border-style: solid;
   border-width: 2px;
+  border-radius: 10px;
   gap: 20px;
 `
 
-const TextDiv = styled.div`
-  font-family: Monospace;
-  font-size: 1.5em;
-  font-weight: 550;
-  padding-left: 5px;
-`
+
 
 const BitsView = styled.div`
-  // width: 10%%;
-  // overflow: auto;
-  // opacity: 0.9;
-  // background: #2c2c2c;
-  // border: 5px solid #000000;
-  // border-radius: 10px;
-  // padding: 20px;
-  // background-color: red;
 
   span {
-    font-family: Monospace;
-    font-style: bold;
+    font-family:'Cooper Black', sans-serif;
+    // font-style: bold;
     font-size: 20px;
-    color: black;
+    color: white;
   }
 
   h2, h3 {
-    font-family: Monospace;
-    font-style: bold;
+    font-family:'Cooper Black', sans-serif;
+    // font-style: bold;
     font-size: 25px;
     color: white;
     line-height: 75%;
