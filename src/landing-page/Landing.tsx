@@ -21,9 +21,9 @@ import MintCardsPage from './MintCardsPage/MintCardsPage';
 
 const Backdrop = styled.div`
   position: absolute;
-  height: 140%;
+  height: 100%;
   width: 100%;
-  background-color: #111B28;
+  background-color: #262626;
 `
 
 

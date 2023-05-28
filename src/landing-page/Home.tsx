@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components'
 import Button from '@mui/material/Button'
 import {  useAppDispatch, useAppSelector } from '../hooks';
-import { Alert, AlertTitle, LinearProgress, Snackbar, Tooltip } from '@mui/material';
+import { Alert, AlertTitle, LinearProgress, makeStyles, Snackbar, Tooltip, withStyles } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -52,10 +52,11 @@ const ButtonView = styled(Button)`
     font-family:'Cooper Black', sans-serif;
   }
 
+  // background-color: #e60808;
   background-color: #9c341a;
 
-  button:hover {
-    background-color: #9c341a;
+  &:hover {
+    background-color: #852d17;
   }
 
 

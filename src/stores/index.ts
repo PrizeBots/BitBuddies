@@ -23,6 +23,7 @@ import MetaInfoStore from './MetaInfoStore'
 import FightInfoStore from './FightsStore'
 import QueueDetailedInfo from './QueueDetailedInfo'
 import MintCardStateStore from './MintCardStateStore'
+import WebsiteStateStore from './WebsiteStateStore'
 
 enableMapSet()
 
@@ -45,6 +46,7 @@ const store = configureStore({
     fightInfoStore: FightInfoStore,
     queueDetailedInfo: QueueDetailedInfo,
     mintCardStateStore: MintCardStateStore,
+    websiteStateStore: WebsiteStateStore,
   },
   // Temporary disable serialize check for redux as we store MediaStream in ComputerStore.
   // https://stackoverflow.com/a/63244831

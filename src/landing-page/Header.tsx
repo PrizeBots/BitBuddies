@@ -313,7 +313,7 @@ function Header() {
       <nav
         className="navbar navbar-expand-sm navbar-dark"
         style={{
-          backgroundColor: "#111B28",
+          backgroundColor: "#262626",
         }}
       >
         <div className="container-fluid">

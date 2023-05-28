@@ -24,8 +24,8 @@ const Backdrop = styled.div`
   position: fixed;
   // bottom: 0px;
   // left: 0;
-  height: 35%;
-  width: 36%;
+  height: 40%;
+  width: 30%;
   bottom: 0;
   // background-color: red;
 `

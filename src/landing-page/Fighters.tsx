@@ -35,6 +35,10 @@ import { setPlayerAuthToken } from '../stores/AuthStore';
 import NotificationMessageHelper from '../game/Components/NotificationMessageHelper';
 import { EquipView } from '../game/Components/InventoryView/EquipView';
 import WinnersReceipt from '../game/Components/MenuComponents/WinnersReceipt';
+import { Loader } from './components/Loader/Loader';
+import { SetGameLoadingState, SetShowGameServersList } from '../stores/WebsiteStateStore';
+import { ListGameServers } from '../utils/game_server_utils';
+import { ServerListWindow } from '../game/Components/MenuComponents/ServerList/ServerListWindow';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -101,12 +105,31 @@ const ImageWraper = styled.div`
 const HeadingText = styled.h1`
   font-size: 2rem;
   letter-spacing: 1px;
-  font-family: Montserrat, sans-serif;
+  font-family:'Cooper Black', sans-serif;
+  // font-family: Montserrat, sans-serif;
   font-weight: 400;
   text-transform: none;
   margin: 0px auto 0;
   color: aliceblue;
 `
+
+const ButtonView = styled(Button)`
+  span {
+    color: black;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+  }
+
+  background-color: #9c341a;
+
+  &:hover {
+    background-color: #852d17;
+  }
+
+  width: 300px;
+  height: 60px;
+`;
   // background: #A1A7B8;
 const vertical= 'top';
 const horizontal = 'center';
@@ -148,9 +171,9 @@ function Fighters() {
 
   console.log("current path 333 ", gameStarted)
 
-  const [game_server, set_game_server ]= useState("Virginia")
+  const [game_server, set_game_server ]= useState("Washington_DC")
 
-  const [playerSelectedBool, setPlayerSelectedBool] = useState(true);
+  const [playerSelectedBool, setPlayerSelectedBool] = useState(false);
   const [snackBarOpen , setSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("")
   const [playerSelected, setPlayerSelected] = useState<IPlayerData>();
@@ -168,13 +191,34 @@ function Fighters() {
   const handleClose = () => {
     setSnackBarOpen(false);
   };
+
+  const SelectGameServerAndLoadInfo = async (region: string) => {
+    ListGameServers(region)
+    console.log("in SelectGameServerAndLoadInfo", region)
+    set_game_server(region);
+  }
   
   const handlePlayerSelection = async (data:IPlayerData) => {
     console.log("--player selected.. data ", data)
     setPlayerSelected(data);
-    setPlayerSelectedBool(false);
+    setPlayerSelectedBool(true);
+
+    store.dispatch(SetShowGameServersList(true));
+    store.dispatch(SetCurrentGamePlayer(data));
+    store.dispatch(setNickName(data.nick_name))
+
+
     setCardSelected(data.data.image)
     bootstrap.play_select_sound()
+
+    console.log("--player selected.. calling login ")
+    const playerAuthToken = await loginAndAuthenticatePlayer(data.user_wallet_address, data.minted_id);
+    if (!isNullOrUndefined(playerAuthToken)) {
+      store.dispatch(setPlayerAuthToken(playerAuthToken))
+      ListGameServers(game_server)
+    }
+
+    
     // console.log("game start -> ", playerSelected)
   }
 
@@ -190,11 +234,12 @@ function Fighters() {
     if (!isNullOrUndefined(playerAuthToken)) {
       store.dispatch(setPlayerAuthToken(playerAuthToken))
       dispatch(SetGameStarted(true));
-      dispatch(SetCurrentGamePlayer(playerSelected))
+      // dispatch(SetCurrentGamePlayer(playerSelected))
 
-      dispatch(setNickName(playerSelected!.nick_name))
-      const bodyHtml = document.querySelector('html');
-      console.log("bodyhtml ", bodyHtml);
+      // dispatch(setNickName(playerSelected!.nick_name))
+      // const bodyHtml = document.querySelector('html');
+      // console.log("bodyhtml ", bodyHtml);
+      store.dispatch(SetGameLoadingState(true))
       bootstrap.launchGame(playerSelected)
     }
     
@@ -364,7 +409,8 @@ function Fighters() {
             style={{float:"left"}}
             fontSize='large'
             onClick={() => {
-              setPlayerSelectedBool(true)
+              setPlayerSelectedBool(false)
+              store.dispatch(SetShowGameServersList(false));
               bootstrap.play_select_sound()
             }}
             key={uuidv4()}
@@ -414,10 +460,15 @@ function Fighters() {
       <WinnersReceipt />
       
       <SendingFriendRequest />
+      <Loader />
     </>
   } else {
       totalUI = <>
-            <Title> Your Bitfighters </Title>
+            <Title> 
+              <div className="cooper-black-tab" style={{
+                fontSize: '30px'
+              }}>Your Bitfighters </div>
+            </Title>
               <Content>
                 <Box sx={{ 
                   width: boxWidth,
@@ -431,15 +482,17 @@ function Fighters() {
                       className="primary" 
                       to="/mint" 
                     >
-                      <Button 
+                      <ButtonView 
                         variant="contained" 
-                        color="info"
-                        style={{
-                          width: 200,
-                        }}
+                        // style={{
+                        //   width: 200,
+                        // }}
                         >
-                          Mint BitFighters
-                      </Button>
+                          <span>
+                            Mint BitFighters
+                          </span>
+                          
+                      </ButtonView>
                     </Link>
                   </div>
                  : <div style={{
@@ -450,11 +503,11 @@ function Fighters() {
                     variant="contained" 
                     color="info"
                     onClick={(event) => startGame(event)}
-                    loading={playerSelectedBool}
-                    loadingIndicator="Choose one"
-                    style={{
-                      width: '200px'
-                    }}
+                    loading={!playerSelectedBool}
+                    loadingIndicator="Select one"
+                    // style={{
+                    //   width: '200px'
+                    // }}
                 >
                   Start Game
                 </LoadingButton>
@@ -464,16 +517,19 @@ function Fighters() {
                     className="primary" 
                     to="/mint" 
                   >
-                    <Button 
+                    <ButtonView 
                       variant="contained" 
                       color="info"
                       style={{
-                        width: 200,
+                        // width: 200,
                         marginTop: '30px'
                       }}
                       >
-                        Mint BitFighters
-                    </Button>
+                        <span>
+                          Mint BitFighters
+                        </span>
+                        
+                    </ButtonView>
                   </Link>
                 }
 
@@ -501,22 +557,38 @@ function Fighters() {
                     id="demo-simple-select"
                     value={game_server}
                     label="Age"
-                    onChange={(event: SelectChangeEvent) => set_game_server(event.target.value as string)}
+                    onChange={(event: SelectChangeEvent) => {
+                      SelectGameServerAndLoadInfo(event.target.value as string)
+                      // set_game_server(event.target.value as string)
+                    }}
                   >
-                    <MenuItem value={"Virginia"}>Virginia</MenuItem>
+                    <MenuItem value={"Washington_DC"}>Washington_DC</MenuItem>
+                    {/* <MenuItem value={"Mumbai"}>Mumbai</MenuItem> */}
                     {/* <MenuItem value={20}>Twenty</MenuItem>
                     <MenuItem value={30}>Thirty</MenuItem> */}
                   </Select>
                 </FormControl>
               </Box>
 
-              <Button 
+              <ButtonView 
                 variant="contained" 
                 color="info"
                 onClick={(event) => startGame(event)}
               >
-                Start Game
-              </Button>
+                <span>
+                    Start Game
+                </span>
+              </ButtonView>
+
+              {/* <ButtonView 
+                variant="contained" 
+                color="info"
+                onClick={(event) => startGame(event)}
+              >
+                <span>
+                    Load Servers
+                </span>
+              </ButtonView> */}
 
           </NewContent>
         </>
@@ -531,7 +603,8 @@ function Fighters() {
         message={snackBarMessage}
         key={vertical + horizontal}
       />
-      {(playerSelectedBool || gameStarted)? totalUI: animationUI}
+      <ServerListWindow />
+      {(!playerSelectedBool || gameStarted)? totalUI: animationUI}
     </div>
   )
 }

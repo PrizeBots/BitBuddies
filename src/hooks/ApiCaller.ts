@@ -646,3 +646,40 @@ export const randomGenaratePreSale = async (userAddress: string) => {
   console.log("output in randomGenaratePreSale --", output)
   return output;
 }
+
+
+export const ListGameServersApiCall = async (userAddress: string, region: string) => {
+  console.log("ListGameServersApiCall clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/server/list/${region}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': store.getState().authStore.player_auth_token
+    },
+  })
+  const output = await result.json();
+  console.log("output in ListGameServersApiCall --", output)
+  return output;
+}
+
+export const FetchGameServerConnectionURL = async (userAddress: string, room_id: string) => {
+  console.log("FetchGameServerConnectionURL clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/server/fetch/${room_id}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': store.getState().authStore.player_auth_token
+    },
+  })
+  const output = await result.json();
+  console.log("output in FetchGameServerConnectionURL --", output)
+  return output;
+}

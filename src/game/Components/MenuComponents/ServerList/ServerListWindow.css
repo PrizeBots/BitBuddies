@@ -1,0 +1,18 @@
+
+
+.list-wrapper {
+  position:absolute;
+  background-color:#262626;
+  width: 30%;
+  height: 95%;
+  opacity: 100%;
+  top: 5%;
+  right: 0%;
+
+  background-color:#3c3b3b;
+
+  /* background: #563131; */
+  /* border: 10px solid #000000; */
+  border-radius: 20px;
+}
+

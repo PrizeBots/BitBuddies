@@ -30,6 +30,7 @@ import { SetEquippedBrewCount, SetInHandBrew } from "../../stores/AssetStore";
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 // import { ActionManager } from "../ActionManager";
 import { v4 as uuidv4 } from 'uuid';
+import { SetGameLoadingState, SetShowGameServersList } from "../../stores/WebsiteStateStore";
 
 
 const textAreaVisible = false;
@@ -259,10 +260,14 @@ export default class Game extends Phaser.Scene {
 
     // const mapCreator = new MapCreator(this);
     // this.map = mapCreator.createMap(this.mapKey)
-    console.log("websocket server--", process.env.REACT_APP_DEV_ENV, REACT_APP_LOBBY_WEBSOCKET_SERVER, store.getState().playerDataStore.nick_name)
+    console.log("websocket server--", process.env.REACT_APP_DEV_ENV, REACT_APP_LOBBY_WEBSOCKET_SERVER, store.getState().playerDataStore.nick_name, store.getState().websiteStateStore.selected_server_url)
 
-    this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER, 'echo-protocol')
-    // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER)
+    store.dispatch(SetShowGameServersList(false));
+    this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
+
+    // this.lobbySocketConnection = new WebSocket("wss://1.proxy.hathora.dev:40771/")
+
+    // this.lobbySocketConnection = new WebSocket(`wss://${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
@@ -277,6 +282,7 @@ export default class Game extends Phaser.Scene {
         last_position_y: random_spawn_points[this.random_pos_selected].y,
         orientation: "right",
       }))
+      store.dispatch(SetGameLoadingState(false))
       this.lobbySocketConnection.send(JSON.stringify({
         event: "geoInfo",
         data: store.getState().geoStore.geoInfo,
