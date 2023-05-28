@@ -263,11 +263,12 @@ export default class Game extends Phaser.Scene {
     console.log("websocket server--", process.env.REACT_APP_DEV_ENV, REACT_APP_LOBBY_WEBSOCKET_SERVER, store.getState().playerDataStore.nick_name, store.getState().websiteStateStore.selected_server_url)
 
     store.dispatch(SetShowGameServersList(false));
-    this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
+    // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
     // this.lobbySocketConnection = new WebSocket("wss://1.proxy.hathora.dev:40771/")
 
-    // this.lobbySocketConnection = new WebSocket(`wss://${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
+    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)

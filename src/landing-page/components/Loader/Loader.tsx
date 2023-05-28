@@ -18,7 +18,12 @@ export function Loader() {
       ring_element.style.animation = "fade-out 3s forwards";
       console.log("fading out ..")
       setTimeout(() => {
-        ring_element.remove()
+        try {
+          ring_element.remove()
+        } catch (err) {
+          console.log("unable to delete ring ")
+        }
+        
       }, 3000)
       
     }

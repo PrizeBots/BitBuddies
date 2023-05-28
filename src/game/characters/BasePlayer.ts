@@ -391,7 +391,7 @@ export class BasePlayer  {
       .setInteractive(new Phaser.Geom.Circle(40,5,15), Phaser.Geom.Circle.Contains)
       .on('pointerdown', (pointer: Phaser.Input.Pointer, objectsClicked: Phaser.GameObjects.GameObject[]) => { 
         this.allInfoButtonStateHandler = 'info_clicked'; 
-        this.AllInfoButtonCOntainer.setVisible(true) 
+        // this.AllInfoButtonCOntainer.setVisible(true) 
         // this.playerContainer.add([this.buttonStats, this.buttonFriend])
         // this.playerContainer.add(this.buttonContainer)
         // store.dispatch(setInfoButtonClicked(true)); 

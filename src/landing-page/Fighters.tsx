@@ -36,9 +36,10 @@ import NotificationMessageHelper from '../game/Components/NotificationMessageHel
 import { EquipView } from '../game/Components/InventoryView/EquipView';
 import WinnersReceipt from '../game/Components/MenuComponents/WinnersReceipt';
 import { Loader } from './components/Loader/Loader';
-import { SetGameLoadingState, SetShowGameServersList } from '../stores/WebsiteStateStore';
+import { SetGameLoadingState, SetSelectedGameServerURL, SetShowGameServersList } from '../stores/WebsiteStateStore';
 import { ListGameServers } from '../utils/game_server_utils';
 import { ServerListWindow } from '../game/Components/MenuComponents/ServerList/ServerListWindow';
+import REACT_APP_LOBBY_WEBSOCKET_SERVER from '../game/configs';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -234,6 +235,9 @@ function Fighters() {
     if (!isNullOrUndefined(playerAuthToken)) {
       store.dispatch(setPlayerAuthToken(playerAuthToken))
       dispatch(SetGameStarted(true));
+
+      store.dispatch(SetSelectedGameServerURL(REACT_APP_LOBBY_WEBSOCKET_SERVER));
+      
       // dispatch(SetCurrentGamePlayer(playerSelected))
 
       // dispatch(setNickName(playerSelected!.nick_name))
