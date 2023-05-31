@@ -1,16 +1,17 @@
-import { Box, Button, Grid, List, ListItemButton, ListItemText } from '@mui/material'
+import { Box, Button, FormControl, Grid, InputLabel, List, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useAppSelector } from '../../../../hooks'
 import './ServerListInfo.css'
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
 import { getEllipsisTxt } from '../../../../utils';
-import { FetchGameServerConnection } from '../../../../utils/game_server_utils';
+import { FetchGameServerConnection, ListGameServers } from '../../../../utils/game_server_utils';
 import store from '../../../../stores';
-import { SetGameLoadingState, SetSelectedRoomId, SetShowGameServersList } from '../../../../stores/WebsiteStateStore';
+import { SetGameLoadingState, SetGameServersData, SetSelectedRoomId, SetShowGameServersList } from '../../../../stores/WebsiteStateStore';
 import { SetGameStarted } from '../../../../stores/PlayerData';
 import Bootstrap from '../../../scenes/Bootstrap';
 import phaserGame from '../../../../PhaserGame';
 import { WaveLoader } from '../../../../landing-page/components/WaveLoader/WaveLoader';
+import { useState } from 'react';
 
 const ButtonView = styled(Button)`
   span {
@@ -30,6 +31,19 @@ const ButtonView = styled(Button)`
   height: 50px;
 `;
 
+const BoxWrapper = styled(Box)`
+  span {
+    color: aliceblue;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+  }
+
+  p {
+    color: #808080;
+  }
+`;
+
 const MyDivider = styled.div`
   border: 1px solid #000000;
   margin-bottom: 10px;
@@ -38,14 +52,21 @@ const MyDivider = styled.div`
 export function ServerListInfo() {
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
   const gameServersInfo = useAppSelector((state) => state.websiteStateStore.serversInfo)
+
+  const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
 
+  const SelectGameServerAndLoadInfo = async (region: string) => {
+    store.dispatch(SetGameServersData([]));
+    ListGameServers(region)
+    console.log("in SelectGameServerAndLoadInfo", region)
+    set_game_server(region);
+  }
+
   const fetchServerUrlAndConnect = async (room_id: string) => {
-    //
     console.log(room_id)
     await FetchGameServerConnection( room_id )
     store.dispatch(SetSelectedRoomId(room_id))
-
     startGame()
   }
 
@@ -55,69 +76,93 @@ export function ServerListInfo() {
     store.dispatch(SetGameLoadingState(true));
     bootstrap.launchGame(store.getState().playerDataStore.current_game_player_info)
     store.dispatch(SetShowGameServersList(false));
-    
   }
 
   return(
     <div>
       <List>
-      {
-        gameServersInfo.length ? 
-        gameServersInfo.map((serverinfo, index) => {
-          return(
-            <Box sx={{ flexGrow: 1 }} key={uuidv4()}>
-              <ListItemButton key={uuidv4()}>
-              <Grid container spacing={0}>
-                <Grid item xs={1} style={{
+      
+            <BoxWrapper sx={{ flexGrow: 1 }} key={uuidv4()}>
+              <FormControl fullWidth style={{
+                alignItems: 'center',
+                paddingBottom: '20px',
+                paddingTop: '20px',
+              }}>
+                <span>World Servers</span>
+                <p> Please connect to your nearest world server for best experience</p>
+                <Select
+                  id="demo-simple-select"
+                  value={game_server}
+                  onChange={(event: SelectChangeEvent) => {
+                    SelectGameServerAndLoadInfo(event.target.value as string)
+                  }}
+                  style={{
+                    width: '300px',
+                  }}
+                >
+                  <MenuItem value={"Washington_DC"}>Washington_DC</MenuItem>
+                  <MenuItem value={"Mumbai"}>Mumbai</MenuItem>
+                </Select>
+              </FormControl>
+              {
+                gameServersInfo && gameServersInfo.length ? 
+                  gameServersInfo.map((serverinfo, index) => {
+                    return(
+                      <>
+                        <ListItemButton key={uuidv4()}>
+                <Grid container spacing={0}>
+                  <Grid item xs={1} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'start'
+                    }}>
+                      <h3 style={{color: 'aliceblue' }}> {index + 1} </h3>
+                  </Grid>
+                  <Grid item xs={8} style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'start'
+                    justifyContent: 'center'
                   }}>
-                    <h3 style={{color: 'aliceblue' }}> {index + 1} </h3>
-                </Grid>
-                <Grid item xs={8} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <ListItemText
-                    primary={
-                      <span style={{
-                        color: "aliceblue",
-                      }}>
-                        {`active - ${serverinfo.active_users}/ 100`}
+                    <ListItemText
+                      primary={
+                        <span style={{
+                          color: "aliceblue",
+                        }}>
+                          {`active - ${serverinfo.active_users}/ 100`}
+                        </span>
+                      } 
+                      secondary={getEllipsisTxt(serverinfo.room_id)}
+                    />
+          
+                  </Grid>
+                  <Grid item xs={3} style={{
+                    alignItems: 'center',
+                    display: 'flex'
+                  }}>
+                    
+                    <ButtonView variant="contained" onClick={() => {
+                      fetchServerUrlAndConnect(serverinfo.room_id)
+                    }}>
+                      <span>
+                        Connect
                       </span>
-                    } 
-                    secondary={getEllipsisTxt(serverinfo.room_id)}
-                  />
-        
+                    </ButtonView>
+                  </Grid>
                 </Grid>
-                <Grid item xs={3} style={{
-                  alignItems: 'center',
-                  display: 'flex'
-                }}>
-                  
-                  <ButtonView variant="contained" onClick={() => {
-                    fetchServerUrlAndConnect(serverinfo.room_id)
-                  }}>
-                    <span>
-                      Connect
-                    </span>
-                  </ButtonView>
-                </Grid>
-              </Grid>
               
               </ListItemButton>
               <MyDivider></MyDivider>
-            </Box>
-          )
-        }):
-        <div>
+                      </>
+                    )
+                  }):<div>
 
-          <WaveLoader />
-        </div>
+                  <WaveLoader />
+                </div>
+              }
+              
+            </BoxWrapper>
+          
 
-      }
       </List>
     </div>
   )

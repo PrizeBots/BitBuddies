@@ -1,6 +1,6 @@
 import phaserGame from "../../../PhaserGame";
 import store from "../../../stores";
-import { BrewMachinePunched, OpenAtmView, ShowBrewEjectAnimation } from "../../../stores/UserActions";
+import { BrewMachinePunched, OpenAtmView, ShowBrewEjectAnimation, TurnMouseClickOff } from "../../../stores/UserActions";
 import { HitFightMachine } from "../../../stores/UserActions";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../../../stores/UserWebsiteStore";
 import Boundary, { Rect, calculateRect, calculateRectReverse } from "../../Components/Boundary";
@@ -211,6 +211,7 @@ export class HQ {
         
       } else {
         store.dispatch(OpenAtmView(false));
+        // store.dispatch(TurnMouseClickOff(false))
       }
 
       if (
@@ -236,6 +237,7 @@ export class HQ {
         
       } else {
         store.dispatch(BrewMachinePunched(false))
+        // store.dispatch(TurnMouseClickOff(false))
       }
 
       // console.log("-collision_with--",((tempMyPlayer.gameObject.sprite.x > this.game.fightMachineOverlapRectReverse.leftX &&tempMyPlayer.gameObject.sprite.x < this.game.fightMachineOverlapRectReverse.leftX + this.game.fightMachineOverlapRectReverse.width )
@@ -280,37 +282,45 @@ export class HQ {
         this.game.fightMachineOverlapText.setDepth(-1);
           store.dispatch(HitFightMachine(false));
         }
+        // store.dispatch(TurnMouseClickOff(false))
     }
 
     if (store.getState().userActionsDataStore.showBrewEjectAnimation) {
+      this.game.lobbySocketConnection.send(JSON.stringify({
+        event: "eject_brew",
+        walletAddress: store.getState().web3store.userAddress,
+        x: (this.brewRect.leftX + this.brewRect.width/2), 
+        y: (this.brewRect.leftY + this.brewRect.height/2),
+      }))
       store.dispatch(ShowBrewEjectAnimation(false))
-      this.brewCanSprite = this.scene.add.image(
-        (this.brewRect.leftX + this.brewRect.width/2), 
-        (this.brewRect.leftY + this.brewRect.height/2), 
-        "brew-can"
-      )
-      this.brewCanSprite.setDisplaySize(7, 14)
-      console.log("brew-- ", this.brewCanSprite.x, this.brewCanSprite.y)
-      this.brewCanSprite.setDepth(this.brewCanSprite.y)
-      this.scene.tweens.add({
-        targets: this.brewCanSprite,
-        x: { from: this.brewCanSprite.x, to: this.brewCanSprite.x - 50, duration: 500, ease: 'Power1' },
-        y: { from: this.brewCanSprite.y, to: this.brewCanSprite.y + 20, duration: 500, ease: 'Sine.easeInOut' }
-      }).once("complete", () => {
-        console.log("--- complete animation ")
+      // this.brewCanSprite = this.scene.add.image(
+      //   (this.brewRect.leftX + this.brewRect.width/2), 
+      //   (this.brewRect.leftY + this.brewRect.height/2), 
+      //   "brew-can"
+      // )
+      // this.brewCanSprite.setDisplaySize(7, 14)
+      // console.log("brew-- ", this.brewCanSprite.x, this.brewCanSprite.y)
+      // this.brewCanSprite.setDepth(this.brewCanSprite.y)
+      // this.scene.tweens.add({
+      //   targets: this.brewCanSprite,
+      //   x: { from: this.brewCanSprite.x, to: this.brewCanSprite.x - 25 - 25 * Math.random(), duration: 500, ease: 'Power1' },
+      //   y: { from: this.brewCanSprite.y, to: this.brewCanSprite.y + 10 + 10 * Math.random(), duration: 500, ease: 'Sine.easeInOut' }
+      // }).once("complete", () => {
+      //   console.log("--- complete animation ")
         
-        setTimeout(() => {
+      //   setTimeout(() => {
           
-          this.scene.tweens.add({
-            targets: this.brewCanSprite,
-            y: 0,
-            x: 400,
-            duration: 2000,
-          }).once("complete", () => {
-            this.brewCanSprite.destroy()
-          })
-        }, 5000)
-      })
+      //     this.scene.tweens.add({
+      //       targets: this.brewCanSprite,
+      //       y: 0,
+      //       x: 400,
+      //       duration: 2000,
+      //     }).once("complete", () => {
+      //       this.brewCanSprite.destroy()
+      //     })
+      //   }, 5000)
+      // })
+
     }
   }
 }

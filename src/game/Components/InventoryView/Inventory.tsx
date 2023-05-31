@@ -75,32 +75,19 @@ export function Inventory() {
     for (let j = 0; j < tempAsset.active_assets; j++) {
       brewArr.push(0)
     }
-    // for (let j = 0; j < tempAsset.used_assets; j++) {
-    //   nonBrewArrMap.push(0)
-    // }
-    // brewArr.push(0)
-    // showButtonGroupIndexArray.push(false);
   }
-  // console.log("assets --- ", brewArr.length, nonBrewArrMap.length, emptyArray.length)
   for (let i = 0; i < 9 - (brewArr.length + nonBrewArrMap.length); i++) {
     emptyArray.push(0)
   }
 
-  // console.log("assets --- ", brewArr.length, nonBrewArrMap.length, emptyArray.length)
-
-
-  // for(let i = 0 ; i< 9 - numberOfBrew; i++) {
-  //   nonBrewArrMap.push(0)
-  // }
-
   async function useBrew() {
     const res = await useAssetsApi("brew")
     if (res) {
-      const otherPlayer = game.otherPlayers.get(store.getState().web3store.player_id)
-      if (otherPlayer?.gameObject) {
-        // otherPlayer.drinkStarted = true
-        // otherPlayer.drinking = false
-      }
+      // const otherPlayer = game.otherPlayers.get(store.getState().web3store.player_id)
+      // if (otherPlayer?.gameObject) {
+      //   // otherPlayer.drinkStarted = true
+      //   // otherPlayer.drinking = false
+      // }
       setTimeout(() => {
         game.lobbySocketConnection.send(JSON.stringify({
           event: "brew_used",

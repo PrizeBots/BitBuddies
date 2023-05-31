@@ -87,8 +87,11 @@ const NewContent = styled.div`
   flex-direction: column;
   gap: 20px;
   margin: 50px 0;
-  align-items: center;
-  justify-content: center;
+  // align-items: center;
+  // justify-content: center;
+
+  padding-left: 30vw;
+  // padding-top: 5vh;
 `
 
 const ImageWraper = styled.div`
@@ -464,7 +467,6 @@ function Fighters() {
       <WinnersReceipt />
       
       <SendingFriendRequest />
-      <Loader />
     </>
   } else {
       totalUI = <>
@@ -553,7 +555,7 @@ function Fighters() {
 
               
 
-              <Box sx={{ minWidth: 200 }}>
+              {/* <Box sx={{ minWidth: 200 }}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Servers</InputLabel>
                   <Select
@@ -563,16 +565,15 @@ function Fighters() {
                     label="Age"
                     onChange={(event: SelectChangeEvent) => {
                       SelectGameServerAndLoadInfo(event.target.value as string)
-                      // set_game_server(event.target.value as string)
+                    }}
+                    style={{
+                      width: '300px',
                     }}
                   >
                     <MenuItem value={"Washington_DC"}>Washington_DC</MenuItem>
-                    {/* <MenuItem value={"Mumbai"}>Mumbai</MenuItem> */}
-                    {/* <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem> */}
                   </Select>
                 </FormControl>
-              </Box>
+              </Box> */}
 
               <ButtonView 
                 variant="contained" 
@@ -598,6 +599,7 @@ function Fighters() {
         key={vertical + horizontal}
       />
       <ServerListWindow />
+      <Loader />
       {(!playerSelectedBool || gameStarted)? totalUI: animationUI}
     </div>
   )

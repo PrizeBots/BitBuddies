@@ -83,6 +83,9 @@ interface UserActionData {
   
   openAtmView: boolean,
   showBrewEjectAnimation: boolean,
+
+  showBrewEjectAnimationFromServer: boolean,
+
   brewMachinePunched: boolean,
 
   openBetWindowView: boolean,
@@ -158,6 +161,9 @@ const initialState: UserActionData = {
   showGotBackHitSprite: false,
   showDownSprite: false,
   showStunnedSprite: false,
+
+
+  showBrewEjectAnimationFromServer: false,
 
   // chat
   focussedOnChat: false,
@@ -359,6 +365,10 @@ export const userActionData = createSlice({
       state.showBrewEjectAnimation = action.payload;
     },
 
+    ShowBrewEjectAnimationFromServer: (state: { showBrewEjectAnimationFromServer: boolean; }, action: PayloadAction<boolean>) => {
+      state.showBrewEjectAnimationFromServer = action.payload;
+    },
+
     ShowBrew: (state: { showBrewEjectAnimation: boolean; }, action: PayloadAction<boolean>) => {
       state.showBrewEjectAnimation = action.payload;
     },
@@ -389,7 +399,7 @@ export const {
   ChangeFightStartTime, 
   ShowFightConfirmationBox, ShowFightConfirmationTime, ShowFightConfirmationStartTime,
   ShowGotHitSprite, 
-  FightPreStart, ClearFighterInfo,
+  FightPreStart, ClearFighterInfo, ShowBrewEjectAnimationFromServer,
   ShowGotBacktHitSprite, ShowDownSprite, ShowStunnedSprite, ShowChatWindow, SetFocussedOnChat,
   ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
   OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData,

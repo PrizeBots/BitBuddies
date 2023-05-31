@@ -62,7 +62,8 @@ export default function InGameAssetPurchase() {
   const [transactionStarted, setTransactionStarted] = useState(false);
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   const game = phaserGame.scene.keys.game as Game;
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  // const game = phaserGame.scene.keys.game as Game
 
   const closeFunction = () => {
     // store.dispatch(BrewMachinePunched(false))
@@ -131,7 +132,7 @@ export default function InGameAssetPurchase() {
         <FriendRequestBox>
           <h2> BREW </h2>
           <MyDivider></MyDivider>
-          <h3> How Many? </h3>
+          {/* <h3> How Many? </h3>
 
           <h3>
             <input type="number" 
@@ -153,7 +154,7 @@ export default function InGameAssetPurchase() {
                 marginBottom: '20px'
               }}
             >
-            </input></h3>
+            </input></h3> */}
           <h3 style={{marginBottom: '20px'}}>Price: 100 Bits</h3>
           <h3 style={{marginBottom: '20px'}}>Total BITS: {parseWBTCBalanceV3(10000 * quantity)}</h3>
           {transactionStarted?

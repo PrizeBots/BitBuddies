@@ -283,6 +283,17 @@ export default class Game extends Phaser.Scene {
         last_position_y: random_spawn_points[this.random_pos_selected].y,
         orientation: "right",
       }))
+      // console.log("important_message--", {
+      //   event: "joined",
+      //   walletAddress: store.getState().web3store.userAddress,
+      //   room_id:"lobby",
+      //   sprite_url: this.nftData.data.sprite_image,
+      //   minted_id: this.nftData.minted_id,
+      //   all_nft_data: this.nftData,
+      //   last_position_x: random_spawn_points[this.random_pos_selected].x,
+      //   last_position_y: random_spawn_points[this.random_pos_selected].y,
+      //   orientation: "right",
+      // })
       store.dispatch(SetGameLoadingState(false))
       this.lobbySocketConnection.send(JSON.stringify({
         event: "geoInfo",
@@ -1505,6 +1516,14 @@ export default class Game extends Phaser.Scene {
                     action_id,
                     orientation_switch: true,
                   }));
+                  // console.log("important--- move--", {
+                  //   event: "move",
+                  //   delta: delta,
+                  //   walletAddress: store.getState().web3store.userAddress,
+                  //   keys: this.keys,
+                  //   action_id,
+                  //   orientation_switch: true,
+                  // })
                 }
               }
             }
@@ -1742,6 +1761,7 @@ export default class Game extends Phaser.Scene {
           && _player.gameObject?.sprite.anims 
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
+          console.log("other_players_loop")
 
           if (_player.gotHit) {
             _player.gameObject.sprite.play("gotHit-"+_player.wallet_address + "_" + _player.minted_id )

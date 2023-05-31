@@ -11,19 +11,26 @@ export function Loader() {
 
   if (!gameLoading && loadingState) {
     const ring_element = document.getElementById("ring-wrapper-id");
+    // const ring = document.getElementById("ring-id");
     setTimeout(() => {
       loadingState = false
-    }, 3000)
-    if (ring_element) {
+    }, 4000)
+    if (ring_element 
+      // && ring_element.parentNode
+      // && ring
+      ) {
       ring_element.style.animation = "fade-out 3s forwards";
+      console.log("ring---", ring_element)
       console.log("fading out ..")
       setTimeout(() => {
         try {
-          ring_element.remove()
+          console.log("ring---removing ring wrapper")
+          // ring_element.parentNode!.removeChild(ring_element)
+          // ring_element.remove()
+          document.removeChild(ring_element)
         } catch (err) {
-          console.log("unable to delete ring ")
+          console.log("ring---unable to delete ring ", err)
         }
-        
       }, 3000)
       
     }
@@ -34,7 +41,7 @@ export function Loader() {
     {
       loadingState && 
         <div className="ring-wrapper" id="ring-wrapper-id">
-          <div className="ring">Loading
+          <div className="ring" id="ring-id">Loading
             <span className="ring-span"></span>
           </div>
         </div>

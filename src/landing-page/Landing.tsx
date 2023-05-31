@@ -24,6 +24,7 @@ const Backdrop = styled.div`
   height: 100%;
   width: 100%;
   background-color: #262626;
+  // background-color: #111B28;
 `
 
 
