@@ -10,7 +10,7 @@ import store from '../../stores';
 import { ethers } from 'ethers';
 import { randomGenarateDripPreSaleV2, randomGenaratePreSaleV2, updateOneKclubNFTs } from '../../hooks/ApiCaller';
 import { PRESALE_CONTRACT_ADDRESS } from '../../contract/presale_constants';
-import { parseUSDCBalance, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
+import { parseUSDCBalance, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
 import Modal from '@mui/material/Modal';
 import ReactPlayer from 'react-player'
 import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNotificationBool, SetSuccessNotificationMessage } from '../../stores/NotificationStore';
@@ -417,6 +417,7 @@ export default function MintPage() {
     setSnackBarOpen(true);
 
     updatePresaleMintedCount()
+    updateDripPresaleMintedCount()
   }
 
   const oneKClubMint = async () => {
@@ -800,7 +801,7 @@ export default function MintPage() {
           </h1>
 
           <h1>
-            {totalPresaleCount - preSaleMintedNFT} Remaining
+            {totalDripPresaleCount - dripPresaleMintedNFT} Remaining
           </h1>
 
         </CustomBox>

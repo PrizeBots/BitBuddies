@@ -1,10 +1,10 @@
 import { BigNumber as BigNumberEthers } from "ethers";
-import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
+import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getDripMintCardsMintedCouponsCount, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
 import store from "../stores";
 import { SetBetBalance, SetWalletBalance, SetWbtcBalance } from "../stores/Web3StoreBalances";
 import BigNumber from "bignumber.js";
 import { isNullOrUndefined } from "util";
-import { SetCurrentPriceOfOnekCard, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
+import { SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
 
 export async function getBalances(currentUser: string) {
   console.log("in_get_balance---", currentUser)
@@ -95,6 +95,17 @@ export async function updatePresaleMintedCount() {
   } catch (err) {
     console.log("error in updatepresale count total ", err);
     store.dispatch(SetTotalPreSaleNFT(0))
+  }
+}
+
+export async function updateDripPresaleMintedCount() {
+  try {
+    const count = await getDripMintCardsMintedCouponsCount()
+    console.log("presale minted ... ", count);
+    store.dispatch(SetTotalDripPreSaleNFT(Number(count)))
+  } catch (err) {
+    console.log("error in updatepresale count total ", err);
+    store.dispatch(SetTotalDripPreSaleNFT(0))
   }
 }
 

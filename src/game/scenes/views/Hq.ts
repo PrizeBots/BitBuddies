@@ -1,12 +1,13 @@
 import phaserGame from "../../../PhaserGame";
 import store from "../../../stores";
-import { BrewMachinePunched, OpenAtmView, ShowBrewEjectAnimation, TurnMouseClickOff } from "../../../stores/UserActions";
+import { BrewMachinePunched, OpenAtmView, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
 import { HitFightMachine } from "../../../stores/UserActions";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../../../stores/UserWebsiteStore";
 import Boundary, { Rect, calculateRect, calculateRectReverse } from "../../Components/Boundary";
 import { IKeysInfo } from "../../characters/IPlayer";
 import Bootstrap from "../Bootstrap";
 import Game from "../Game";
+import { DEFAULT_SPRITE_DISPLAY_HEIGHT } from "../../configs";
 
 
 export class HQ {
@@ -293,34 +294,43 @@ export class HQ {
         y: (this.brewRect.leftY + this.brewRect.height/2),
       }))
       store.dispatch(ShowBrewEjectAnimation(false))
-      // this.brewCanSprite = this.scene.add.image(
-      //   (this.brewRect.leftX + this.brewRect.width/2), 
-      //   (this.brewRect.leftY + this.brewRect.height/2), 
-      //   "brew-can"
-      // )
-      // this.brewCanSprite.setDisplaySize(7, 14)
-      // console.log("brew-- ", this.brewCanSprite.x, this.brewCanSprite.y)
-      // this.brewCanSprite.setDepth(this.brewCanSprite.y)
+    }
+
+    // if (store.getState().userActionsDataStore.showBrewEjectAnimationFromServer) {
+    //   store.dispatch(ShowBrewEjectAnimationFromServer(false))
+    //   this.brewCanSprite = this.scene.add.image(
+    //     (this.brewRect.leftX + this.brewRect.width/2), 
+    //     (this.brewRect.leftY + this.brewRect.height/2), 
+    //     "brew-can"
+    //   )
+    //   this.brewCanSprite.setDisplaySize(7, 14)
+    //   console.log("brew-- ", this.brewCanSprite.x, this.brewCanSprite.y)
+    //   this.brewCanSprite.setDepth(this.brewCanSprite.y - DEFAULT_SPRITE_DISPLAY_HEIGHT/2)
+    //   this.scene.tweens.add({
+    //     targets: this.brewCanSprite,
+    //     x: { from: this.brewCanSprite.x, to: this.brewCanSprite.x - 25 - 25 * Math.random(), duration: 500, ease: 'Power1' },
+    //     y: { from: this.brewCanSprite.y, to: this.brewCanSprite.y + 10 + 10 * Math.random(), duration: 500, ease: 'Sine.easeInOut' }
+    //   }).once("complete", () => {
+    //     //
+    //   })
+
+    // }
+
+    if (store.getState().userActionsDataStore.magnet_move_brew.state) {
+      // store.dispatch(ShowMagnetMoveBrew({
+      //   state: false,
+      //   x: 0,
+      //   y: 0,
+      // }))
+      // const data = store.getState().userActionsDataStore.magnet_move_brew;
       // this.scene.tweens.add({
       //   targets: this.brewCanSprite,
-      //   x: { from: this.brewCanSprite.x, to: this.brewCanSprite.x - 25 - 25 * Math.random(), duration: 500, ease: 'Power1' },
-      //   y: { from: this.brewCanSprite.y, to: this.brewCanSprite.y + 10 + 10 * Math.random(), duration: 500, ease: 'Sine.easeInOut' }
+      //   x: { from: this.brewCanSprite.x, to: data.x, duration: 500, ease: 'Power1' },
+      //   y: { from: this.brewCanSprite.y, to: data.y, duration: 500, ease: 'Power1' }
       // }).once("complete", () => {
-      //   console.log("--- complete animation ")
-        
-      //   setTimeout(() => {
-          
-      //     this.scene.tweens.add({
-      //       targets: this.brewCanSprite,
-      //       y: 0,
-      //       x: 400,
-      //       duration: 2000,
-      //     }).once("complete", () => {
-      //       this.brewCanSprite.destroy()
-      //     })
-      //   }, 5000)
+      //   //
+      //   this.brewCanSprite.destroy()
       // })
-
     }
   }
 }

@@ -74,7 +74,7 @@ export const bitFightersCollection = createSlice({
   },
 })
 
-export const { addIntoArray, clearArray, setArray, setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, SetTotalOneKClubNF, SetTotalMintedOneKClubNF, SetCurrentPriceOfOnekCard } =
+export const { addIntoArray, clearArray, setArray, setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, SetTotalOneKClubNF, SetTotalMintedOneKClubNF, SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT } =
   bitFightersCollection.actions
 
 export default bitFightersCollection.reducer

@@ -84,7 +84,15 @@ interface UserActionData {
   openAtmView: boolean,
   showBrewEjectAnimation: boolean,
 
-  showBrewEjectAnimationFromServer: boolean,
+  showBrewEjectAnimationFromServer: {
+    state: boolean,
+    brew_id: string,
+  },
+  magnet_move_brew: {
+    state: boolean,
+    x: number,
+    y: number,
+  },
 
   brewMachinePunched: boolean,
 
@@ -163,7 +171,15 @@ const initialState: UserActionData = {
   showStunnedSprite: false,
 
 
-  showBrewEjectAnimationFromServer: false,
+  showBrewEjectAnimationFromServer: {
+    state: false,
+    brew_id: ""
+  },
+  magnet_move_brew: {
+    state: false,
+    x: 0,
+    y: 0
+  },
 
   // chat
   focussedOnChat: false,
@@ -365,8 +381,12 @@ export const userActionData = createSlice({
       state.showBrewEjectAnimation = action.payload;
     },
 
-    ShowBrewEjectAnimationFromServer: (state: { showBrewEjectAnimationFromServer: boolean; }, action: PayloadAction<boolean>) => {
+    ShowBrewEjectAnimationFromServer: (state: { showBrewEjectAnimationFromServer: any; }, action: PayloadAction<any>) => {
       state.showBrewEjectAnimationFromServer = action.payload;
+    },
+
+    ShowMagnetMoveBrew: (state: { magnet_move_brew: any; }, action: PayloadAction<any>) => {
+      state.magnet_move_brew = action.payload;
     },
 
     ShowBrew: (state: { showBrewEjectAnimation: boolean; }, action: PayloadAction<boolean>) => {
@@ -402,7 +422,7 @@ export const {
   FightPreStart, ClearFighterInfo, ShowBrewEjectAnimationFromServer,
   ShowGotBacktHitSprite, ShowDownSprite, ShowStunnedSprite, ShowChatWindow, SetFocussedOnChat,
   ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
-  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData,
+  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew,
   // SetFightInfo 
 } = userActionData.actions
 

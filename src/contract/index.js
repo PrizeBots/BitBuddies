@@ -644,6 +644,18 @@ export async function getPreSaleCountTotal() {
   return presaleMintedCount;
 }
 
+export async function getDripMintCardsMintedCouponsCount() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: PRESALE_DRIP_CONTRACT_V2,
+    functionName: "getMintedCouponsCount",
+    abi: PRESALE_DRIP_ABI,
+  };
+  const presaleMintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- getMintedCouponsCount ", presaleMintedCount);
+  return presaleMintedCount;
+}
+
 export async function getOneKMintedTotalCount() {
   await Moralis.enableWeb3()
   const sendOptions = {

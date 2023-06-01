@@ -7,7 +7,7 @@ import { IOtherPlayer } from "../characters/OtherPlayer";
 import { ChangeCombinedQueueData, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ChangeNotificationMessageFromServer, ChangeNotificationStateFromServer, ChangePath, ChangeShowControls, ChangeShowMenuBox, ChangeShowQueueBox, IQueueCombined, ShowWinnerCardAtFightEnd } from "../../stores/UserWebsiteStore";
 // import { MyPlayer } from "../characters/MyPlayer";
 import { OtherPlayer } from "../characters/OtherPlayer";
-import { ClearFighterInfo, FightContinue, FightEnd, FightPreStart, FightStart, IfightersInfo, SetCurrentOtherPlayerFighting, SetCurrentPlayerFighting, SetFightersInfo, SetFocussedOnChat, ShowChatWindow, ShowFightConfirmationBox, ShowFightConfirmationStartTime, ShowFightConfirmationTime } from "../../stores/UserActions";
+import { ClearFighterInfo, FightContinue, FightEnd, FightPreStart, FightStart, IfightersInfo, SetCurrentOtherPlayerFighting, SetCurrentPlayerFighting, SetFightersInfo, SetFocussedOnChat, ShowBrewEjectAnimationFromServer, ShowChatWindow, ShowFightConfirmationBox, ShowFightConfirmationStartTime, ShowFightConfirmationTime, ShowMagnetMoveBrew } from "../../stores/UserActions";
 import { IKeysInfo, INFTDataOfConnections, IPlayerData } from "../characters/IPlayer";
 import { SetCurrentGamePlayer } from "../../stores/PlayerData";
 import { FightInfoText } from "../Components/FightInfoText";
@@ -31,6 +31,7 @@ import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 // import { ActionManager } from "../ActionManager";
 import { v4 as uuidv4 } from 'uuid';
 import { SetGameLoadingState, SetShowGameServersList } from "../../stores/WebsiteStateStore";
+import { BrewManager, IBrew } from "../characters/BrewMananger";
 
 
 const textAreaVisible = false;
@@ -49,6 +50,7 @@ export default class Game extends Phaser.Scene {
   public otherPlayers = new Map<string, IOtherPlayer>()
 
   public mouses: Array<IMouse> = [];
+  public brews: Array<IBrew> = [];
 
   otherPlayersGroup!: Phaser.Physics.Arcade.Group
   pressedKeys: Array<any>;
@@ -1233,6 +1235,25 @@ export default class Game extends Phaser.Scene {
             }
           })
         }
+
+        if (obj.event === "eject_brew_server") {
+          console.log(obj)
+          this.brews.push({
+              brew_id: obj.brew_id,
+              gameObject: new BrewManager(this, obj.fromX, obj.fromY, obj.toX, obj.toY)
+            }
+          )
+        }
+
+        if (obj.event === "magnet_move_brew") {
+          console.log(obj)
+          for(let i =0; i < this.brews.length;i++) {
+            if (this.brews[i].brew_id === obj.brew_id) {
+              this.brews[i].gameObject.MagnetMoveBrew(obj.toX, obj.toY)
+              break
+            }
+          }
+        }
       }
 
       if (objs.event === "all_chats") {
@@ -1306,7 +1327,7 @@ export default class Game extends Phaser.Scene {
           // }
         })
       }
-      
+
       this.load.on('filecomplete', (key: string, val:any) => {
         // console.log("filecomplete- live_players_init", key, val)
         if (this.otherPlayers.get(key) && key.split("_").length === 2) { 
