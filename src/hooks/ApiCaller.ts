@@ -647,6 +647,30 @@ export const randomGenaratePreSale = async (userAddress: string) => {
   return output;
 }
 
+export const randomGenaratePreSaleV2 = async (userAddress: string, quantity: number) => {
+  console.log("randomGenaratePreSale clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  if (quantity === 0) {
+    quantity = 1
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v2/generator/create/preSaleNFT/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "user_wallet_address" : userAddress,
+      "quantity": quantity
+    })
+  })
+  const output = await result.json();
+  console.log("output in randomGenaratePreSale --", output)
+  return output;
+}
+
 
 export const ListGameServersApiCall = async (userAddress: string, region: string) => {
   console.log("ListGameServersApiCall clicked..", userAddress)

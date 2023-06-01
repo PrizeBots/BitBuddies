@@ -105,6 +105,17 @@ export const PRESALE_ABI = [{
   },
   {
     "inputs": [],
+    "name": "BFContractAddress",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "_tokenIds",
     "outputs": [{
       "internalType": "uint256",
@@ -149,10 +160,38 @@ export const PRESALE_ABI = [{
   {
     "inputs": [{
       "internalType": "uint256",
+      "name": "_tokenID",
+      "type": "uint256"
+    }],
+    "name": "burnMintCard",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
       "name": "_amount",
       "type": "uint256"
     }],
     "name": "changePriceOfPreSaleNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_newReferrerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "changeReferrerAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -170,6 +209,17 @@ export const PRESALE_ABI = [{
       }
     ],
     "name": "changeTokenURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "totalQuantity",
+      "type": "uint256"
+    }],
+    "name": "changeTotalPreSaleCoupons",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -253,17 +303,51 @@ export const PRESALE_ABI = [{
   },
   {
     "inputs": [{
-      "internalType": "string",
-      "name": "_tokenURI",
-      "type": "string"
-    }],
-    "name": "mintPreSaleBitfighterCard",
-    "outputs": [{
+        "internalType": "string[]",
+        "name": "_tokenURIs",
+        "type": "string[]"
+      },
+      {
+        "internalType": "address",
+        "name": "_referrerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "mintMultiPresaleBitfighterCard",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "string",
+        "name": "_tokenURI",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "airdrop_to",
+        "type": "address"
+      }
+    ],
+    "name": "mintPreSaleBitfighterCardAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
       "internalType": "uint256",
       "name": "",
       "type": "uint256"
     }],
-    "stateMutability": "nonpayable",
+    "name": "mintedIdToReferrerAddressMapping",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -273,6 +357,21 @@ export const PRESALE_ABI = [{
       "internalType": "string",
       "name": "",
       "type": "string"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "name": "originalMinters",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -390,10 +489,32 @@ export const PRESALE_ABI = [{
   {
     "inputs": [{
       "internalType": "address",
+      "name": "bitfightersContractAddress",
+      "type": "address"
+    }],
+    "name": "setBitfighterContractAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
       "name": "_wallet",
       "type": "address"
     }],
-    "name": "setSystemWalletAddress",
+    "name": "setSystemWalletAddress1",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_wallet",
+      "type": "address"
+    }],
+    "name": "setSystemWalletAddress2",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -448,7 +569,18 @@ export const PRESALE_ABI = [{
   },
   {
     "inputs": [],
-    "name": "systemWalletAddress",
+    "name": "systemWalletAddress1",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "systemWalletAddress2",
     "outputs": [{
       "internalType": "address",
       "name": "",
@@ -481,6 +613,23 @@ export const PRESALE_ABI = [{
       "type": "uint256"
     }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "address",
+        "name": "send_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -541,7 +690,7 @@ export const PRESALE_ABI = [{
 ]
 
 
-const DEV_PRESALE_ADDRESS = "0xaa1d42E462d638c930ae356F166Cc1F759e0241f"
+const DEV_PRESALE_ADDRESS = "0x62939359D7D87b71EB76cb993f0fecB23bA6A27A"
 const PROD_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
 export let PRESALE_CONTRACT_ADDRESS = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {

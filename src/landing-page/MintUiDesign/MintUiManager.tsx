@@ -5,10 +5,10 @@ import { Box, Typography } from '@mui/material';
 import phaserGame from '../../PhaserGame';
 import Bootstrap from '../../game/scenes/Bootstrap';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { approveUSDC, approveWBTC2, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleNFT } from '../../contract';
+import { approveUSDC, approveWBTC2, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleNFTV2 } from '../../contract';
 import store from '../../stores';
 import { ethers } from 'ethers';
-import { randomGenaratePreSale, updateOneKclubNFTs } from '../../hooks/ApiCaller';
+import { randomGenaratePreSaleV2, updateOneKclubNFTs } from '../../hooks/ApiCaller';
 import { PRESALE_CONTRACT_ADDRESS } from '../../contract/presale_constants';
 import { parseUSDCBalance, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
 import Modal from '@mui/material/Modal';
@@ -33,7 +33,7 @@ const ModalWrapper = styled.div`
 const BoxWrapper = styled(Box)`
   // background: #989ea4;
   border-left: 10px solid #74777b;
-  width: 30%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,7 +62,7 @@ const BoxWrapper = styled(Box)`
 const BoxWrapper2 = styled(Box)`
   border-left: 10px solid #74777b;
   width: 15%;
-  max-height: 200px;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -145,11 +145,12 @@ const CustomBox = styled(Box)`
 
   h1 {
     font-family:'Cooper Black', sans-serif;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 30px;
     color: white;
     line-height: 75%;
     padding: 10px;
+    // letter-spacing: 1px;
   }
 
   h3 {
@@ -249,7 +250,8 @@ const TopRightBox = styled.div`
 
 enum PageStates {
   Presale= "presale",
-  OneKClub = "oneKClub"
+  OneKClub = "oneKClub",
+  DripPreSale = "drip_presale"
 }
 
 // const ratio = 555/10000
@@ -268,10 +270,21 @@ export default function MintPage() {
 
   const [pageState, setPageState] = useState(PageStates.Presale)
   const [onekClubQuantity, setOnekClubQuantity] = useState(0);
+  const [mintCardsQuantity, setmintCardsQuantity] = useState(0);
+  const [refAddrMintCard, setRefAddrMintCard] = useState("");
+
+  const [dripMintCardsQuantity, setdripMintCardsQuantity] = useState(0);
+  const [driprefAddrMintCard, setdripRefAddrMintCard] = useState("");
+  const [driptagMintCard, setdriptagMintCard] = useState(0);
+  const [driptatooMintCard, setdriptatooMintCard] = useState(0);
 
 
   const totalPresaleCount = 100;
   const preSaleMintedNFT = useAppSelector((state) => state.bitFighters.preSaleNFTMintedCount);
+
+  const totalDripPresaleCount = 100;
+  const dripPresaleMintedNFT = useAppSelector((state) => state.bitFighters.drip_preSaleNFTMintedCount);
+
   const onekClubMintedNFT = useAppSelector((state) => state.bitFighters.oneKClubMintedCards);
   const totalOneKClubNFTs = useAppSelector((state) => state.bitFighters.totalOneKClubCards);
   const priceOfOneKCLubNFT = useAppSelector((state) => state.bitFighters.currentPriceOfOneKClubCard);
@@ -282,18 +295,33 @@ export default function MintPage() {
 
   const preSaleMint = async () => {
     // if (!validateFields()) return;
+    console.log("in_presalemint", mintCardsQuantity, refAddrMintCard, mintCardsQuantity <1)
+
+    if (mintCardsQuantity <1) {
+      setmintCardsQuantity(1)
+      // console.log("in_presalemint2", mintCardsQuantity, refAddrMintCard, mintCardsQuantity <1)
+      // store.dispatch(SetFailureNotificationBool(true))
+      // store.dispatch(SetFailureNotificationMessage("Quantity should be greater than 0"))
+      // return
+    }
+
+    let tempRefAddr = ""
+    if (refAddrMintCard == "") {
+      setRefAddrMintCard(ethers.constants.AddressZero)
+      tempRefAddr = ethers.constants.AddressZero
+    } else {
+      tempRefAddr = refAddrMintCard
+    }
     setMintingBool(true);
     setMintingState("Generating Your Mint Card");
 
     const allowance = await checkAllowancePresale(store.getState().web3store.userAddress)
     console.log("allowance -- >", allowance.toString());
-    if (ethers.BigNumber.from("10000000000000000").gte(ethers.BigNumber.from(allowance.toString()))) {
+    if (ethers.BigNumber.from("100000000000000").gte(ethers.BigNumber.from(allowance.toString()))) {
       console.log("less allowance")
       if (!await approveWBTC2(PRESALE_CONTRACT_ADDRESS, ethers.BigNumber.from("10000000000000000000"))) {
         setMintingBool(false);
         setMintingState("");
-        // setErrSnackBarOpen(true);
-        // setErrSnackBarMessage("Something went wrong.. ")
 
         store.dispatch(SetFailureNotificationBool(true))
         store.dispatch(SetFailureNotificationMessage("Approval Failed"))
@@ -302,11 +330,11 @@ export default function MintPage() {
       }
     }
 
-    const output = await randomGenaratePreSale(store.getState().web3store.userAddress);
+    const output = await randomGenaratePreSaleV2(store.getState().web3store.userAddress, mintCardsQuantity);
     console.log("---output ", output)
 
     setMintingState("Minting Your Mint Card");
-    const minted = await mintPreSaleNFT(output.data.nft_url);
+    const minted = await mintPreSaleNFTV2(output.data, tempRefAddr);
     if (!minted) {
       bootstrap.play_err_sound()
       setMintingBool(false);
@@ -328,7 +356,6 @@ export default function MintPage() {
     setSnackBarOpen(true);
 
     updatePresaleMintedCount()
-    // bootstrap.play_err_sound()
   }
 
   const oneKClubMint = async () => {
@@ -391,7 +418,41 @@ export default function MintPage() {
 
   const handleModalOpen = () => setOpenModal(true);
 
-  let CustomUI;
+  let CustomUI
+  const MySidePanel = <BoxWrapper2>
+            <button
+              onClick={() => setPageState(PageStates.Presale)}
+              style={{
+                backgroundColor: '#ae0606',
+              }}
+            >
+              <h4 className="cooper-black-tab">
+                Presale
+              </h4> 
+            </button>
+
+            <button
+              onClick={() => setPageState(PageStates.DripPreSale)}
+              style={{
+                backgroundColor: '#ae0606',
+              }}
+            >
+              <h4 className="cooper-black-tab">
+                Drip Presale
+              </h4> 
+            </button>
+
+            <button
+              onClick={() => setPageState(PageStates.OneKClub)}
+              style={{
+                backgroundColor: '#ae0606',
+              }}
+            >
+              <h4 className="cooper-black-tab">
+                1K Club
+              </h4> 
+            </button>
+        </BoxWrapper2>
   if (pageState === PageStates.Presale) {
     CustomUI = <Wrapper>
       <BoxWrapper className="mint_box_shadow">
@@ -415,8 +476,6 @@ export default function MintPage() {
             
         </TopRightBox>
 
-
-
         <CustomBox>
           <h1>
             Bit Fighter Mint Card
@@ -428,16 +487,49 @@ export default function MintPage() {
 
         </CustomBox>
 
+        <div>
+            <label>Quantity:</label>
+            <input type="number" 
+              placeholder='quantity' 
+              value={mintCardsQuantity}
+              onChange={(e) => {
+                setmintCardsQuantity(parseInt(e.target.value))
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+            <br />
+
+            
+            <label>Ref addres:</label>
+            <input type="text" 
+              placeholder='refAddr' 
+              value={refAddrMintCard}
+              onChange={(e) => {
+                setRefAddrMintCard(e.target.value)
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+          </div>
+
+
         <div className="cooper-black-tab" style={{
           display: 'flex',
           flexDirection: 'row',
-          // alignItems: 'center',
-          // justifyContent: 'center'
         }}>
 
-          <h1>
-            Price - 0.001 BTC.b 
-          </h1>
+          <h2>
+            Price - {mintCardsQuantity * 0.001 ? mintCardsQuantity * 0.001: 0} BTC.b 
+          </h2>
 
           <img 
             height={30}
@@ -499,30 +591,8 @@ export default function MintPage() {
 
             
       </BoxWrapper>
-          
-      <BoxWrapper2>
-          <button
-            onClick={() => setPageState(PageStates.Presale)}
-            style={{
-              backgroundColor: '#ae0606',
-            }}
-          >
-            <h4 className="cooper-black-tab">
-              Presale
-            </h4> 
-          </button>
 
-          <button
-            onClick={() => setPageState(PageStates.OneKClub)}
-            style={{
-              backgroundColor: '#ae0606',
-            }}
-          >
-            <h4 className="cooper-black-tab">
-              1K Club
-            </h4> 
-          </button>
-      </BoxWrapper2>
+      {MySidePanel}
     </Wrapper>
   } else if (pageState === PageStates.OneKClub) {
     CustomUI = <Wrapper>
@@ -547,8 +617,6 @@ export default function MintPage() {
               
           </TopRightBox>
 
-
-
           <CustomBox>
             <h1>
               OneK Club Cards
@@ -564,15 +632,7 @@ export default function MintPage() {
             display: 'flex',
             flexDirection: 'row',
           }}>
-
-            {/* <h1>
-              Price - {(200 * ((1 - Math.pow(ratio, onekClubMintedNFT+1)) / (1- ratio) )).toFixed(2)} USDC
-            </h1> */}
-
-            <h1>
-              Price - { parseUSDCBalance(priceOfOneKCLubNFT) } USDC
-            </h1>
-
+            <h1> Price - { parseUSDCBalance(priceOfOneKCLubNFT) } USDC </h1>
             <img 
               height={30}
               width={30}
@@ -581,11 +641,9 @@ export default function MintPage() {
                 margin: '10px'
               }}
             />
-
           </div>
 
           <div>
-
             <input type="number" 
               placeholder='quantity' 
               value={onekClubQuantity}
@@ -651,29 +709,183 @@ export default function MintPage() {
               
         </BoxWrapper>
           
-        <BoxWrapper2>
-            <button
-              onClick={() => setPageState(PageStates.Presale)}
-              style={{
-                backgroundColor: '#ae0606',
-              }}
-            >
-              <h4 className="cooper-black-tab">
-                Presale
-              </h4> 
-            </button>
+          {MySidePanel}
+    </Wrapper>
+  } else if (pageState === PageStates.DripPreSale) {
+    CustomUI = <Wrapper>
+      <BoxWrapper className="mint_box_shadow">
+        <TopRightBox>
+            {
+            (totalPresaleCount - preSaleMintedNFT) > 0? 
+            <>
+              <span></span>
+                <FloaterBoxRight>
+                  <h2>
+                    Ready
+                  </h2>
+                </FloaterBoxRight>
+            </>:
+            <>
+              <span className='red'>
+              </span>
+            </>
+            }
+            
+        </TopRightBox>
 
-            <button
-              onClick={() => setPageState(PageStates.OneKClub)}
+        <CustomBox>
+          <h1>
+            Drip Fighter Mint Card
+          </h1>
+
+          <h1>
+            {totalPresaleCount - preSaleMintedNFT} Remaining
+          </h1>
+
+        </CustomBox>
+
+
+          <div>
+            <label>Quantity:</label>
+            <input type="number" 
+              placeholder='quantity' 
+              value={dripMintCardsQuantity}
+              onChange={(e) => {
+                setdripMintCardsQuantity(parseInt(e.target.value))
+              }}
               style={{
-                backgroundColor: '#ae0606',
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
               }}
             >
-              <h4 className="cooper-black-tab">
-                1K Club
-              </h4> 
-            </button>
-        </BoxWrapper2>
+            </input>
+            <br />
+
+            
+            <label>Ref addres:</label>
+            <input type="text" 
+              placeholder='refAddr' 
+              value={driprefAddrMintCard}
+              onChange={(e) => {
+                setdripRefAddrMintCard(e.target.value)
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+
+            <label>Tag: 0.002 BTC.b</label>
+            <input type="checkbox" 
+              // placeholder='refAddr' 
+              value={driptagMintCard}
+              onChange={(e) => {
+                setdriptagMintCard(e.target.checked? 1: 0)
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+
+            <label>Tatoo: 0.003 BTC.b</label>
+            <input type="checkbox" 
+              // placeholder='refAddr' 
+              value={driptatooMintCard}
+              onChange={(e) => {
+                setdriptatooMintCard(e.target.checked? 1: 0)
+              }}
+              style={{
+                marginTop: '10px',
+                width: '200px',
+                marginBottom: '20px',
+              }}
+            >
+            </input>
+          </div>
+
+        <div className="cooper-black-tab" style={{
+          display: 'flex',
+          flexDirection: 'row',
+        }}>
+
+          <h2>
+            Price - {
+              dripMintCardsQuantity *  (0.001 + 0.002 * driptagMintCard + 0.003* driptatooMintCard)? 
+              dripMintCardsQuantity *  (0.001 + 0.002 * driptagMintCard + 0.003* driptatooMintCard): 
+              0 
+            } BTC.b
+          </h2>
+
+          <img 
+            height={30}
+            width={30}
+            src="bitfgihter_assets/avax.png" 
+            style={{
+              margin: '10px'
+            }}
+          />
+
+        </div>
+
+        
+
+        <div>
+          {
+            (totalPresaleCount - preSaleMintedNFT) > 0?
+              <button
+                  // onClick={() => preSaleMint()}
+                  style={{
+                    width: '150px',
+                    backgroundColor: '#ae0606',
+                    height: '80px'
+                  }}
+                >
+                  <h4 className="cooper-black-tab">
+                    Go!
+                  </h4> 
+              </button>:
+              <div style={{
+                height: '80px'
+              }}>
+              </div>
+            
+          }
+          
+        </div>
+
+        <MyDivider />
+
+          <FooterText>
+            <h2>
+              M-o-M Inc.
+            </h2>
+          </FooterText>
+
+
+          {
+            mintingBool && 
+            <ProgressBarWrapper
+              style={{
+                margin: '20px',
+              }}
+            >
+              <h3> {mintingState} </h3>
+              <ProgressBar style={{
+                backgroundColor: 'grey'
+              }} />
+            </ProgressBarWrapper>
+          }
+
+            
+      </BoxWrapper>
+
+      {MySidePanel}
     </Wrapper>
   }
 

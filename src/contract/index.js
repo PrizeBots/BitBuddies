@@ -245,7 +245,7 @@ export async function checkAllowancePresale(owner) {
     },
   };
   const _allowance = await Moralis.executeFunction(sendOptions);
-  console.log("_allowance --> ", _allowance, owner);
+  console.log("_allowance --> ", _allowance, owner, WBTC_ADDRESS, PRESALE_CONTRACT_ADDRESS);
   return _allowance;
 }
 
@@ -658,6 +658,32 @@ export async function getPriceOfOneKCard() {
   const oneK_nfts_mintedCount = await Moralis.executeFunction(sendOptions);
   console.log("----- oneK_Club_price ", oneK_nfts_mintedCount);
   return oneK_nfts_mintedCount;
+}
+
+export async function mintPreSaleNFTV2(_tokenURIs, _referrerAddress) {
+
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  // console.log("in mintPreSaleNFTV2 ", _tokenURIs)
+  console.log("in mintPreSaleNFTV2 gasPrice... ", gasPrice.toNumber())
+  const signer = web3Provider.getSigner();
+  console.log("---", _tokenURIs, _referrerAddress, PRESALE_CONTRACT_ADDRESS, await signer.getAddress())
+
+  const contract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
+
+  try {
+    const transaction = await contract.mintMultiPresaleBitfighterCard(
+      _tokenURIs, _referrerAddress, {
+        gasPrice: 5 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in mintPreSaleNFT ", err)
+    return false;
+  }
+  return true;
 }
 
 

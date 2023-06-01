@@ -7,6 +7,7 @@ interface BitFightersCollection {
   loaded: boolean
   totalNFTData: Array<any>
   preSaleNFTMintedCount: number,
+  drip_preSaleNFTMintedCount: number,
   oneKClubMintedCards: number;
   totalOneKClubCards: number;
   currentPriceOfOneKClubCard: number;
@@ -18,6 +19,7 @@ const initialState: BitFightersCollection = {
   loaded: false,
   totalNFTData: [],
   preSaleNFTMintedCount: 0,
+  drip_preSaleNFTMintedCount: 0,
   oneKClubMintedCards: 0,
   totalOneKClubCards: 0,
   currentPriceOfOneKClubCard: 0
@@ -52,6 +54,10 @@ export const bitFightersCollection = createSlice({
 
     SetTotalPreSaleNFT: (state: { preSaleNFTMintedCount: number; }, action: PayloadAction<number>) => {
       state.preSaleNFTMintedCount = action.payload;
+    },
+
+    SetTotalDripPreSaleNFT: (state: { drip_preSaleNFTMintedCount: number; }, action: PayloadAction<number>) => {
+      state.drip_preSaleNFTMintedCount = action.payload;
     },
 
     SetTotalOneKClubNF: (state: { totalOneKClubCards: number; }, action: PayloadAction<number>) => {
