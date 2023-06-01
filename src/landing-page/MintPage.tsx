@@ -47,6 +47,26 @@ const Wrapper = styled.div`
   box-shadow: 10px 10px 10px 10px #0000006f;
 `
 
+const ButtonView = styled(Button)`
+  span {
+    color: aliceblue;
+    // font-family: Monospace;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+  }
+
+  // background-color: #e60808;
+  background-color: #9c341a;
+
+  &:hover {
+    background-color: #852d17;
+  }
+
+
+  width: 300px;
+  height: 60px;
+`;
 
 const Title = styled.h1`
   font-size: 24px;
@@ -54,11 +74,14 @@ const Title = styled.h1`
   text-align: center;
 `
 
+{/* <div className="cooper-black-tab">Mint</div> */}
+
 const Title2 = styled.h1`
   font-size: 22px;
   color: #eee;
   position: absolute;
   left: 10%;
+  font-family:'Cooper Black', sans-serif;
   // padding-bottom: 40px;
   // margin-bottom: 40px;
 `
@@ -275,7 +298,7 @@ export default function OldMintPage() {
           className="primary" 
           to="/game" 
         >
-          <Button 
+          <ButtonView 
             variant="contained" 
             color="success"
             style={{
@@ -283,7 +306,7 @@ export default function OldMintPage() {
             }}
             >
               View Bitfighters
-          </Button>
+          </ButtonView>
         </Link>
       </Alert>
     </Snackbar>
@@ -345,7 +368,7 @@ export default function OldMintPage() {
               type="number"
             />
           </FormControl>
-          <Button
+          <ButtonView
             variant="outlined"
             color="secondary"
             onClick={() => mintOperation()}
@@ -353,8 +376,10 @@ export default function OldMintPage() {
               width: '150px'
             }}
           >
-            Mint
-          </Button>
+            <span>
+          Mint
+        </span>
+          </ButtonView>
         </Content>
       </Wrapper>
       {mintingBool && <ProgressBarWrapper>
