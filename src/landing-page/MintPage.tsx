@@ -40,8 +40,9 @@ const Backdrop2 = styled.div`
 `
 
 const Wrapper = styled.div`
-  background-color: #262626;
+  // background-color: #262626;
   // background: #222639;
+  background-color: #111B28;
   border-radius: 16px;
   padding: 36px 60px;
   box-shadow: 10px 10px 10px 10px #0000006f;

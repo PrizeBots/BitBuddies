@@ -5,10 +5,10 @@ import { Box, Typography } from '@mui/material';
 import phaserGame from '../../PhaserGame';
 import Bootstrap from '../../game/scenes/Bootstrap';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { approveUSDC, approveWBTC2, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleNFTV2 } from '../../contract';
+import { approveUSDC, approveWBTC2, checkAllowanceGeneral, checkAllowanceOneKClub, checkAllowancePresale, mintOneKClubCard, mintPreSaleDripNFTV2, mintPreSaleNFTV2 } from '../../contract';
 import store from '../../stores';
 import { ethers } from 'ethers';
-import { randomGenaratePreSaleV2, updateOneKclubNFTs } from '../../hooks/ApiCaller';
+import { randomGenarateDripPreSaleV2, randomGenaratePreSaleV2, updateOneKclubNFTs } from '../../hooks/ApiCaller';
 import { PRESALE_CONTRACT_ADDRESS } from '../../contract/presale_constants';
 import { parseUSDCBalance, updateOneKClubMintedCount, updatePresaleMintedCount } from '../../utils/web3_utils';
 import Modal from '@mui/material/Modal';
@@ -17,6 +17,7 @@ import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNo
 import NotificationMessageHelper from '../../game/Components/NotificationMessageHelper';
 import { onek_club_contract_adress } from '../../contract/onek_club_nft_constants';
 import { isNullOrUndefined } from 'util';
+import { PRESALE_DRIP_CONTRACT_V2 } from '../../contract/presale_drip_constants';
 
 
 
@@ -335,6 +336,66 @@ export default function MintPage() {
 
     setMintingState("Minting Your Mint Card");
     const minted = await mintPreSaleNFTV2(output.data, tempRefAddr);
+    if (!minted) {
+      bootstrap.play_err_sound()
+      setMintingBool(false);
+      setMintingState("");
+
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage("Minting Failed"))
+      return;
+    } else {
+      bootstrap.play_dr_bits_success_sound()
+      store.dispatch(SetSuccessNotificationBool(true))
+      store.dispatch(SetSuccessNotificationMessage(`Success`))
+      setTimeout(() => {
+        handleModalOpen()
+      }, 1000)
+    }
+
+    setMintingBool(false);
+    setSnackBarOpen(true);
+
+    updatePresaleMintedCount()
+  }
+
+  const preSaleMintDrip = async () => {
+    console.log("in_presalemintDrip", dripMintCardsQuantity)
+
+    if (dripMintCardsQuantity <1) {
+      setdripMintCardsQuantity(1)
+    }
+
+    let tempRefAddr = ""
+    if (refAddrMintCard == "") {
+      setRefAddrMintCard(ethers.constants.AddressZero)
+      tempRefAddr = ethers.constants.AddressZero
+    } else {
+      tempRefAddr = refAddrMintCard
+    }
+    setMintingBool(true);
+    setMintingState("Generating Your Mint Card");
+
+    const allowance = await checkAllowanceGeneral(store.getState().web3store.userAddress, PRESALE_DRIP_CONTRACT_V2)
+    console.log("allowance -- >", allowance.toString());
+    if (ethers.BigNumber.from("100000000000").gte(ethers.BigNumber.from(allowance.toString()))) {
+      console.log("less allowance")
+      if (!await approveWBTC2(PRESALE_DRIP_CONTRACT_V2, ethers.BigNumber.from("10000000000000000000"))) {
+        setMintingBool(false);
+        setMintingState("");
+
+        store.dispatch(SetFailureNotificationBool(true))
+        store.dispatch(SetFailureNotificationMessage("Approval Failed"))
+        bootstrap.play_err_sound()
+        return;
+      }
+    }
+
+    const output = await randomGenarateDripPreSaleV2(store.getState().web3store.userAddress, dripMintCardsQuantity, driptatooMintCard === 1? "Yes": "No", driptagMintCard === 1? "Yes": "No");
+    console.log("---output ", output)
+
+    setMintingState("Minting Your Drip Mint Card");
+    const minted = await mintPreSaleDripNFTV2(output.data, tempRefAddr, driptatooMintCard === 1? 1: 0, driptagMintCard === 1? 1: 0);
     if (!minted) {
       bootstrap.play_err_sound()
       setMintingBool(false);
@@ -777,6 +838,7 @@ export default function MintPage() {
               }}
             >
             </input>
+            <br />
 
             <label>Tag: 0.002 BTC.b</label>
             <input type="checkbox" 
@@ -839,7 +901,7 @@ export default function MintPage() {
           {
             (totalPresaleCount - preSaleMintedNFT) > 0?
               <button
-                  // onClick={() => preSaleMint()}
+                  onClick={() => preSaleMintDrip()}
                   style={{
                     width: '150px',
                     backgroundColor: '#ae0606',

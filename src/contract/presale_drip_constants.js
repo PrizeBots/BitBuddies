@@ -1,4 +1,4 @@
-export const PRESALE_ABI = [{
+export const PRESALE_DRIP_ABI = [{
     "inputs": [{
         "internalType": "string",
         "name": "_name",
@@ -181,23 +181,6 @@ export const PRESALE_ABI = [{
   },
   {
     "inputs": [{
-        "internalType": "uint256",
-        "name": "_tokenID",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_newReferrerAddress",
-        "type": "address"
-      }
-    ],
-    "name": "changeReferrerAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
         "internalType": "string",
         "name": "_tokenURI",
         "type": "string"
@@ -260,6 +243,36 @@ export const PRESALE_ABI = [{
       "name": "tokenId",
       "type": "uint256"
     }],
+    "name": "fetchTagInfoOfCard",
+    "outputs": [{
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+    }],
+    "name": "fetchTatooInfoOfCard",
+    "outputs": [{
+      "internalType": "bool",
+      "name": "",
+      "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+    }],
     "name": "getApproved",
     "outputs": [{
       "internalType": "address",
@@ -311,26 +324,19 @@ export const PRESALE_ABI = [{
         "internalType": "address",
         "name": "_referrerAddress",
         "type": "address"
-      }
-    ],
-    "name": "mintMultiPresaleBitfighterCard",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-        "internalType": "string",
-        "name": "_tokenURI",
-        "type": "string"
       },
       {
-        "internalType": "address",
-        "name": "airdrop_to",
-        "type": "address"
+        "internalType": "bool",
+        "name": "tatoo",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "tag",
+        "type": "bool"
       }
     ],
-    "name": "mintPreSaleBitfighterCardAdmin",
+    "name": "mintMultiPresaleDripBitfighterCard",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -358,6 +364,27 @@ export const PRESALE_ABI = [{
       "name": "",
       "type": "string"
     }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "name": "nftIdToExtraInfoMapping",
+    "outputs": [{
+        "internalType": "bool",
+        "name": "tag",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "tatoo",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -405,6 +432,28 @@ export const PRESALE_ABI = [{
   {
     "inputs": [],
     "name": "priceOfPreSaleNFT",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOfTagAddon",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOfTatooAddon",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -689,21 +738,11 @@ export const PRESALE_ABI = [{
   }
 ]
 
-
-const DEV_PRESALE_ADDRESS = "0x62939359D7D87b71EB76cb993f0fecB23bA6A27A"
-const PROD_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
-export let PRESALE_CONTRACT_ADDRESS = ""
+const DEV_DRIP_PRESALE_ADDRESS = "0x7a890eF3F63Cf97FAc4bbb94093275605CcbAcA6"
+const PROD_DRIP_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
+export let PRESALE_DRIP_CONTRACT_V2 = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {
-  PRESALE_CONTRACT_ADDRESS = PROD_PRESALE_ADDRESS
+  PRESALE_DRIP_CONTRACT_V2 = PROD_DRIP_PRESALE_ADDRESS
 } else {
-  PRESALE_CONTRACT_ADDRESS = DEV_PRESALE_ADDRESS
+  PRESALE_DRIP_CONTRACT_V2 = DEV_DRIP_PRESALE_ADDRESS
 }
-
-// const DEV_DRIP_PRESALE_ADDRESS = "0x7a890eF3F63Cf97FAc4bbb94093275605CcbAcA6"
-// const PROD_DRIP_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
-// export let PRESALE_DRIP_CONTRACT_V2 = ""
-// if (process.env.REACT_APP_DEV_ENV === "production") {
-//   PRESALE_DRIP_CONTRACT_V2 = PROD_DRIP_PRESALE_ADDRESS
-// } else {
-//   PRESALE_DRIP_CONTRACT_V2 = DEV_DRIP_PRESALE_ADDRESS
-// }

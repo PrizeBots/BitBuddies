@@ -671,6 +671,32 @@ export const randomGenaratePreSaleV2 = async (userAddress: string, quantity: num
   return output;
 }
 
+export const randomGenarateDripPreSaleV2 = async (userAddress: string, quantity: number, tatoo: string, tag: string) => {
+  console.log("randomGenarateDripPreSaleV2 clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  if (quantity === 0) {
+    quantity = 1
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v2/generator/create/drip/preSaleNFT/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "user_wallet_address" : userAddress,
+      "quantity": quantity,
+      "tatoo": tatoo,
+      "tag": tag
+    })
+  })
+  const output = await result.json();
+  console.log("output in randomGenarateDripPreSaleV2 --", output)
+  return output;
+}
+
 
 export const ListGameServersApiCall = async (userAddress: string, region: string) => {
   console.log("ListGameServersApiCall clicked..", userAddress)

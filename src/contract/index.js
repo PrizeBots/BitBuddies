@@ -25,6 +25,10 @@ import {
   onek_club_contract_adress,
   ONEK_CLUB_CONTRACT_ABI
 } from "./onek_club_nft_constants";
+import {
+  PRESALE_DRIP_ABI,
+  PRESALE_DRIP_CONTRACT_V2
+} from "./presale_drip_constants";
 
 const appId = process.env.REACT_APP_MORALIS_APP_ID
 const serverUrl = process.env.REACT_APP_MORALIS_SERVER_URL
@@ -246,6 +250,22 @@ export async function checkAllowancePresale(owner) {
   };
   const _allowance = await Moralis.executeFunction(sendOptions);
   console.log("_allowance --> ", _allowance, owner, WBTC_ADDRESS, PRESALE_CONTRACT_ADDRESS);
+  return _allowance;
+}
+
+
+export async function checkAllowanceGeneral(owner, spender) {
+  // await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: WBTC_ADDRESS,
+    functionName: "allowance",
+    abi: WBTC_ABI,
+    params: {
+      owner,
+      spender,
+    },
+  };
+  const _allowance = await Moralis.executeFunction(sendOptions);
   return _allowance;
 }
 
@@ -676,6 +696,30 @@ export async function mintPreSaleNFTV2(_tokenURIs, _referrerAddress) {
     const transaction = await contract.mintMultiPresaleBitfighterCard(
       _tokenURIs, _referrerAddress, {
         gasPrice: 5 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+  } catch (err) {
+    console.log("err in mintPreSaleNFT ", err)
+    return false;
+  }
+  return true;
+}
+
+export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tatoo, tag) {
+
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("in mintPreSaleDripNFTV2 gasPrice... ", gasPrice.toNumber(), _tokenURIs, _referrerAddress, tatoo, tag)
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(PRESALE_DRIP_CONTRACT_V2, PRESALE_DRIP_ABI, signer);
+
+  try {
+    const transaction = await contract.mintMultiPresaleDripBitfighterCard(
+      _tokenURIs, _referrerAddress, tatoo, tag, {
+        gasPrice: 2 * gasPrice,
       });
     await transaction.wait();
     console.log("--------------------------------");
