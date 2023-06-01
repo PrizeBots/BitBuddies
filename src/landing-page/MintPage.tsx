@@ -19,7 +19,7 @@ import store from '../stores';
 
 const Backdrop = styled.div`
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -40,10 +40,11 @@ const Backdrop2 = styled.div`
 `
 
 const Wrapper = styled.div`
-  background: #222639;
+  background-color: #262626;
+  // background: #222639;
   border-radius: 16px;
   padding: 36px 60px;
-  box-shadow: 0px 0px 5px #0000006f;
+  box-shadow: 10px 10px 10px 10px #0000006f;
 `
 
 
