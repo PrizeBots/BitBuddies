@@ -308,7 +308,7 @@ export default function NewMenuSideBar() {
                         </TabPanel>
                       </MenuBox>
 
-                      <LogoutButtonView />
+                      {/* <LogoutButtonView /> */}
                     </TabsSection>
                     :   
                     <TabsSection>

@@ -267,7 +267,7 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    // this.lobbySocketConnection = new WebSocket("wss://1.proxy.hathora.dev:40771/")
+    // this.lobbySocketConnection = new WebSocket("ws://0.tcp.in.ngrok.io:12553/")
 
     console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
     this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
@@ -422,12 +422,18 @@ export default class Game extends Phaser.Scene {
           this.keys.keyD.double_pressed = false
           break
         case 'KeyW':
+          if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
+            break
+          }
           this.keys.keyW.pressed = true
           this.keys.lastKey = 'KeyA'
           this.keys.keyD.double_pressed = false
           this.keys.keyA.double_pressed = false
           break
         case 'KeyS':
+          if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
+            break
+          }
           this.keys.keyS.pressed = true
           this.keys.lastKey = 'KeyS'
           this.keys.keyD.double_pressed = false
@@ -1782,7 +1788,7 @@ export default class Game extends Phaser.Scene {
           && _player.gameObject?.sprite.anims 
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
-          console.log("other_players_loop")
+          // console.log("other_players_loop")
 
           if (_player.gotHit) {
             _player.gameObject.sprite.play("gotHit-"+_player.wallet_address + "_" + _player.minted_id )

@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { v4 as uuidv4 } from 'uuid';
 import store from "../../../stores";
-// import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { getEllipsisTxt } from "../../../utils";
 import phaserGame from '../../../PhaserGame';
 import Game from '../../scenes/Game';
@@ -358,6 +358,8 @@ export default function QueueList() {
             </BetInfoView>
           {/* </ListItemButton> */}
 
+
+
           </ImageAndTextView>
     )
   }
@@ -672,6 +674,21 @@ export default function QueueList() {
                       </Grid>
                     </Box>
                   </ListItemViews>
+
+                  {
+                    (data.p1_wallet === store.getState().web3store.userAddress || data.p2_wallet === store.getState().web3store.userAddress) ?
+                    <CloseIcon
+                      style={{
+                        color: 'red'
+                      }} 
+                      onClick={() => {
+                        // remove your self from queue
+                        console.log("pressed close icon")
+                        deleteUserFromQueue()
+                      }}
+                    />
+                    :<></>
+                  }
 
                   <Divider />
                 </ListItem>

@@ -264,14 +264,34 @@ function Header() {
                 </a>
               </li>
 
-              <li key={3}>
+              {/* <li key={uuidv4()}>
+                  <div
+                    style={{
+                      width: 20,
+                    }}
+                  ></div>
+                </li>
+
+                <li style={{ textAlign: "center" }} key={uuidv4()}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={() => web3LogOut()}
+                  >
+                    LogOut
+                  </button>
+                </li> */}
+
+              
+
+              {/* <li key={3}>
                 <hr></hr>
-              </li>
+              </li> */}
               {/* <li key={uuidv4()}><NewMenuSideBar /></li> */}
               {/* <li><a className="dropdown-item" href="#"> {getRoundedString(wbtcBalance)} <span style={{ color: "red", fontSize: '16px'}}> wBTC </span>    </a></li>
             <li><a className="dropdown-item" href="#"> {getRoundedString(maticBalance)} <span style={{ color: "red", fontSize: '16px'}}> Matic </span> </a></li> */}
               {/* <li key={7}><hr></hr></li> */}
-              <li style={{ textAlign: "center" }}>
+              {/* <li style={{ textAlign: "center" }}>
                 <button
                   type="button"
                   className="btn btn-outline-danger"
@@ -279,7 +299,7 @@ function Header() {
                 >
                   LogOut
                 </button>
-              </li>
+              </li> */}
             </ul>
           </li>
         )}
@@ -525,8 +545,38 @@ function Header() {
                     }}
                   ></div>
                 </li>
+              
+
+                {moralisButtonUI ? moralisButtonUI : <>Cool</>}
+                {
+                  userAddress !== "" ? 
+                  <div>
+
+                    {/* <li key={10}>
+                      <div
+                        style={{
+                          width: 50,
+                        }}
+                      ></div>
+                    </li> */}
+
+                    <li style={{ textAlign: "center", marginLeft: '50px' }}>
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger"
+                        onClick={() => web3LogOut()}
+                      >
+                        LogOut
+                      </button>
+                    </li>
+
+                  </div>
+                  : <div></div>
+                }
+
+                
               </ul>
-              {moralisButtonUI ? moralisButtonUI : <>Cool</>}
+
             </ul>
           </div>
 

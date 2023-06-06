@@ -111,7 +111,7 @@ export default function AtmViewBox(data: IQueueOptions) {
               </thead>
               <tbody>
               <tr>
-                <td>WBTC</td>
+                <td>BTC.b</td>
                 <td>{parseWBTCBalanceV2(wbtcBalance)}</td>
                 <td>{parseWBTCBalanceV3(web2_credit_balance)}</td>
                 <td>

@@ -209,7 +209,8 @@ export async function createBitFighter3(_tokenURI, referer_address, lucky_number
       referer_address,
       lucky_number,
       nick_name,
-      _gen, {
+      _gen,
+      "", {
         gasPrice: 2 * gasPrice,
       });
     await transaction.wait();

@@ -106,7 +106,7 @@ export default function InGameAssetPurchase() {
     } else {
       setTimeout(() => {
         store.dispatch(SetFailureNotificationBool(true))
-        store.dispatch(SetFailureNotificationMessage("Quantity should be less than 9"))
+        store.dispatch(SetFailureNotificationMessage("INSUFFICIENT FUNDS"))
         bootstrap.play_err_sound()
       }, 200);
     }

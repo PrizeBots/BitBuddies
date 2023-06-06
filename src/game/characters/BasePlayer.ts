@@ -797,6 +797,10 @@ export class BasePlayer  {
   }
 
   EnableHealthBars() {
+
+    if (this.wallet_address != store.getState().web3store.userAddress) {
+      return
+    }
     // return;
     // if (!this.healthAndStaminaBarsEnabled) return;
 

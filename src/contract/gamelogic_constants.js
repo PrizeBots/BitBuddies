@@ -27,21 +27,6 @@ export const GameLogicABI = [{
       "name": "",
       "type": "address"
     }],
-    "name": "_betInFightsEscrow",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "",
-      "type": "address"
-    }],
     "name": "_depositCount",
     "outputs": [{
       "internalType": "uint256",
@@ -68,21 +53,6 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-      "internalType": "uint8",
-      "name": "",
-      "type": "uint8"
-    }],
-    "name": "_multiTierJackPotEscrow",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
       "internalType": "address",
       "name": "",
       "type": "address"
@@ -98,32 +68,17 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "string",
+        "name": "partner_id",
+        "type": "string"
       },
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "internalType": "address",
+        "name": "partner_address",
+        "type": "address"
       }
     ],
-    "name": "addressToBrewMap",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "uint256",
-      "name": "_betInFightMoney",
-      "type": "uint256"
-    }],
-    "name": "betMoneyInFight",
+    "name": "addPartners",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -152,23 +107,6 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-        "internalType": "uint256",
-        "name": "_quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_assetName",
-        "type": "string"
-      }
-    ],
-    "name": "buyAsset",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
       "internalType": "address",
       "name": "_sender",
       "type": "address"
@@ -180,24 +118,6 @@ export const GameLogicABI = [{
       "type": "uint256"
     }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_user",
-      "type": "address"
-    }],
-    "name": "clearBetMoney",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "clearBetMoneyUser",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -224,134 +144,48 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "dripBuyBackWalletAddress",
+    "name": "fetchAllAddressOfPartners",
     "outputs": [{
-      "internalType": "address",
+      "internalType": "address[]",
       "name": "",
-      "type": "address"
+      "type": "address[]"
     }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "fightDripBuyBackShare",
+    "name": "fetchAllNamesOfPartners",
     "outputs": [{
-      "internalType": "uint256",
+      "internalType": "string[]",
       "name": "",
-      "type": "uint256"
+      "type": "string[]"
     }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [{
-        "internalType": "address",
-        "name": "_winner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_looser",
-        "type": "address"
-      }
-    ],
-    "name": "fightEnds",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fightJackPotShare",
-    "outputs": [{
       "internalType": "uint256",
-      "name": "",
+      "name": "index",
       "type": "uint256"
     }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fightPrizePoolShare",
+    "name": "fetchPartner",
     "outputs": [{
-      "internalType": "uint256",
+      "components": [{
+          "internalType": "string",
+          "name": "partner_id",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "partner_address",
+          "type": "address"
+        }
+      ],
+      "internalType": "struct GameLogic.PartnersInfo",
       "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fightSystemShare",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fightTreasuryShare",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "string",
-      "name": "_assetName",
-      "type": "string"
-    }],
-    "name": "getAssetPrice",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_assetName",
-        "type": "string"
-      }
-    ],
-    "name": "getAssetsOfUser",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "account",
-      "type": "address"
-    }],
-    "name": "getBetBalance",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
+      "type": "tuple"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -392,6 +226,11 @@ export const GameLogicABI = [{
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_partner",
+        "type": "string"
       }
     ],
     "name": "mintBitFighter",
@@ -456,16 +295,22 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-      "internalType": "string",
-      "name": "",
-      "type": "string"
-    }],
-    "name": "priceOfAssets",
-    "outputs": [{
       "internalType": "uint256",
       "name": "",
       "type": "uint256"
     }],
+    "name": "partnersMapping",
+    "outputs": [{
+        "internalType": "string",
+        "name": "partner_id",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "partner_address",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -498,25 +343,19 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
+    "inputs": [{
+      "internalType": "string",
+      "name": "partner_id",
+      "type": "string"
+    }],
+    "name": "removePartner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_assetName",
-        "type": "string"
-      }
-    ],
-    "name": "setAssetPrice",
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -539,17 +378,6 @@ export const GameLogicABI = [{
       "type": "address"
     }],
     "name": "setDepositWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_dripBuyBackWalletAddress",
-      "type": "address"
-    }],
-    "name": "setDripBuyBackWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -609,7 +437,18 @@ export const GameLogicABI = [{
       "name": "_systemWalletAddress",
       "type": "address"
     }],
-    "name": "setSystemWallet",
+    "name": "setSystemWallet1",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_systemWalletAddress",
+      "type": "address"
+    }],
+    "name": "setSystemWallet2",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -638,13 +477,62 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "systemWalletAddress",
+    "name": "systemWalletAddress1",
     "outputs": [{
       "internalType": "address",
       "name": "",
       "type": "address"
     }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "systemWalletAddress2",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalPartners",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "_value",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "address",
+        "name": "send_to",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_gen",
+        "type": "uint8"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -699,4 +587,4 @@ export const GameLogicABI = [{
   }
 ]
 
-export const gamelogic_contract_address = "0x6c3d363bD4ddEf376Ec37eb8D6B0827362DD0FDb"
+export const gamelogic_contract_address = "0xe575564e44D32fb7114d8232eC8C5E6637f1dC83"
