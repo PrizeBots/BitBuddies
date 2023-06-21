@@ -1,7 +1,7 @@
 @import "../../../assets/sass/mixins";
 @import "../../../assets/sass/variables";
 
-.mint-card {
+.mint-card-base {
   height: 575px;
   width: 366px;
   background-image: url("../../../assets/images/card-bg.png");
@@ -77,6 +77,11 @@
       }
       h4 {
         font-size: 32px;
+        margin: 0;
+        color: $white;
+      }
+      h5 {
+        font-size: 28px;
         margin: 0;
         color: $white;
       }

@@ -648,7 +648,7 @@ export const randomGenaratePreSale = async (userAddress: string) => {
 }
 
 export const randomGenaratePreSaleV2 = async (userAddress: string, quantity: number) => {
-  console.log("randomGenaratePreSale clicked..", userAddress)
+  console.log("randomGenaratePreSaleV2 clicked..", userAddress)
   if (userAddress === "") {
     console.log("nill user address");
     return

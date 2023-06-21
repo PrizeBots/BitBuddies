@@ -559,14 +559,14 @@ export default class Game extends Phaser.Scene {
           break
         case 'KeyW':
           this.keys.keyW.pressed = false;
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false     
+          // this.keys.keyD.double_pressed = false
+          // this.keys.keyA.double_pressed = false     
           this.keys.lastKey = ""   
           break
         case 'KeyS':
           this.keys.keyS.pressed = false;
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false  
+          // this.keys.keyD.double_pressed = false
+          // this.keys.keyA.double_pressed = false  
           this.keys.lastKey = ""      
           break
         case 'KeyP':
