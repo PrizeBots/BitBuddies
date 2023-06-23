@@ -9,7 +9,6 @@ const Backdrop = styled.div`
   align-items: center;
   justify-content: center;
   background-color: green;
-
   h4 {
     color: white;
   }

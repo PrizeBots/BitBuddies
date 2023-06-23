@@ -4,7 +4,7 @@
 .mint-card {
   &__form {
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-align: left;
     &__title {
       margin-bottom: 5px;
@@ -19,7 +19,12 @@
       }
     }
     &__item {
-      margin-left: 8px;
+      .red{
+        margin: 0;
+        margin: 0 0 3px 5px;
+        font-size: 19px;
+        letter-spacing: 0.5px;
+      }
       label {
         font-size: 22px;
         color: $dark;
@@ -32,8 +37,9 @@
         border: 0;
         border-bottom: 3px solid $dark;
         max-width: 120px;
+        text-align: center;
         font-family: "Cooper Black";
-        font-size: 22px;
+        font-size: 16px;
         color: $dark;
       }
       input[type="number"] {
@@ -44,8 +50,9 @@
         border: 0;
         border-bottom: 3px solid $dark;
         max-width: 120px;
+        text-align: center;
         font-family: "Cooper Black";
-        font-size: 22px;
+        font-size: 16px;
         color: $dark;
       }
       .red{
@@ -54,22 +61,23 @@
       &--radio {
         display: flex;
         align-items: flex-end;
-        margin-bottom: 5px;
+        margin-bottom: 3px;
         label {
-          font-size: 17px;
+          font-size: 15px;
+          letter-spacing: 0.5px;
           margin-left: 5px;
         }
         input[type="radio"] {
-          position: relative;
-          z-index: -3;
-          display: none;
+          // position: relative;
+          // z-index: -3;
+          // display: none;
         }
         .radio-circle {
-          margin-left: 0;
-          margin-bottom: 3px;
           display: block;
-          height: 20px;
-          width: 20px;
+          margin-left: 2px;
+          // margin-bottom: 3px;
+          height: 15px;
+          width: 15px;
           border: 3px solid $dark;
           border-radius: 50%;
         }

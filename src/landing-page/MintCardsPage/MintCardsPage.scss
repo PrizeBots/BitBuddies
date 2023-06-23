@@ -4,4 +4,10 @@
   justify-content: center;
   padding: 100px;
   overflow-x: scroll;
+  .cards {
+    position: relative;
+  }
+  .slime-img {
+    z-index: 5;
+  }
 }
