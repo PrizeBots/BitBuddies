@@ -1,11 +1,4 @@
-import { useRef } from "react";
-import { useSelector } from "react-redux";
-// import { selectMintCardState } from "../../../stores/MintCardStateStore";
-import Button from "../Button/Button";
 import SidePanel, { PageStates } from "../SidePanel/SidePanel";
-
-import MintCardForm from "../MintCardForm/MintCardForm";
-import cardRibbon from "../../../assets/images/Mint_Panel__0004_Slime.png";
 import bfMark from "../../../assets/images/Mint_Panel__0001_BF_png.png";
 import statusReady from "../../../assets/images/status-ready.png";
 import non_statusReady from "../../../assets/images/non_status-ready.png";
@@ -52,9 +45,6 @@ import { PRESALE_CONTRACT_ADDRESS } from "../../../contract/presale_constants";
 import styled from "styled-components";
 import { LinearProgress } from "@mui/material";
 import { PRESALE_DRIP_CONTRACT_V2 } from "../../../contract/presale_drip_constants";
-import { connect } from "http2";
-import Background from "../../../game/scenes/Background";
-import { orange } from "@mui/material/colors";
 
 const ProgressBarWrapper = styled.div`
   display: flex;
@@ -117,6 +107,8 @@ function MintCard() {
   const [driptagMintCard, setdriptagMintCard] = useState(0);
   const [driptatooMintCard, setdriptatooMintCard] = useState(0);
   const [dripRefBoxMintCard, setDripRefBoxMintCard] = useState(0);
+  const [isRefCode, setIsRefCode] = useState(false);
+  const [isDrip, setIsDrip] = useState(0);
 
   const cardState = useAppSelector(
     (state) => state.mintCardStateStore.state_selected
@@ -154,9 +146,7 @@ function MintCard() {
 
       setMintingBool(false);
       setMintingState("");
-
       initializePreMintVars();
-
       store.dispatch(SetFailureNotificationBool(true));
       store.dispatch(
         SetFailureNotificationMessage("Quantity should be greater than 0")
@@ -442,29 +432,29 @@ function MintCard() {
 
   const displayFooterPart =
     cardState === PageStates.NotConnectedState ? (
-      <Button
-        onClick={preSaleMint}
+      <div
+        onClick={() => dispatch(setCardState(PageStates.ProgressState))}
         className="btn-mint--red btn-mint--big footer-connect"
-      ></Button>
+      ></div>
     ) : cardState === PageStates.Minting ? (
-      <Button className="btn-mint--grey btn-mint--big"></Button>
+      <div className="btn-mint--grey btn-mint--big"></div>
     ) : cardState === PageStates.Presale ? (
-      <Button
+      <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
-      ></Button>
+      ></div>
     ) : cardState === PageStates.DripPreSale ? (
-      <Button
+      <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
-      ></Button>
+      ></div>
     ) : cardState === PageStates.OneKClub ? (
-      <Button
+      <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
-      ></Button>
+      ></div>
     ) : (
-      <Button className="btn-mint--grey btn-mint--big"></Button>
+      <div className="btn-mint--grey btn-mint--big"></div>
     );
 
   const displayInfoPart =
@@ -476,21 +466,13 @@ function MintCard() {
       />
     ) : cardState === PageStates.Minting ? (
       <>
-        <h1>Thank you!</h1>
+        <h3 style={{ marginTop: "30px" }}> {mintingState} </h3>
         <div className="progress-info--bar">
-          <p
-            style={{
-              margin: 0,
-              padding: 0,
-            }}
-          >
-            Minting in Progress
-          </p>
+          <p>Minting in Progress</p>
           <ProgressBarWrapper>
-            <h3> {mintingState} </h3>
             <ProgressBar
               style={{
-                backgroundColor: "dark",
+                backgroundColor: "ff5b00",
               }}
             />
           </ProgressBarWrapper>
@@ -515,72 +497,149 @@ function MintCard() {
                   onChange={(e) => {
                     setRefAddrMintCard(e.target.value);
                   }}
+                  required
                 />
               </div>
               <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="radio">I don&#39;t have one</label>
-                <input
-                  id="radio"
-                  type="radio"
-                  className="radio-circle"
-                  value={refBoxMintCard}
-                  onChange={(e) => {
-                    setRefBoxMintCard(e.target.checked ? 1 : 0);
-                  }}
-                />
-                <input
-                  id="radio"
-                  type="radio"
-                  className="radio-circle"
-                  value={refBoxMintCard}
-                  onChange={(e) => {
-                    setRefBoxMintCard(e.target.checked ? 1 : 0);
-                  }}
-                />
+                <div className="haveone-select">
+                  <label htmlFor="radio">I don&#39;t have one</label>
+                  {isRefCode ? (
+                    <>
+                      <div
+                        onClick={() => setIsRefCode(!isRefCode)}
+                        className="radio_dripTag_selected"
+                      ></div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        onClick={() => setIsRefCode(!isRefCode)}
+                        className="radio_dripTag"
+                      ></div>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="mint-card__form__item">
                 <p className="red">100% of Addons goes to Drip</p>
               </div>
-
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
-                <input
-                  id="radio"
-                  type="radio"
-                  className="radio-circle"
-                  value={refBoxMintCard}
-                  onChange={(e) => {
-                    setdriptagMintCard(e.target.checked ? 1 : 0);
-                  }}
-                />
-              </div>
-
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
-                <input
-                  id="radio"
-                  type="radio"
-                  className="radio-circle"
-                  value={refBoxMintCard}
-                  onChange={(e) => {
-                    setdriptatooMintCard(e.target.checked ? 1 : 0);
-                  }}
-                />
-              </div>
-
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                <input
-                  id="radio"
-                  type="radio"
-                  className="radio-circle"
-                  value={refBoxMintCard}
-                  onChange={(e) => {
-                    setdriptatooMintCard(e.target.checked ? 1 : 0);
-                  }}
-                />
-              </div>
-
+              {isDrip === 0 ? (
+                <>
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <div className="driptag-select">
+                      <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
+                      <div
+                        onClick={() => setIsDrip(1)}
+                        className="radio_dripTag"
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <div className="driptatoo-select">
+                      <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
+                      <div
+                        onClick={() => setIsDrip(2)}
+                        className="radio_dripTag"
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <div className="addboth-select">
+                      <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                      <div
+                        onClick={() => setIsDrip(3)}
+                        className="radio_dripTag"
+                      ></div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {isDrip === 1 ? (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="driptag-select">
+                          <label htmlFor="radio">
+                            Add Drip Tag: 0.002BTC.b
+                          </label>
+                          <div
+                            onClick={() => setIsDrip(0)}
+                            className="radio_dripTag_active"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="driptag-select">
+                          <label htmlFor="radio">
+                            Add Drip Tag: 0.002BTC.b
+                          </label>
+                          <div
+                            onClick={() => setIsDrip(1)}
+                            className="radio_dripTag"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {isDrip === 2 ? (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="driptatoo-select">
+                          <label htmlFor="radio">
+                            Add Drip Tatoo: 0.002BTC.b
+                          </label>
+                          <div
+                            onClick={() => setIsDrip(0)}
+                            className="radio_dripTag_active"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="driptatoo-select">
+                          <label htmlFor="radio">
+                            Add Drip Tatoo: 0.002BTC.b
+                          </label>
+                          <div
+                            onClick={() => setIsDrip(2)}
+                            className="radio_dripTag"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {isDrip === 3 ? (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="addboth-select">
+                          <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                          <div
+                            onClick={() => setIsDrip(0)}
+                            className="radio_dripTag_active"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="mint-card__form__item mint-card__form__item--radio">
+                        <div className="addboth-select">
+                          <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                          <div
+                            onClick={() => setIsDrip(3)}
+                            className="radio_dripTag"
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
               <div className="mint-card__form__item mint-card__form__item--radio">
                 <label htmlFor="quantity">Quantity:</label>
                 <input
@@ -592,6 +651,7 @@ function MintCard() {
                   style={{
                     outline: "None",
                   }}
+                  required
                 />
               </div>
             </div>
@@ -623,25 +683,22 @@ function MintCard() {
             />
           </div>
           <div className="mint-card__form__item mint-card__form__item--radio">
-            <label htmlFor="radio">I don&#39;t have one</label>
-            <input
-              id="radio"
-              type="radio"
-              className="radio-circle"
-              value={refBoxMintCard}
-              onChange={(e) => {
-                setRefBoxMintCard(e.target.checked ? 1 : 0);
-              }}
-            />
-            <input
-              id="radio"
-              type="radio"
-              className="radio-circle"
-              value={refBoxMintCard}
-              onChange={(e) => {
-                setRefBoxMintCard(e.target.checked ? 1 : 0);
-              }}
-            />
+            <div className="haveone-select">
+              <label htmlFor="radio">I don&#39;t have one</label>
+              {isRefCode ? (
+                <>
+                  <div
+                    onClick={() => setIsRefCode(!isRefCode)}
+                    className="radio_dripTag_selected"
+                  ></div>
+                </>
+              ) : (
+                <div
+                  onClick={() => setIsRefCode(!isRefCode)}
+                  className="radio_dripTag"
+                ></div>
+              )}
+            </div>
           </div>
           <div className="mint-card__form__item mint-card__form__item--radio">
             <label htmlFor="quantity">Quantity:</label>
@@ -670,11 +727,49 @@ function MintCard() {
       </>
     ) : cardState === PageStates.OneKClub ? (
       <>
-        <h5>Card #: {mintCardsQuantity}</h5>
-        <h5>Price: {mintCardsQuantity}</h5>
-        <h5>Quantity: {mintCardsQuantity}</h5>
+        <div
+          className="mint-card__form__item mint-card__form__item--radio"
+          style={{ marginTop: "30px" }}
+        >
+          <h5>
+            <label htmlFor="quantity" style={{ fontSize: "1.25rem" }}>
+              Card #:
+            </label>
+          </h5>
+          <input
+            id="quantity"
+            type="text"
+            onChange={(e) => {
+              setmintCardsQuantity(parseInt(e.target.value));
+            }}
+            style={{
+              outline: "None",
+              width: "35px",
+            }}
+          />
+        </div>
+        <h5>Price: $200</h5>
+        {/* <h5>Quantity: {mintCardsQuantity}</h5> */}
+        <div className="mint-card__form__item mint-card__form__item--radio">
+          <h5>
+            <label htmlFor="quantity" style={{ fontSize: "1.25rem" }}>
+              Quantity:
+            </label>
+          </h5>
+          <input
+            id="quantity"
+            type="number"
+            onChange={(e) => {
+              setmintCardsQuantity(parseInt(e.target.value));
+            }}
+            style={{
+              outline: "None",
+              width: "50px",
+            }}
+          />
+        </div>
         <div className="mint-card-base__info__btc">
-          <h6>200$</h6>
+          <h3>$200</h3>
         </div>
       </>
     ) : (
@@ -691,7 +786,7 @@ function MintCard() {
     <div className="mint-card-base__wrapper">
       <article className="mint-card-base">
         <div className="mint-card-base__layer">
-          {/* <div className="mint-card-base__slice"> */}
+          {/* <div className="mint-card-honey"> */}
           <div className="mint-card-base__inner">
             <div className="mint-card-base__status">
               <div className="mint-card-base__status__title">
@@ -723,12 +818,17 @@ function MintCard() {
                     padding: "10px",
                   }}
                 >
-                  <h3> {mintingState} </h3>
-                  <ProgressBar
-                    style={{
-                      backgroundColor: "orange",
-                    }}
-                  />
+                  {/* <h3> {mintingState} </h3> */}
+                  {/* <ProgressBar
+											style={{
+												position: "absolute",
+												backgroundColor: "#ff5b00",
+												width: "90%",
+												bottom: "60px",
+												zIndex: "1",
+												borderRadius: "0"
+											}}
+										/> */}
                 </ProgressBarWrapper>
               )}
               <img src={cardBlock} alt="card-block" />

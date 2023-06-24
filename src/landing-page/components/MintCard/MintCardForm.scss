@@ -19,6 +19,8 @@
       }
     }
     &__item {
+      position: relative;
+      z-index: 100;
       .red{
         margin: 0;
         margin: 0 0 3px 5px;
@@ -58,19 +60,53 @@
       .red{
         color: #ae0606;
       }
+      &--radio:last-child{
+        position: absolute;
+        bottom: 70px;
+      }
       &--radio {
         display: flex;
         align-items: flex-end;
         margin-bottom: 3px;
+        .haveone-select, .driptag-select, .driptatoo-select, .addboth-select{
+          display: flex;
+          width: 100%;
+        }
+        .radio_dripTag {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0000_select.png");
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+        }
+        .radio_dripTag:hover {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0001_select_hover.png");
+        }
+        .radio_dripTag:active {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
+        .radio_dripTag_selected {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
+        .radio_dripTag_inactive {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-color: grey;
+          border-radius: 30px;
+        }
+        .radio_dripTag_active {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
         label {
           font-size: 15px;
           letter-spacing: 0.5px;
           margin-left: 5px;
-        }
-        input[type="radio"] {
-          // position: relative;
-          // z-index: -3;
-          // display: none;
         }
         .radio-circle {
           display: block;

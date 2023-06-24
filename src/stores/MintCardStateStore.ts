@@ -11,7 +11,7 @@ interface MintCardState {
 }
 
 const initialState: MintCardState = {
-  state_selected: PageStates.Presale,
+  state_selected: PageStates.NotConnectedState,
 };
 
 export const MintCardStateSlice = createSlice({

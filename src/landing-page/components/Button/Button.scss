@@ -36,9 +36,9 @@
   }
   &--grey {
     background-color: $grey;
-    &:hover {
-      background-color: #505050;
-    }
+    // &:hover {
+    //   background-color: #505050;
+    // }
   }
   &--lightgray {
     background-color: $light-gray;
