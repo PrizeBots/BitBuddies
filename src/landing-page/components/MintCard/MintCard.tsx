@@ -588,7 +588,7 @@ function MintCard() {
     );
   } else if (cardState === PageStates.Minting)
     displayFooterPart = (
-      <button className="btn-mint--grey btn-mint--big"></button>
+      <div className="btn-mint--grey btn-mint--big footer-connect custom-disabled"></div>
     );
   else if (cardState === PageStates.Presale)
     displayFooterPart = (
@@ -609,13 +609,13 @@ function MintCard() {
   else if (cardState === PageStates.OneKClub)
     displayFooterPart = (
       <div
-        onClick={preSaleMint}
+        onClick={() => dispatch(setCardState(PageStates.Minting))}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
     );
   else
     displayFooterPart = (
-      <Button className="btn-mint--grey btn-mint--big"></Button>
+      <div className="btn-mint--grey btn-mint--big footer-connect custom-disabled"></div>
     );
 
   let displayInfoPart = <></>;
@@ -823,17 +823,22 @@ function MintCard() {
               Card #:
             </label>
           </h5>
-          <input
+          <div
             id="quantity"
-            type="text"
-            onChange={(e) => {
-              setmintCardsQuantity(parseInt(e.target.value));
-            }}
+            // type="text"
+            // onChange={(e) => {
+            //   setmintCardsQuantity(parseInt(e.target.value));
+            // }}
+            // disabled
             style={{
               outline: "None",
-              width: "35px",
+              // width: "35px",
+              borderBottom: "3px solid #363636",
+              fontSize: "16px",
+              padding: "2px 6px",
+              width: "80px",
             }}
-          />
+          ></div>
         </div>
         <h5>Price: $200</h5>
         {/* <h5>Quantity: {mintCardsQuantity}</h5> */}
