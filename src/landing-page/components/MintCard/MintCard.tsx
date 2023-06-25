@@ -380,16 +380,24 @@ function MintCard() {
     updateDripPresaleMintedCount();
   };
 
-  const titleState =
-    cardState === PageStates.NotConnectedState
-      ? "Offline"
-      : cardState === PageStates.Minting
-      ? "Minting"
-      : "Ready";
+  let titleState = "";
+  if (cardState === PageStates.NotConnectedState) titleState = "Offline";
+  else if (cardState === PageStates.Minting) titleState = "Minting";
+  else titleState = "Ready";
 
-  const photoState =
+  // const titleState =
+  //   cardState === PageStates.NotConnectedState
+  //     ? "Offline"
+  //     : cardState === PageStates.Minting
+  //     ? "Minting"
+  //     : "Ready";
+
+  let photoState = <></>;
+  if (
     cardState === PageStates.NotConnectedState ||
-    cardState === PageStates.Minting ? (
+    cardState === PageStates.Minting
+  ) {
+    photoState = (
       <>
         <img
           src={
@@ -410,7 +418,9 @@ function MintCard() {
           className="mint-card-base__status__photo"
         />
       </>
-    ) : (
+    );
+  } else {
+    photoState = (
       <>
         <img
           src={
@@ -432,11 +442,59 @@ function MintCard() {
         />
       </>
     );
+  }
 
-  const displayInnerPart =
-    cardState === PageStates.NotConnectedState ? (
-      <img src={pleaseConnect} alt="please-connect-img" />
-    ) : cardState === PageStates.Minting ? (
+  // const photoState =
+  //   cardState === PageStates.NotConnectedState ||
+  //   cardState === PageStates.Minting ? (
+  //     <>
+  //       <img
+  //         src={
+  //           totalPresaleCount - preSaleMintedNFT < 0
+  //             ? statusNotReady
+  //             : statusNotReady
+  //         }
+  //         alt="status-photo"
+  //         className="mint-card-base__status__photo"
+  //       />
+  //       <img
+  //         src={
+  //           totalPresaleCount - preSaleMintedNFT < 0
+  //             ? statusNotReady
+  //             : non_statusReady
+  //         }
+  //         alt="status-photo"
+  //         className="mint-card-base__status__photo"
+  //       />
+  //     </>
+  //   ) : (
+  //     <>
+  //       <img
+  //         src={
+  //           totalPresaleCount - preSaleMintedNFT < 0
+  //             ? statusNotReady
+  //             : non_statusNotReady
+  //         }
+  //         alt="status-photo"
+  //         className="mint-card-base__status__photo"
+  //       />
+  //       <img
+  //         src={
+  //           totalPresaleCount - preSaleMintedNFT < 0
+  //             ? statusNotReady
+  //             : statusReady
+  //         }
+  //         alt="status-photo"
+  //         className="mint-card-base__status__photo"
+  //       />
+  //     </>
+  //   );
+
+  let displayInnerPart = <></>;
+  if (cardState === PageStates.NotConnectedState) {
+    displayInnerPart = <img src={pleaseConnect} alt="please-connect-img" />;
+  } else if (cardState === PageStates.Minting) {
+    displayInnerPart = (
       <>
         <h5>Drip Fighter Mint Card</h5>
         <p>
@@ -444,7 +502,9 @@ function MintCard() {
           <br></br> Minted
         </p>
       </>
-    ) : cardState === PageStates.Presale ? (
+    );
+  } else if (cardState === PageStates.Presale) {
+    displayInnerPart = (
       <>
         <h5>Drip Fighter Mint Card</h5>
         <p>
@@ -452,7 +512,9 @@ function MintCard() {
           <br></br> Minted
         </p>
       </>
-    ) : cardState === PageStates.DripPreSale ? (
+    );
+  } else if (cardState === PageStates.DripPreSale) {
+    displayInnerPart = (
       <>
         <h5>Bit Fighter Mint Card</h5>
         <p>
@@ -460,7 +522,9 @@ function MintCard() {
           <br></br> Minted
         </p>
       </>
-    ) : cardState === PageStates.OneKClub ? (
+    );
+  } else if (cardState === PageStates.OneKClub) {
+    displayInnerPart = (
       <>
         <h5>The 1K Club</h5>
         <p>
@@ -468,47 +532,101 @@ function MintCard() {
           <br></br> Minted
         </p>
       </>
-    ) : (
-      <>
-        <img src={welcome} alt="welcome-img" />
-      </>
     );
+  } else {
+    displayInnerPart = <img src={welcome} alt="welcome-img" />;
+  }
 
-  const displayFooterPart =
-    cardState === PageStates.NotConnectedState ? (
+  // const displayInnerPart =
+  // cardState === PageStates.NotConnectedState ? (
+  //   <img src={pleaseConnect} alt="please-connect-img" />
+  // ) : cardState === PageStates.Minting ? (
+  //   <>
+  //     <h5>Drip Fighter Mint Card</h5>
+  //     <p>
+  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
+  //       <br></br> Minted
+  //     </p>
+  //   </>
+  // ) : cardState === PageStates.Presale ? (
+  //   <>
+  //     <h5>Drip Fighter Mint Card</h5>
+  //     <p>
+  //       {`${preSaleMintedNFT} of ${totalPresaleCount}`}
+  //       <br></br> Minted
+  //     </p>
+  //   </>
+  // ) : cardState === PageStates.DripPreSale ? (
+  //   <>
+  //     <h5>Bit Fighter Mint Card</h5>
+  //     <p>
+  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
+  //       <br></br> Minted
+  //     </p>
+  //   </>
+  // ) : cardState === PageStates.OneKClub ? (
+  //   <>
+  //     <h5>The 1K Club</h5>
+  //     <p>
+  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
+  //       <br></br> Minted
+  //     </p>
+  //   </>
+  // ) : (
+  //   <>
+  //     <img src={welcome} alt="welcome-img" />
+  //   </>
+  // );
+
+  let displayFooterPart = <></>;
+  if (cardState === PageStates.NotConnectedState) {
+    displayFooterPart = (
       <div
         onClick={() => dispatch(setCardState(PageStates.ProgressState))}
         className="btn-mint--red btn-mint--big footer-connect"
       ></div>
-    ) : cardState === PageStates.Minting ? (
+    );
+  } else if (cardState === PageStates.Minting)
+    displayFooterPart = (
       <button className="btn-mint--grey btn-mint--big"></button>
-    ) : cardState === PageStates.Presale ? (
+    );
+  else if (cardState === PageStates.Presale)
+    displayFooterPart = (
       <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
-    ) : cardState === PageStates.DripPreSale ? (
+    );
+  else if (cardState === PageStates.DripPreSale)
+    displayFooterPart = (
       <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
-    ) : cardState === PageStates.OneKClub ? (
+    );
+  else if (cardState === PageStates.OneKClub)
+    displayFooterPart = (
       <div
         onClick={preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
-    ) : (
+    );
+  else
+    displayFooterPart = (
       <Button className="btn-mint--grey btn-mint--big"></Button>
     );
 
-  const displayInfoPart =
-    cardState === PageStates.NotConnectedState ? (
+  let displayInfoPart = <></>;
+  if (cardState === PageStates.NotConnectedState)
+    displayInfoPart = (
       <img
         src={totalPresaleCount - preSaleMintedNFT < 0 ? statusNotReady : bfMark}
         alt="status-photo"
         className="mint-card-base__status__photo"
       />
-    ) : cardState === PageStates.Minting ? (
+    );
+  else if (cardState === PageStates.Minting)
+    displayInfoPart = (
       <>
         <h3 style={{ marginTop: "30px" }}> {mintingState} </h3>
         <div className="progress-info--bar">
@@ -525,111 +643,115 @@ function MintCard() {
           <img src={btcIcon} alt="btc-info" />
         </div>
       </>
-    ) : cardState === PageStates.Presale ? (
-      <>
-        {totalPresaleCount - preSaleMintedNFT < 0 ? (
-          <h2 className="mint-card-base__info__sold">Sold Out</h2>
-        ) : (
-          <>
-            <div className="mint-card__form">
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="code">Ref. Code:</label>
-                <input
-                  id="code"
-                  type="text"
-                  value={refAddrMintCard}
-                  onChange={(e) => {
-                    setRefAddrMintCard(e.target.value);
-                  }}
-                  required
-                />
+    );
+  else if (cardState === PageStates.Presale) {
+    if (totalPresaleCount - preSaleMintedNFT < 0) {
+      displayInfoPart = (
+        <h2 className="mint-card-base__info__sold">Sold Out</h2>
+      );
+    } else {
+      displayInfoPart = (
+        <>
+          <div className="mint-card__form">
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <label htmlFor="code">Ref. Code:</label>
+              <input
+                id="code"
+                type="text"
+                value={refAddrMintCard}
+                onChange={(e) => {
+                  setRefAddrMintCard(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <div className="haveone-select">
+                <label htmlFor="radio">I don&#39;t have one</label>
+                {isRefCode ? (
+                  <>
+                    <div
+                      onClick={() => setIsRefCode(!isRefCode)}
+                      className="radio_dripTag_selected"
+                    ></div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      onClick={() => setIsRefCode(!isRefCode)}
+                      className="radio_dripTag"
+                    ></div>
+                  </>
+                )}
               </div>
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <div className="haveone-select">
-                  <label htmlFor="radio">I don&#39;t have one</label>
-                  {isRefCode ? (
-                    <>
-                      <div
-                        onClick={() => setIsRefCode(!isRefCode)}
-                        className="radio_dripTag_selected"
-                      ></div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        onClick={() => setIsRefCode(!isRefCode)}
-                        className="radio_dripTag"
-                      ></div>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="mint-card__form__item">
-                <p className="red">100% of Addons goes to Drip</p>
-              </div>
+            </div>
+            <div className="mint-card__form__item">
+              <p className="red">100% of Addons goes to Drip</p>
+            </div>
 
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <div className="driptag-select">
-                  <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
-                  <div
-                    onClick={() => ondrip1()}
-                    className={
-                      isDrip1 ? "radio_dripTag_selected" : "radio_dripTag"
-                    }
-                  ></div>
-                </div>
-              </div>
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <div className="driptatoo-select">
-                  <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
-                  <div
-                    onClick={() => ondrip2()}
-                    className={
-                      isDrip2 ? "radio_dripTag_selected" : "radio_dripTag"
-                    }
-                  ></div>
-                </div>
-              </div>
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <div className="addboth-select">
-                  <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                  <div
-                    onClick={() => ondrip3()}
-                    className={
-                      isDrip3 ? "radio_dripTag_selected" : "radio_dripTag"
-                    }
-                  ></div>
-                </div>
-              </div>
-              <div className="mint-card__form__item mint-card__form__item--radio">
-                <label htmlFor="quantity">Quantity:</label>
-                <input
-                  id="quantity"
-                  type="number"
-                  onChange={(e) => {
-                    setmintCardsQuantity(parseInt(e.target.value));
-                  }}
-                  style={{
-                    outline: "None",
-                  }}
-                  required
-                />
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <div className="driptag-select">
+                <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
+                <div
+                  onClick={() => ondrip1()}
+                  className={
+                    isDrip1 ? "radio_dripTag_selected" : "radio_dripTag"
+                  }
+                ></div>
               </div>
             </div>
-            <div className="mint-card-base__info__btc">
-              <span>
-                {(mintCardsQuantity * 0.0015
-                  ? mintCardsQuantity * 0.0015
-                  : 0
-                ).toFixed(4)}{" "}
-                BTC.b
-              </span>
-              <img src={btcIcon} alt="btc-info" />
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <div className="driptatoo-select">
+                <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
+                <div
+                  onClick={() => ondrip2()}
+                  className={
+                    isDrip2 ? "radio_dripTag_selected" : "radio_dripTag"
+                  }
+                ></div>
+              </div>
             </div>
-          </>
-        )}
-      </>
-    ) : cardState === PageStates.DripPreSale ? (
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <div className="addboth-select">
+                <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                <div
+                  onClick={() => ondrip3()}
+                  className={
+                    isDrip3 ? "radio_dripTag_selected" : "radio_dripTag"
+                  }
+                ></div>
+              </div>
+            </div>
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <label htmlFor="quantity">Quantity:</label>
+              <input
+                id="quantity"
+                type="number"
+                onChange={(e) => {
+                  setmintCardsQuantity(parseInt(e.target.value));
+                }}
+                style={{
+                  outline: "None",
+                }}
+                required
+              />
+            </div>
+          </div>
+          <div className="mint-card-base__info__btc">
+            <span>
+              {(mintCardsQuantity * 0.0015
+                ? mintCardsQuantity * 0.0015
+                : 0
+              ).toFixed(4)}{" "}
+              BTC.b
+            </span>
+            <img src={btcIcon} alt="btc-info" />
+          </div>
+        </>
+      );
+    }
+  } else if (cardState === PageStates.DripPreSale)
+    displayInfoPart = (
       <>
         <div className="mint-card__form">
           <div className="mint-card__form__item mint-card__form__item--radio">
@@ -686,7 +808,9 @@ function MintCard() {
           <img src={btcIcon} alt="btc-info" />
         </div>
       </>
-    ) : cardState === PageStates.OneKClub ? (
+    );
+  else if (cardState === PageStates.OneKClub)
+    displayInfoPart = (
       <>
         <div
           className="mint-card__form__item mint-card__form__item--radio"
@@ -733,7 +857,9 @@ function MintCard() {
           <h3>$200</h3>
         </div>
       </>
-    ) : (
+    );
+  else
+    displayInfoPart = (
       <>
         <img
           src={makeselection}
@@ -778,19 +904,7 @@ function MintCard() {
                     margin: "20px",
                     padding: "10px",
                   }}
-                >
-                  {/* <h3> {mintingState} </h3> */}
-                  {/* <ProgressBar
-											style={{
-												position: "absolute",
-												backgroundColor: "#ff5b00",
-												width: "90%",
-												bottom: "60px",
-												zIndex: "1",
-												borderRadius: "0"
-											}}
-										/> */}
-                </ProgressBarWrapper>
+                ></ProgressBarWrapper>
               )}
               <img src={cardBlock} alt="card-block" />
               <h3>M-o-M Inc.</h3>

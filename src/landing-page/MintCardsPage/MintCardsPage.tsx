@@ -12,12 +12,14 @@ function MintCardsPage() {
     <main className="main">
       <div className="cards">
         <div style={{ display: "flex" }}>
-          <Button
+          {/* This is the place where Minting was shown */}
+
+          {/* <Button
             onClick={() => dispatch(setCardState(PageStates.Minting))}
             className="btn-mint--red btn-mint--small sidePanel-drip"
           >
             Minting
-          </Button>
+          </Button> */}
         </div>
         <MintCard />
       </div>
