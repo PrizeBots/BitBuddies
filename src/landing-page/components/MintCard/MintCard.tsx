@@ -593,14 +593,16 @@ function MintCard() {
   else if (cardState === PageStates.Presale)
     displayFooterPart = (
       <div
-        onClick={preSaleMint}
+        onClick={() => dispatch(setCardState(PageStates.Minting))}
+        // onClick={()preSaleMint}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
     );
   else if (cardState === PageStates.DripPreSale)
     displayFooterPart = (
       <div
-        onClick={preSaleMint}
+        // onClick={preSaleMint}
+        onClick={() => dispatch(setCardState(PageStates.Minting))}
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
     );
