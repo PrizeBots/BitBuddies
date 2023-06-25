@@ -496,7 +496,7 @@ function MintCard() {
   } else if (cardState === PageStates.Minting) {
     displayInnerPart = (
       <>
-        <h5>Drip Fighter Mint Card</h5>
+        <h5>{localStorage.getItem("state")} Mint Card</h5>
         <p>
           {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
           <br></br> Minted

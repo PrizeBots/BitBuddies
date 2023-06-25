@@ -52,7 +52,10 @@ const SidePanel = () => {
                     <div className="btn-mint--small sidePanel-disabled"></div>
                   ) : (
                     <div
-                      onClick={() => dispatch(setCardState(PageStates.Presale))}
+                      onClick={() => {
+                        localStorage.setItem("state", "Drip Fighter");
+                        dispatch(setCardState(PageStates.Presale));
+                      }}
                       className="btn-mint--small sidePanel-drip"
                     ></div>
                   )}
@@ -68,9 +71,10 @@ const SidePanel = () => {
                     <div className="btn-mint--small sidePanel-disabled"></div>
                   ) : (
                     <div
-                      onClick={() =>
-                        dispatch(setCardState(PageStates.DripPreSale))
-                      }
+                      onClick={() => {
+                        localStorage.setItem("state", "Bit Fighter");
+                        dispatch(setCardState(PageStates.DripPreSale));
+                      }}
                       className="btn-mint--small sidePanel-bit"
                     ></div>
                   )}
@@ -86,9 +90,10 @@ const SidePanel = () => {
                     <div className="btn-mint--small sidePanel-disabled"></div>
                   ) : (
                     <div
-                      onClick={() =>
-                        dispatch(setCardState(PageStates.OneKClub))
-                      }
+                      onClick={() => {
+                        localStorage.setItem("state", "The 1K Club");
+                        dispatch(setCardState(PageStates.OneKClub));
+                      }}
                       className="btn-mint--small sidePanel-oneclub"
                     ></div>
                   )}
