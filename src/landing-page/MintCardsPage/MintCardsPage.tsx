@@ -11,7 +11,7 @@ function MintCardsPage() {
   return (
     <main className="main">
       <div className="cards">
-        <div style={{display: "flex"}}>
+        <div style={{ display: "flex" }}>
           <Button
             onClick={() => dispatch(setCardState(PageStates.Minting))}
             className="btn-mint--red btn-mint--small sidePanel-drip"

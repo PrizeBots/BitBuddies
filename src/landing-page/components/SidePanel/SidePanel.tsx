@@ -16,31 +16,46 @@ export enum PageStates {
 }
 
 const SidePanel = () => {
+  const loggedInUserWalletAddress = useAppSelector(
+    (state) => state.web3store.userAddress
+  );
   const dispatch = useDispatch();
   const state = useAppSelector(
     (state) => state.mintCardStateStore.state_selected
   );
   const refrinkHandle = () => {
-    navigator.clipboard.writeText(" www.bitfighters.club/mint/ref?=0x000000000000000").then(() => {
-      confirm("Your ref link has been copied! Go paste and share it with everyone!")
-    })
-  }
+    const temp = document.URL;
+    console.log(temp, document);
+
+    navigator.clipboard
+      .writeText(temp + "/ref?=" + loggedInUserWalletAddress)
+      .then(() => {
+        confirm(
+          "Your ref link has been copied! Go paste and share it with everyone!"
+        );
+      });
+  };
   return (
     <aside className="side-panel">
       <div className="side-panel__layer">
         <div className="side-panel__inner">
           <div className="bottom-button-cover"></div>
-            {<>
+          {
+            <>
               {state === PageStates.Presale ? (
                 <>
                   <div className="btn-mint--small presale-state-active"></div>
                 </>
               ) : (
                 <>
-                  <div
-                    onClick={() => dispatch(setCardState(PageStates.Presale))}
-                    className="btn-mint--small sidePanel-drip"
-                  ></div>
+                  {state === PageStates.NotConnectedState ? (
+                    <div className="btn-mint--small sidePanel-disabled"></div>
+                  ) : (
+                    <div
+                      onClick={() => dispatch(setCardState(PageStates.Presale))}
+                      className="btn-mint--small sidePanel-drip"
+                    ></div>
+                  )}
                 </>
               )}
               {state === PageStates.DripPreSale ? (
@@ -49,12 +64,16 @@ const SidePanel = () => {
                 </>
               ) : (
                 <>
-                  <div
-                    onClick={() =>
-                      dispatch(setCardState(PageStates.DripPreSale))
-                    }
-                    className="btn-mint--small sidePanel-bit"
-                  ></div>
+                  {state === PageStates.NotConnectedState ? (
+                    <div className="btn-mint--small sidePanel-disabled"></div>
+                  ) : (
+                    <div
+                      onClick={() =>
+                        dispatch(setCardState(PageStates.DripPreSale))
+                      }
+                      className="btn-mint--small sidePanel-bit"
+                    ></div>
+                  )}
                 </>
               )}
               {state === PageStates.OneKClub ? (
@@ -63,19 +82,28 @@ const SidePanel = () => {
                 </>
               ) : (
                 <>
-                  <div
-                    onClick={() => dispatch(setCardState(PageStates.OneKClub))}
-                    className="btn-mint--small sidePanel-oneclub"
-                  ></div>
+                  {state === PageStates.NotConnectedState ? (
+                    <div className="btn-mint--small sidePanel-disabled"></div>
+                  ) : (
+                    <div
+                      onClick={() =>
+                        dispatch(setCardState(PageStates.OneKClub))
+                      }
+                      className="btn-mint--small sidePanel-oneclub"
+                    ></div>
+                  )}
                 </>
               )}
-              <div
-                className="btn-mint--small sidePanel-disabled"
-              ></div>
-              <div
-                className="btn-mint--small sidePanel-refrink"
-                onClick={refrinkHandle}
-              ></div>
+              <div className="btn-mint--small sidePanel-disabled"></div>
+
+              {state === PageStates.NotConnectedState ? (
+                <div className="btn-mint--small sidePanel-refrink-disabled sidePanel-disabled"></div>
+              ) : (
+                <div
+                  onClick={refrinkHandle}
+                  className="btn-mint--small sidePanel-refrink"
+                ></div>
+              )}
             </>
           }
         </div>

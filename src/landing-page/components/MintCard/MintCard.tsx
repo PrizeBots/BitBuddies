@@ -43,7 +43,7 @@ import {
 } from "../../../hooks/ApiCaller";
 import { PRESALE_CONTRACT_ADDRESS } from "../../../contract/presale_constants";
 import styled from "styled-components";
-import { LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { PRESALE_DRIP_CONTRACT_V2 } from "../../../contract/presale_drip_constants";
 
 const ProgressBarWrapper = styled.div`
@@ -109,6 +109,50 @@ function MintCard() {
   const [dripRefBoxMintCard, setDripRefBoxMintCard] = useState(0);
   const [isRefCode, setIsRefCode] = useState(false);
   const [isDrip, setIsDrip] = useState(0);
+
+  const [isDrip1, setIsDrip1] = useState(false);
+  const [isDrip2, setIsDrip2] = useState(false);
+  const [isDrip3, setIsDrip3] = useState(false);
+
+  const ondrip1 = () => {
+    if (isDrip1 === false) {
+      if (isDrip2 === true) {
+        setIsDrip1(false);
+        setIsDrip2(false);
+        setIsDrip3(true);
+      } else {
+        setIsDrip1(true);
+        setIsDrip3(false);
+      }
+    } else {
+      setIsDrip1(false);
+    }
+  };
+
+  const ondrip2 = () => {
+    if (isDrip2 === false) {
+      if (isDrip1 === true) {
+        setIsDrip1(false);
+        setIsDrip2(false);
+        setIsDrip3(true);
+      } else {
+        setIsDrip3(false);
+        setIsDrip2(true);
+      }
+    } else {
+      setIsDrip2(false);
+    }
+  };
+
+  const ondrip3 = () => {
+    if (isDrip3 === false) {
+      setIsDrip1(false);
+      setIsDrip2(false);
+      setIsDrip3(true);
+    } else {
+      setIsDrip3(false);
+    }
+  };
 
   const cardState = useAppSelector(
     (state) => state.mintCardStateStore.state_selected
@@ -394,7 +438,7 @@ function MintCard() {
       <img src={pleaseConnect} alt="please-connect-img" />
     ) : cardState === PageStates.Minting ? (
       <>
-        <h5>Bit Fighter Mint Card</h5>
+        <h5>Drip Fighter Mint Card</h5>
         <p>
           {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
           <br></br> Minted
@@ -437,7 +481,7 @@ function MintCard() {
         className="btn-mint--red btn-mint--big footer-connect"
       ></div>
     ) : cardState === PageStates.Minting ? (
-      <div className="btn-mint--grey btn-mint--big"></div>
+      <button className="btn-mint--grey btn-mint--big"></button>
     ) : cardState === PageStates.Presale ? (
       <div
         onClick={preSaleMint}
@@ -454,7 +498,7 @@ function MintCard() {
         className="btn-mint--red btn-mint--big footer-go"
       ></div>
     ) : (
-      <div className="btn-mint--grey btn-mint--big"></div>
+      <Button className="btn-mint--grey btn-mint--big"></Button>
     );
 
   const displayInfoPart =
@@ -523,123 +567,40 @@ function MintCard() {
               <div className="mint-card__form__item">
                 <p className="red">100% of Addons goes to Drip</p>
               </div>
-              {isDrip === 0 ? (
-                <>
-                  <div className="mint-card__form__item mint-card__form__item--radio">
-                    <div className="driptag-select">
-                      <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
-                      <div
-                        onClick={() => setIsDrip(1)}
-                        className="radio_dripTag"
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="mint-card__form__item mint-card__form__item--radio">
-                    <div className="driptatoo-select">
-                      <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
-                      <div
-                        onClick={() => setIsDrip(2)}
-                        className="radio_dripTag"
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="mint-card__form__item mint-card__form__item--radio">
-                    <div className="addboth-select">
-                      <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                      <div
-                        onClick={() => setIsDrip(3)}
-                        className="radio_dripTag"
-                      ></div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {isDrip === 1 ? (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="driptag-select">
-                          <label htmlFor="radio">
-                            Add Drip Tag: 0.002BTC.b
-                          </label>
-                          <div
-                            onClick={() => setIsDrip(0)}
-                            className="radio_dripTag_active"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="driptag-select">
-                          <label htmlFor="radio">
-                            Add Drip Tag: 0.002BTC.b
-                          </label>
-                          <div
-                            onClick={() => setIsDrip(1)}
-                            className="radio_dripTag"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {isDrip === 2 ? (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="driptatoo-select">
-                          <label htmlFor="radio">
-                            Add Drip Tatoo: 0.002BTC.b
-                          </label>
-                          <div
-                            onClick={() => setIsDrip(0)}
-                            className="radio_dripTag_active"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="driptatoo-select">
-                          <label htmlFor="radio">
-                            Add Drip Tatoo: 0.002BTC.b
-                          </label>
-                          <div
-                            onClick={() => setIsDrip(2)}
-                            className="radio_dripTag"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {isDrip === 3 ? (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="addboth-select">
-                          <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                          <div
-                            onClick={() => setIsDrip(0)}
-                            className="radio_dripTag_active"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mint-card__form__item mint-card__form__item--radio">
-                        <div className="addboth-select">
-                          <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                          <div
-                            onClick={() => setIsDrip(3)}
-                            className="radio_dripTag"
-                          ></div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="driptag-select">
+                  <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
+                  <div
+                    onClick={() => ondrip1()}
+                    className={
+                      isDrip1 ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
+              </div>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="driptatoo-select">
+                  <label htmlFor="radio">Add Drip Tatoo: 0.002BTC.b</label>
+                  <div
+                    onClick={() => ondrip2()}
+                    className={
+                      isDrip2 ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
+              </div>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="addboth-select">
+                  <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                  <div
+                    onClick={() => ondrip3()}
+                    className={
+                      isDrip3 ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
+              </div>
               <div className="mint-card__form__item mint-card__form__item--radio">
                 <label htmlFor="quantity">Quantity:</label>
                 <input
