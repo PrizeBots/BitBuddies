@@ -223,6 +223,17 @@ export const PRESALE_DRIP_ABI = [{
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "dripPartnerWallet",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{
       "internalType": "address",
       "name": "_userAddress",
@@ -233,6 +244,21 @@ export const PRESALE_DRIP_ABI = [{
       "internalType": "uint256[]",
       "name": "value",
       "type": "uint256[]"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "_tokenID",
+      "type": "uint256"
+    }],
+    "name": "fetchReferrer",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -464,6 +490,17 @@ export const PRESALE_DRIP_ABI = [{
   },
   {
     "inputs": [],
+    "name": "priceOfTatooAndTagAddon",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -542,6 +579,17 @@ export const PRESALE_DRIP_ABI = [{
       "type": "address"
     }],
     "name": "setBitfighterContractAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_dripPartnerWallet",
+      "type": "address"
+    }],
+    "name": "setDripPartnerWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -738,7 +786,7 @@ export const PRESALE_DRIP_ABI = [{
   }
 ]
 
-const DEV_DRIP_PRESALE_ADDRESS = "0x7a890eF3F63Cf97FAc4bbb94093275605CcbAcA6"
+const DEV_DRIP_PRESALE_ADDRESS = "0xA54046feF06E8E66C5bA66d2D50674945754bE65"
 const PROD_DRIP_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
 export let PRESALE_DRIP_CONTRACT_V2 = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {

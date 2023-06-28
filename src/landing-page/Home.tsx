@@ -23,7 +23,6 @@ const Content = styled.div`
   margin: 20px 0;
   align-items: center;
   justify-content: center;
-
   img {
     border-radius: 8px;
     height: 120px;

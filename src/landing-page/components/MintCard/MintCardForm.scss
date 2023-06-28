@@ -4,8 +4,9 @@
 .mint-card {
   &__form {
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-align: left;
+    margin-top: 10px;
     &__title {
       margin-bottom: 5px;
       margin-left: 2px;
@@ -19,7 +20,14 @@
       }
     }
     &__item {
-      margin-left: 8px;
+      position: relative;
+      z-index: 100;
+      .red{
+        margin: 0;
+        margin: 0 0 3px 5px;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+      }
       label {
         font-size: 22px;
         color: $dark;
@@ -31,9 +39,10 @@
         outline: 0;
         border: 0;
         border-bottom: 3px solid $dark;
-        max-width: 120px;
+        max-width: 200px;
+        text-align: center;
         font-family: "Cooper Black";
-        font-size: 22px;
+        font-size: 16px;
         color: $dark;
       }
       input[type="number"] {
@@ -43,33 +52,69 @@
         outline: 0;
         border: 0;
         border-bottom: 3px solid $dark;
-        max-width: 120px;
+        max-width: 40px;
+        text-align: center;
         font-family: "Cooper Black";
-        font-size: 22px;
+        font-size: 16px;
         color: $dark;
       }
       .red{
         color: #ae0606;
       }
+      &--radio:last-child{
+        position: absolute;
+        bottom: 70px;
+      }
       &--radio {
         display: flex;
         align-items: flex-end;
-        margin-bottom: 5px;
+        margin-bottom: 3px;
+        .haveone-select, .driptag-select, .driptatoo-select, .addboth-select{
+          display: flex;
+          width: 100%;
+        }
+        .radio_dripTag {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0000_select.png");
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+        }
+        .radio_dripTag:hover {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0001_select_hover.png");
+        }
+        .radio_dripTag:active {
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
+        .radio_dripTag_selected {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
+        .radio_dripTag_inactive {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-color: grey;
+          border-radius: 30px;
+        }
+        .radio_dripTag_active {
+          background-repeat: no-repeat;
+          width: 50px;
+          margin: 2px 0 0 10px;
+          background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
+        }
         label {
-          font-size: 17px;
+          font-size: 14px;
+          letter-spacing: 0.5px;
           margin-left: 5px;
         }
-        input[type="radio"] {
-          position: relative;
-          z-index: -3;
-          display: none;
-        }
         .radio-circle {
-          margin-left: 0;
-          margin-bottom: 3px;
           display: block;
-          height: 20px;
-          width: 20px;
+          margin-left: 2px;
+          // margin-bottom: 3px;
+          height: 15px;
+          width: 15px;
           border: 3px solid $dark;
           border-radius: 50%;
         }
@@ -86,4 +131,8 @@
       }
     }
   }
+}
+
+#code{
+  text-align: left !important;
 }

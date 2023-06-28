@@ -271,6 +271,7 @@ export async function checkAllowanceGeneral(owner, spender) {
 }
 
 export async function checkAllowanceOneKClub(owner) {
+  console.debug("debug...", owner, USDC_ADDRESS, onek_club_contract_adress)
   // await Moralis.enableWeb3()
   const sendOptions = {
     contractAddress: USDC_ADDRESS,
@@ -626,7 +627,7 @@ export async function mintOneKClubCard(quantity) {
     await transaction.wait();
     console.log("--------------------------------");
   } catch (err) {
-    console.log("err in mintPreSaleNFT ", err)
+    console.log("err in mintOneKClubCard ", err)
     return false;
   }
   return true;

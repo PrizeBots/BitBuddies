@@ -26,6 +26,7 @@ export const NotificationStore = createSlice({
     },
 
     SetFailureNotificationBool: (state: { failureNotificationBool: boolean; },  action: PayloadAction<boolean>) => {
+      console.log("in_SetFailureNotificationBool ", action.payload)
       state.failureNotificationBool = action.payload;
     },
 

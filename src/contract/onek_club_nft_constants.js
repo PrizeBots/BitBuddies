@@ -621,4 +621,4 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
   }
 ]
 
-export const onek_club_contract_adress = "0x754E80519de6F1312Ce52Fb716Dadb79CC08a93f"
+export const onek_club_contract_adress = "0xA01f827C234AdEaE8FB1B38995245626Fb331259"

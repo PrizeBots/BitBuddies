@@ -25,7 +25,7 @@
   &--red {
     background-color: $red;
     &:hover {
-      background-color: #e60808;
+      background-color: #931919;
     }
   }
   &--dark {
@@ -34,17 +34,26 @@
       background-color: #1e1e1e;
     }
   }
+  &--grey {
+    background-color: $grey;
+    // &:hover {
+    //   background-color: #505050;
+    // }
+  }
+  &--lightgray {
+    background-color: $light-gray;
+    &:hover {
+      background-color: #505050;
+    }
+  }
   &--big {
     font-size: 32px;
+    width: 180px;
   }
   &--small {
     font-size: 19px;
   }
-
   &:active {
-    border-image-width: 9px 12px 10px;
-    span {
-      transform: scale(0.85);
-    }
+    background-color: #931919;
   }
 }

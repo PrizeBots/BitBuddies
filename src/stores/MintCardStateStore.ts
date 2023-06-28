@@ -8,10 +8,12 @@ import { PageStates } from "../landing-page/components/SidePanel/SidePanel";
 
 interface MintCardState {
   state_selected: string;
+  global_ref_code: string;
 }
 
 const initialState: MintCardState = {
-  state_selected: PageStates.Presale,
+  state_selected: PageStates.NotConnectedState,
+  global_ref_code: "",
 };
 
 export const MintCardStateSlice = createSlice({
@@ -22,10 +24,14 @@ export const MintCardStateSlice = createSlice({
       // console.log("sidepanel clicked.. ", action.payload)
       state.state_selected = action.payload;
     },
+
+    SetGlobalRefCode: (state: { global_ref_code: string; }, action: PayloadAction<string>) => {
+      state.global_ref_code = action.payload;
+    },
   },
 });
 
-export const { setCardState } = MintCardStateSlice.actions;
+export const { setCardState, SetGlobalRefCode } = MintCardStateSlice.actions;
 
 // export const selectMintCardState = (state: RootState) =>
 //   state.mintCardStateStore.cardType;

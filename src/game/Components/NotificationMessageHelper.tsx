@@ -20,6 +20,11 @@ export default function NotificationMessageHelper () {
   
   const handleClose = () => {
     store.dispatch(SetSuccessNotificationBool(false))
+    // store.dispatch(SetFailureNotificationBool(false))
+  };
+
+  const handleCloseErr = () => {
+    // store.dispatch(SetSuccessNotificationBool(false))
     store.dispatch(SetFailureNotificationBool(false))
   };
 
@@ -44,10 +49,10 @@ export default function NotificationMessageHelper () {
         anchorOrigin={{ vertical, horizontal }}
         open={openFailureNotificationBool}
         autoHideDuration={5000}
-        onClose={handleClose}
+        onClose={handleCloseErr}
         key={vertical + horizontal + "sdsdfsd"}
       >
-        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+        <Alert onClose={handleCloseErr} severity="error" sx={{ width: '100%' }} variant="filled">
           <AlertTitle> Failure </AlertTitle>
             {messageFailureNotificationBool}
         </Alert>
