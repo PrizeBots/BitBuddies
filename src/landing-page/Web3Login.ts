@@ -9,6 +9,8 @@ import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import detectEthereumProvider from '@metamask/detect-provider'
 import { getBalances, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
+import { setCardState } from '../stores/MintCardStateStore';
+import { PageStates } from './components/SidePanel/SidePanel';
 // import { SetWbtcBalance } from '../stores/Web3StoreBalances';
 // import WalletConnectProvider from "@walletconnect/web3-provider";
 
@@ -116,6 +118,7 @@ export async function Web3Login() {
     return;
   }
   store.dispatch(Login(accounts[0]));
+  store.dispatch(setCardState(PageStates.ProgressState))
   store.dispatch(ChangeValidUserState(true))
 
   const auth_token: string = await loginAndAuthenticateUser(accounts[0]);

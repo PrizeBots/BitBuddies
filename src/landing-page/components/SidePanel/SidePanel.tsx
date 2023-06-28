@@ -13,6 +13,7 @@ export enum PageStates {
   NotConnectedState = "NotConnected",
   Bitfighter = "Bitfighter",
   ProgressState = "progress",
+  MakeSelection = "make_selection"
 }
 
 const SidePanel = () => {
@@ -28,7 +29,7 @@ const SidePanel = () => {
     console.log(temp, document);
 
     navigator.clipboard
-      .writeText(temp + "/ref?=" + loggedInUserWalletAddress)
+      .writeText(temp + "?ref_code=" + loggedInUserWalletAddress)
       .then(() => {
         confirm(
           "Your ref link has been copied! Go paste and share it with everyone!"
@@ -53,7 +54,7 @@ const SidePanel = () => {
                   ) : (
                     <div
                       onClick={() => {
-                        localStorage.setItem("state", "Drip Fighter");
+                        localStorage.setItem("state", "Drip Fighter Mint Card");
                         dispatch(setCardState(PageStates.Presale));
                       }}
                       className="btn-mint--small sidePanel-drip"
@@ -72,7 +73,7 @@ const SidePanel = () => {
                   ) : (
                     <div
                       onClick={() => {
-                        localStorage.setItem("state", "Bit Fighter");
+                        localStorage.setItem("state", "Bit Fighter Mint Card");
                         dispatch(setCardState(PageStates.DripPreSale));
                       }}
                       className="btn-mint--small sidePanel-bit"

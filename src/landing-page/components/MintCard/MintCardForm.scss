@@ -6,6 +6,7 @@
     width: 100%;
     margin-bottom: 10px;
     text-align: left;
+    margin-top: 10px;
     &__title {
       margin-bottom: 5px;
       margin-left: 2px;
@@ -24,7 +25,7 @@
       .red{
         margin: 0;
         margin: 0 0 3px 5px;
-        font-size: 19px;
+        font-size: 15px;
         letter-spacing: 0.5px;
       }
       label {
@@ -38,7 +39,7 @@
         outline: 0;
         border: 0;
         border-bottom: 3px solid $dark;
-        max-width: 120px;
+        max-width: 200px;
         text-align: center;
         font-family: "Cooper Black";
         font-size: 16px;
@@ -51,7 +52,7 @@
         outline: 0;
         border: 0;
         border-bottom: 3px solid $dark;
-        max-width: 120px;
+        max-width: 40px;
         text-align: center;
         font-family: "Cooper Black";
         font-size: 16px;
@@ -104,7 +105,7 @@
           background-image: url("../../../assets/images/work/Mint_Panel__0001s_0002_selected.png");
         }
         label {
-          font-size: 15px;
+          font-size: 14px;
           letter-spacing: 0.5px;
           margin-left: 5px;
         }

@@ -181,23 +181,6 @@ export const PRESALE_ABI = [{
   },
   {
     "inputs": [{
-        "internalType": "uint256",
-        "name": "_tokenID",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_newReferrerAddress",
-        "type": "address"
-      }
-    ],
-    "name": "changeReferrerAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
         "internalType": "string",
         "name": "_tokenURI",
         "type": "string"
@@ -250,6 +233,21 @@ export const PRESALE_ABI = [{
       "internalType": "uint256[]",
       "name": "value",
       "type": "uint256[]"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "_tokenID",
+      "type": "uint256"
+    }],
+    "name": "fetchReferrer",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -690,7 +688,7 @@ export const PRESALE_ABI = [{
 ]
 
 
-const DEV_PRESALE_ADDRESS = "0x62939359D7D87b71EB76cb993f0fecB23bA6A27A"
+const DEV_PRESALE_ADDRESS = "0xd025cF66cC77D2A0BeCFc1C1C0424C08E435bEC5"
 const PROD_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
 export let PRESALE_CONTRACT_ADDRESS = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {

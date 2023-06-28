@@ -133,5 +133,5 @@ export function parseUSDCBalance(balance: number| undefined) {
     return "0"
   }
   const bn = new BigNumber(balance);
-  return Math.floor(bn.dividedBy(10**6).toNumber()).toLocaleString();
+  return Math.floor(Math.round(bn.dividedBy(10**6).toNumber() * 10)/10).toLocaleString();
 }

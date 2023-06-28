@@ -41,6 +41,17 @@ const StyledFab = styled(Fab)`
   }
 `;
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
+const isMetaMaskInstalled = () => {
+  const { ethereum } = window;
+  return Boolean(ethereum && ethereum.isMetaMask);
+};
+
 function Header() {
   const userAddress = useAppSelector((state) => state.web3store.userAddress);
   const maticBalance = useAppSelector(
@@ -118,18 +129,20 @@ function Header() {
     // }, 30 * 1000)
   };
 
+  
   useEffect(() => {
     (async function () {
       console.log("executing this..");
       // const namedata = await getContractName()
       // console.log("name-- ", namedata)
       // const ddddata = ReaderFunctions.getContractName()
-      if (!metaMaskInstalled) return;
+      if (!isMetaMaskInstalled()) return;
       await window.ethereum.enable();
-      window.ethereum?.on("accountsChanged", beforeUnloadFun);
-      window.ethereum?.on("chainChanged", afterNetworkChanged);
+      console.log("executing this..2");
+      window.ethereum.on("accountsChanged", beforeUnloadFun);
+      window.ethereum.on("chainChanged", afterNetworkChanged);
       function beforeUnloadFun(account: string) {
-        console.log("accounts changed...2 ", account);
+        console.log("accounts changed...2 beforeUnloadFun ", account);
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -358,21 +371,21 @@ function Header() {
               </Link>
             </li>
 
-            <li className="nav-item" key={uuidv4()}>
+            {/* <li className="nav-item" key={uuidv4()}>
               <Link className="nav-link" to="/presale">
                 <div className="cooper-black-tab">Testing</div>
               </Link>
-            </li>
+            </li> */}
+
+            {/* <li className="nav-item" key={uuidv4()}>
+              <Link className="nav-link" to="/mint">
+                <div className="cooper-black-tab">Mint</div>
+              </Link>
+            </li> */}
 
             <li className="nav-item" key={uuidv4()}>
               <Link className="nav-link" to="/mint">
                 <div className="cooper-black-tab">Mint</div>
-              </Link>
-            </li>
-
-            <li className="nav-item" key={uuidv4()}>
-              <Link className="nav-link" to="/mint-cards">
-                <div className="cooper-black-tab">Mint Cards</div>
               </Link>
             </li>
 

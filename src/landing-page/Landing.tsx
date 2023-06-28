@@ -15,6 +15,8 @@ import { Web2LoginPage } from "./Web2LoginPage";
 import styled from "styled-components";
 import { SetGameStarted } from "../stores/PlayerData";
 import MintCardsPage from "./MintCardsPage/MintCardsPage";
+import { SetGlobalRefCode } from "../stores/MintCardStateStore";
+import { isNullOrUndefined } from "util";
 // import MintPage3 from './MintPage3';
 
 const Backdrop = styled.div`
@@ -49,6 +51,7 @@ const Landing = (props: any) => {
     (location.pathname === "/home" ||
       location.pathname === "/" ||
       location.pathname === "/mint" ||
+      // location.pathname === "/mint-cards" ||
       location.pathname === "/presale")
   ) {
     if (window.confirm("Are you sure?") == true) {
@@ -80,21 +83,32 @@ const Landing = (props: any) => {
     if (location.pathname === "/home" || location.pathname === "/") {
       View = <Home />;
       dispatch(SetGameStarted(false));
-    } else if (location.pathname === "/mint") {
-      console.log(location.pathname);
-      View = <OldMintPage />;
-      dispatch(SetGameStarted(false));
-    } else if (location.pathname === "/presale") {
-      console.log(location.pathname);
-      View = <MintPage />;
-      dispatch(SetGameStarted(false));
-    } else if (location.pathname === "/login") {
+    } 
+    // else if (location.pathname === "/mint") {
+    //   console.log("debug.. -", location.pathname);
+    //   View = <OldMintPage />;
+    //   dispatch(SetGameStarted(false));
+    // } else if (location.pathname === "/presale") {
+    //   console.log("debug.. -", location.pathname);
+    //   View = <MintPage />;
+    //   dispatch(SetGameStarted(false));
+    // } 
+    else if (location.pathname.includes("/login")) {
+      console.log("debug.. -", location.pathname);
       View = <Web2LoginPage />;
       dispatch(SetGameStarted(false));
-    } else if (location.pathname === "/game") {
+    } else if (location.pathname.includes("/game")) {
+      console.log("debug.. -", location.pathname);
       View = <Fighters />;
       // dispatch(setGameStarted(false));
-    } else if (location.pathname === "/mint-cards") {
+    } else if (location.pathname.includes("/mint")) {
+      const url = new URL(window.location.href);
+      const global_ref_code = url.searchParams.get("ref_code");
+      console.log("debug.. -", location.pathname, window.location.href, "ref -",  global_ref_code);
+      if (global_ref_code) {
+        store.dispatch(SetGlobalRefCode(global_ref_code))
+      }
+      
       View = <MintCardsPage />;
     } else {
       View = (
