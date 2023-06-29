@@ -15,6 +15,7 @@ import { ChangeMetaMaskInstalled } from "./stores/UserWebsiteStore";
 import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
 // import { LoopAllFightsAndUpdate } from './utils/fight_utils';
 // import { FetchFightInfo } from './hooks/ApiCaller';
+import DocumentMeta from 'react-document-meta';
 
 const Backdrop = styled.div`
   position: absolute;
@@ -43,6 +44,18 @@ function App() {
   );
   const ValidUser = useAppSelector((state) => state.userPathStore.ValidUser);
   const dispatch = useAppDispatch();
+
+  const meta = {
+      title: 'Some Meta Title',
+      description: 'I am a description, and I can create multiple tags',
+      canonical: 'http://example.com/path/to/page',
+      meta: {
+        charset: 'utf-8',
+        name: {
+          keywords: 'react,meta,document,html,tags'
+        }
+      }
+    };
 
   const getGeoInfo = () => {
     axios
@@ -99,6 +112,18 @@ function App() {
 
   return (
     <div className="App prevent-select">
+      {/* <DocumentMeta {...{
+      title: 'Bit Fighters',
+      description: 'I am a description, and I can create multiple tags',
+      meta: {
+        charset: 'utf-8',
+        name: {
+          keywords: 'react,meta,document,html,tags'
+        }
+      }
+    }}> */}
+
+      
       <Backdrop>
         <BrowserRouter>
           <React.Suspense fallback={loading()}>
@@ -122,6 +147,7 @@ function App() {
           </React.Suspense>
         </BrowserRouter>
       </Backdrop>
+      {/* </DocumentMeta> */}
     </div>
   );
 }

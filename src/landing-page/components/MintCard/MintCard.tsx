@@ -5,6 +5,7 @@ import non_statusReady from "../../../assets/images/non_status-ready.png";
 import statusNotReady from "../../../assets/images/status-not-ready.png";
 import non_statusNotReady from "../../../assets/images/non_status-not-ready.png";
 import btcIcon from "../../../assets/images/btc-icon.png";
+import usdcCoin from "../../../assets/images/work/usdc_32.png"
 import pleaseConnect from "../../../assets/images/work/pleaseconnect.png";
 import welcome from "../../../assets/images/work/welcome.png";
 import makeselection from "../../../assets/images/work/makeselection.png";
@@ -180,6 +181,8 @@ function MintCard() {
   const [onlyTaoo, setOnlyTatoo] = useState(false);
   const [tagAndTatoo, setTagAndTatoo] = useState(false);
 
+  const [errorState, setErrorState] = useState("")
+
   const ondrip1 = () => {
     if (onlyTag === false) {
       if (onlyTaoo === true) {
@@ -285,10 +288,13 @@ function MintCard() {
       setMintingBool(false);
       setMintingState("");
       initializePreMintVars();
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(
-        SetFailureNotificationMessage("Quantity should be greater than 0")
-      );
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(
+      //   SetFailureNotificationMessage("Quantity should be greater than 0")
+      // );
+
+      setErrorState("Quantity should be greater than 0")
+      dispatch(setCardState(PageStates.FailedState))
       bootstrap.play_err_sound();
 
       return;
@@ -300,10 +306,14 @@ function MintCard() {
       setMintingBool(false);
       setMintingState("");
       initializePreMintVars();
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(
-        SetFailureNotificationMessage("Enter Ref. Addr")
-      );
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(
+      //   SetFailureNotificationMessage("Enter Ref. Addr")
+      // );
+
+      setErrorState("Enter Ref. Addr")
+      dispatch(setCardState(PageStates.FailedState))
+
       bootstrap.play_err_sound();
 
       return;
@@ -345,8 +355,14 @@ function MintCard() {
         setMintingBool(false);
         setMintingState("");
 
-        store.dispatch(SetFailureNotificationBool(true));
-        store.dispatch(SetFailureNotificationMessage("Approval Failed"));
+        // setErrorState("Quantity should be greater than 0")
+
+        setErrorState("Approval Failed")
+        dispatch(setCardState(PageStates.FailedState))
+
+
+        // store.dispatch(SetFailureNotificationBool(true));
+        // store.dispatch(SetFailureNotificationMessage("Approval Failed"));
         bootstrap.play_err_sound();
 
         initializePreMintVars();
@@ -369,8 +385,11 @@ function MintCard() {
       setMintingBool(false);
       setMintingState("");
 
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(SetFailureNotificationMessage("Minting Failed"));
+      setErrorState("Minting Failed")
+      dispatch(setCardState(PageStates.FailedState))
+
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(SetFailureNotificationMessage("Minting Failed"));
 
       initializePreMintVars();
       dispatch(setCardState(PageStates.DripPreSale))
@@ -404,10 +423,13 @@ function MintCard() {
 
       initializeDripPreMintVars();
 
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(
-        SetFailureNotificationMessage("Quantity should be greater than 0")
-      );
+      // setErrorState("Quantity should be greater than 0")
+
+      setErrorState("Quantity should be greater than 0")
+      dispatch(setCardState(PageStates.FailedState))
+
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(SetFailureNotificationMessage("Quantity should be greater than 0"));
       bootstrap.play_err_sound();
 
       return;
@@ -451,8 +473,11 @@ function MintCard() {
         setMintingBool(false);
         setMintingState("");
 
-        store.dispatch(SetFailureNotificationBool(true));
-        store.dispatch(SetFailureNotificationMessage("Approval Failed"));
+        setErrorState("Approval Failed")
+        dispatch(setCardState(PageStates.FailedState))
+
+        // store.dispatch(SetFailureNotificationBool(true));
+        // store.dispatch(SetFailureNotificationMessage("Approval Failed"));
         bootstrap.play_err_sound();
 
         initializeDripPreMintVars();
@@ -485,13 +510,16 @@ function MintCard() {
       tempTatoo ? 1 : 0,
       tempTag ? 1 : 0
     );
-    if (!minted) {
+    if (minted.error === 1) {
       bootstrap.play_err_sound();
       setMintingBool(false);
       setMintingState("");
 
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(SetFailureNotificationMessage("Minting Failed"));
+      setErrorState(minted.message)
+      dispatch(setCardState(PageStates.FailedState))
+
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(SetFailureNotificationMessage("Minting Failed"));
 
       initializeDripPreMintVars();
       return;
@@ -529,10 +557,12 @@ function MintCard() {
       setMintingBool(false);
       setMintingState("");
       initializeOneKVars();
-      store.dispatch(SetFailureNotificationBool(true));
-      store.dispatch(
-        SetFailureNotificationMessage("Quantity should be greater than 0")
-      );
+      setErrorState("Quantity should be greater than 0")
+      dispatch(setCardState(PageStates.FailedState))
+      // store.dispatch(SetFailureNotificationBool(true));
+      // store.dispatch(
+      //   SetFailureNotificationMessage("Quantity should be greater than 0")
+      // );
       bootstrap.play_err_sound();
       return;
     }
@@ -548,8 +578,11 @@ function MintCard() {
         setMintingState("");
         initializeOneKVars();
 
-        store.dispatch(SetFailureNotificationBool(true))
-        store.dispatch(SetFailureNotificationMessage("Approval Failed"))
+        // store.dispatch(SetFailureNotificationBool(true))
+        // store.dispatch(SetFailureNotificationMessage("Approval Failed"))
+
+        setErrorState("Approval Failed")
+        dispatch(setCardState(PageStates.FailedState))
         bootstrap.play_err_sound()
         return;
       }
@@ -557,21 +590,25 @@ function MintCard() {
 
     // setMintingState("Minting Your Onek Club Card");
     const minted = await mintOneKClubCard(onekClubQuantity);
-    if (!minted) {
+    console.log("-------minted ------", minted)
+    if (minted.error === 1) {
       bootstrap.play_err_sound()
       setMintingBool(false);
       setMintingState("");
 
-      store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Minting Failed"))
+      // store.dispatch(SetFailureNotificationBool(true))
+      // store.dispatch(SetFailureNotificationMessage("Minting Failed"))
       initializeOneKVars();
+
+      setErrorState(minted.message)
+      dispatch(setCardState(PageStates.FailedState))
       
       return;
     } else {
       bootstrap.play_dr_bits_success_sound()
       updateOneKclubNFTs(store.getState().web3store.userAddress)
-      store.dispatch(SetSuccessNotificationBool(true))
-      store.dispatch(SetSuccessNotificationMessage(`Success`))
+      // store.dispatch(SetSuccessNotificationBool(true))
+      // store.dispatch(SetSuccessNotificationMessage(`Success`))
       initializeOneKVars();
       dispatch(setCardState(PageStates.OneKClub))
       setTimeout(() => {
@@ -582,9 +619,9 @@ function MintCard() {
 
     setMintingBool(false);
     updateOneKClubMintedCount()
-    setTimeout(() => {
-      dispatch(setCardState(PageStates.OneKClub))
-    }, 1000)
+    // setTimeout(() => {
+    //   dispatch(setCardState(PageStates.OneKClub))
+    // }, 1000)
   }
 
   let titleState = "";
@@ -746,50 +783,25 @@ function MintCard() {
         </p>
       </>
     );
-  } else {
+  } else if (cardState === PageStates.FailedState) {
+    displayInnerPart = (
+      <>
+        <h5>{localStorage.getItem("state")}</h5>
+        <p>
+          {
+            localStorage.getItem("state") === "Bit Fighter Mint Card" ?
+            `${preSaleMintedNFT} of ${totalPresaleCount}`:
+            localStorage.getItem("state") === "The 1K Club"?
+            `${onekClubMintedNFT} of ${totalOneKClubNFTs}`:
+            `${dripPresaleMintedNFT} of ${totalDripPresaleCount}`
+          }
+          <br></br> Minted
+        </p>
+      </>
+    );
+  }else {
     displayInnerPart = <img src={welcome} alt="welcome-img" />;
   }
-
-  // const displayInnerPart =
-  // cardState === PageStates.NotConnectedState ? (
-  //   <img src={pleaseConnect} alt="please-connect-img" />
-  // ) : cardState === PageStates.Minting ? (
-  //   <>
-  //     <h5>Drip Fighter Mint Card</h5>
-  //     <p>
-  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
-  //       <br></br> Minted
-  //     </p>
-  //   </>
-  // ) : cardState === PageStates.Presale ? (
-  //   <>
-  //     <h5>Drip Fighter Mint Card</h5>
-  //     <p>
-  //       {`${preSaleMintedNFT} of ${totalPresaleCount}`}
-  //       <br></br> Minted
-  //     </p>
-  //   </>
-  // ) : cardState === PageStates.DripPreSale ? (
-  //   <>
-  //     <h5>Bit Fighter Mint Card</h5>
-  //     <p>
-  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
-  //       <br></br> Minted
-  //     </p>
-  //   </>
-  // ) : cardState === PageStates.OneKClub ? (
-  //   <>
-  //     <h5>The 1K Club</h5>
-  //     <p>
-  //       {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
-  //       <br></br> Minted
-  //     </p>
-  //   </>
-  // ) : (
-  //   <>
-  //     <img src={welcome} alt="welcome-img" />
-  //   </>
-  // );
 
   let displayFooterPart = <></>;
   if (cardState === PageStates.NotConnectedState) {
@@ -964,7 +976,13 @@ function MintCard() {
                 type="number"
                 value={dripMintCardsQuantity}
                 onChange={(e) => {
-                  setdripMintCardsQuantity(parseInt(e.target.value));
+                  // setdripMintCardsQuantity(parseInt(e.target.value));
+
+                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                    setdripMintCardsQuantity(1);
+                  } else {
+                    setdripMintCardsQuantity(parseInt(e.target.value));
+                  }
                 }}
                 style={{
                   outline: "None",
@@ -1042,7 +1060,12 @@ function MintCard() {
               type="number"
               value={mintCardsQuantity}
               onChange={(e) => {
-                setmintCardsQuantity(parseInt(e.target.value));
+                // setmintCardsQuantity(parseInt(e.target.value));
+                if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                  setmintCardsQuantity(1);
+                } else {
+                  setmintCardsQuantity(parseInt(e.target.value));
+                }
               }}
               style={{
                 outline: "None",
@@ -1065,61 +1088,74 @@ function MintCard() {
   else if (cardState === PageStates.OneKClub)
     displayInfoPart = (
       <>
+        <div className="mint-card__form">
+          <div className="mint-card__form__item mint-card__form__item--radio" style={{marginTop: '5px'}}>
+            {/* <h5> */}
+              <label htmlFor="quantity">
+                Card #: {(onekClubMintedNFT + 1)}
+              </label>
+            {/* </h5> */}
+          </div>
+          <div className="mint-card__form__item mint-card__form__item--radio">
+          {/* <h5> */}
+              <label htmlFor="price">
+                Price: ${parseUSDCBalance(priceOfOneKCLubNFT)}
+              </label>
+            {/* </h5> */}
+          </div>
+          <div className="mint-card__form__item mint-card__form__item--radio">
+            <label htmlFor="quantity">Quantity:</label>
+            <input
+              id="quantity"
+              type="number"
+              value={onekClubQuantity}
+              onChange={(e) => {
+                if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                  setOnekClubQuantity(1);
+                } else {
+                  setOnekClubQuantity(parseInt(e.target.value));
+                }
+              }}
+              style={{
+                outline: "None",
+                // width: "50px",
+              }}
+            />
+          </div>
+        </div>
+        <div className="mint-card-base__info__btc">
+          <span>
+            {
+              onekClubQuantity > 0?
+              parseUSDCBalance(priceOfOneKCLubNFT* (1-Math.pow(1.00555,onekClubQuantity))/(-0.00555) ) :
+              0
+            } USDC
+          </span>
+          <img src={usdcCoin} alt="btc-info" />
+        </div>
+      </>
+    );
+  else if (cardState === PageStates.FailedState) {
+    displayInfoPart = (
+      <>
         <div
           className="mint-card__form__item mint-card__form__item--radio"
           style={{ marginTop: "30px" }}
         >
           <h5>
             <label htmlFor="quantity" style={{ fontSize: "1.25rem" }}>
-              Card #: {onekClubMintedNFT + 1}
+              Error Occured
             </label>
           </h5>
-          {/* <div
-            id="quantity"
-            style={{
-              outline: "None",
-              borderBottom: "3px solid #363636",
-              fontSize: "16px",
-              padding: "2px 6px",
-              width: "80px",
-            }}
-          >{onekClubMintedNFT + 1}</div> */}
         </div>
-        <h5>Price: ${parseUSDCBalance(priceOfOneKCLubNFT)}</h5>
-        {/* <h5>Quantity: {onekClubQuantity}</h5> */}
-        <div className="mint-card__form__item mint-card__form__item--radio">
-          <h5>
-            <label htmlFor="quantity" style={{ fontSize: "1.25rem" }}>
-              Quantity:
-            </label>
-          </h5>
-          <input
-            id="quantity"
-            type="number"
-            value={onekClubQuantity}
-            onChange={(e) => {
-              setOnekClubQuantity(parseInt(e.target.value));
-              // if (isNullOrUndefined(e.target.value)) {
-              //   setOnekClubQuantity(0);
-              // } else {
-              //   setOnekClubQuantity(parseInt(e.target.value));
-              // }
-            }}
-            style={{
-              outline: "None",
-              width: "50px",
-            }}
-          />
+        <div className="mint-card__form__item" style={{marginTop: '20px'}}>
+          <p className="red">{errorState}</p>
         </div>
-        <div className="mint-card-base__info__btc">
-          {
-            onekClubQuantity > 0?
-            <h3>${parseUSDCBalance(priceOfOneKCLubNFT* (1-Math.pow(1.00555,onekClubQuantity))/(-0.00555) ) }</h3>:
-            <h3>$0</h3>
-          }
-        </div>
+        {/* <h5>{errorState}</h5> */}
       </>
     );
+  } 
+      
   else
     displayInfoPart = (
       <>

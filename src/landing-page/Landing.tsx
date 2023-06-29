@@ -102,6 +102,23 @@ const Landing = (props: any) => {
       View = <Fighters />;
       // dispatch(setGameStarted(false));
     } else if (location.pathname.includes("/mint")) {
+
+      const allMetaElements = document.getElementsByTagName('meta')
+      console.log("meta -- ", allMetaElements)
+      for (let i=0; i<allMetaElements.length; i++) { 
+        console.log("---meta", allMetaElements[i].getAttribute("name"))
+        if (allMetaElements[i].getAttribute("name") === "description") { 
+          //make necessary changes
+          console.log("meta 1 -- ", allMetaElements[i])
+          // Use my ref code to join my gang and dominate the cities with me!
+          // store.dispatch(SetMetaTagDescription())
+          allMetaElements[i].setAttribute('description', "Use my ref code to join my gang and dominate the cities with me!"); 
+          allMetaElements[i].setAttribute('title', "Bit Fighters"); 
+          allMetaElements[i].setAttribute('og:description', "Use my ref code to join my gang and dominate the cities with me!"); 
+          allMetaElements[i].setAttribute('og:title', "Bit Fighters"); 
+          break;
+        } 
+      } 
       const url = new URL(window.location.href);
       const global_ref_code = url.searchParams.get("ref_code");
       console.log("debug.. -", location.pathname, window.location.href, "ref -",  global_ref_code);
