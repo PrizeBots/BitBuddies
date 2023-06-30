@@ -693,8 +693,8 @@ function MintCard() {
             localStorage.getItem("state") === "Bit Fighter Mint Card" ?
             `${preSaleMintedNFT} of ${totalPresaleCount.toLocaleString()}`:
             localStorage.getItem("state") === "The 1K Club"?
-            `${onekClubMintedNFT} of ${totalOneKClubNFTs}`:
-            `${dripPresaleMintedNFT} of ${totalDripPresaleCount}`
+            `${onekClubMintedNFT} of ${totalOneKClubNFTs.toLocaleString()}`:
+            `${dripPresaleMintedNFT} of ${totalDripPresaleCount.toLocaleString()}`
           }
           <br></br> Minted
         </p>
@@ -705,7 +705,7 @@ function MintCard() {
       <>
         <h5>Drip Fighter Mint Card</h5>
         <p>
-          {`${dripPresaleMintedNFT} of ${totalDripPresaleCount}`}
+          {`${dripPresaleMintedNFT} of ${totalDripPresaleCount.toLocaleString()}`}
           <br></br> Minted
         </p>
       </>
@@ -715,7 +715,7 @@ function MintCard() {
       <>
         <h5>Bit Fighter Mint Card</h5>
         <p>
-          {`${preSaleMintedNFT} of ${totalPresaleCount}`}
+          {`${preSaleMintedNFT} of ${totalPresaleCount.toLocaleString()}`}
           <br></br> Minted
         </p>
       </>
@@ -725,7 +725,7 @@ function MintCard() {
       <>
         <h5>The 1K Club</h5>
         <p>
-          {`${onekClubMintedNFT} of ${totalOneKClubNFTs}`}
+          {`${onekClubMintedNFT} of ${totalOneKClubNFTs.toLocaleString()}`}
           <br></br> Minted
         </p>
       </>
@@ -840,6 +840,7 @@ function MintCard() {
                 id="code"
                 type="text"
                 value={driprefAddrMintCard}
+                disabled={global_ref_code!==""}
                 onChange={(e) => {
                   setdripRefAddrMintCard(e.target.value);
                 }}
@@ -940,7 +941,7 @@ function MintCard() {
               {
               (dripMintCardsQuantity > 0?
                 tagAndTatoo?
-                dripMintCardsQuantity* (0.004):
+                dripMintCardsQuantity* (0.003 + 0.0002):
                 dripMintCardsQuantity *  (0.0002 + 0.002 * ((onlyTag || tagAndTatoo)?1:0) + 0.002* ((onlyTaoo || tagAndTatoo)?1:0)):
               0).toFixed(4)}{" "}
               BTC.b
@@ -961,6 +962,7 @@ function MintCard() {
               id="code"
               type="text"
               value={refAddrMintCard}
+              disabled={global_ref_code!==""}
               onChange={(e) => {
                 setRefAddrMintCard(e.target.value);
               }}
@@ -1035,20 +1037,20 @@ function MintCard() {
         <div className="mint-card__form">
           <div className="mint-card__form__item mint-card__form__item--radio" style={{marginTop: '5px'}}>
             {/* <h5> */}
-              <label htmlFor="quantity">
+              <label htmlFor="quantity" className="slightly_bigger_label" >
                 Card #: {(onekClubMintedNFT + 1)}
               </label>
             {/* </h5> */}
           </div>
-          <div className="mint-card__form__item mint-card__form__item--radio">
+          <div className="mint-card__form__item mint-card__form__item--radio" >
           {/* <h5> */}
-              <label htmlFor="price">
+              <label htmlFor="price" className="slightly_bigger_label">
                 Price: ${parseUSDCBalance(priceOfOneKCLubNFT)}
               </label>
             {/* </h5> */}
           </div>
           <div className="mint-card__form__item mint-card__form__item--radio">
-            <label htmlFor="quantity">Quantity:</label>
+            <label htmlFor="quantity" className="slightly_bigger_label">Quantity:</label>
             <input
               id="quantity"
               type="number"
@@ -1186,10 +1188,26 @@ function MintCard() {
         </h2>
           {
             cardState === PageStates.DripPreSale ?
-            <h3>Get {mintCardsQuantity} Bit Fighter Pre-Launch Cards!</h3>:
+            <div>
+            {
+              mintCardsQuantity >1?
+              <h3>Get {mintCardsQuantity} Bit Fighter Pre-Launch Cards!</h3>:
+              <h3>Get {mintCardsQuantity} Bit Fighter Pre-Launch Card!</h3>
+            }</div>:
             cardState === PageStates.OneKClub?
-            <h3>Get {onekClubQuantity} Onek Club Cards!</h3>:
-            <h3>Get {dripMintCardsQuantity} Drip Fighter Pre-Launch Cards!</h3>
+            <div>
+            {
+              onekClubQuantity >1?
+              <h3>Get {onekClubQuantity} 1k Club Cards!</h3>:
+              <h3>Get {onekClubQuantity} 1k Club Card!</h3>
+            }</div>:
+            <div>
+            {
+              dripMintCardsQuantity >1?
+              <h3>Get {dripMintCardsQuantity} Drip Fighter Pre-Launch Cards!</h3>:
+              <h3>Get {dripMintCardsQuantity} Drip Fighter Pre-Launch Card!</h3>
+            }</div>
+            // <h3>Get {dripMintCardsQuantity} Drip Fighter Pre-Launch Cards!</h3>
           }
         <Typography id="modal-modal-title" variant="h2" component="h2"></Typography>
         {

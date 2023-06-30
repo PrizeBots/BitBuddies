@@ -736,19 +736,19 @@ export async function mintPreSaleNFTV2(_tokenURIs, _referrerAddress) {
   }
 }
 
-export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tatoo, tag) {
+export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tattoo, tag) {
 
   const ethers = Moralis.web3Library; // get ethers.js library
   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
   const gasPrice = await web3Provider.getGasPrice();
-  console.log("in mintPreSaleDripNFTV2 gasPrice... ", gasPrice.toNumber(), _tokenURIs, _referrerAddress, tatoo, tag)
+  console.log("in mintPreSaleDripNFTV2 gasPrice... ", gasPrice.toNumber(), _tokenURIs, _referrerAddress, tattoo, tag)
   const signer = web3Provider.getSigner();
 
   const contract = new ethers.Contract(PRESALE_DRIP_CONTRACT_V2, PRESALE_DRIP_ABI, signer);
 
   try {
     const transaction = await contract.mintMultiPresaleDripBitfighterCard(
-      _tokenURIs, _referrerAddress, tatoo, tag, {
+      _tokenURIs, _referrerAddress, tattoo, tag, {
         gasPrice: 2 * gasPrice,
       });
     await transaction.wait();

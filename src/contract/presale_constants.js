@@ -688,7 +688,7 @@ export const PRESALE_ABI = [{
 ]
 
 
-const DEV_PRESALE_ADDRESS = "0xDbeC4c8F84fe8d8aa92fB58BB9a6c9fFfD9BE431"
+const DEV_PRESALE_ADDRESS = "0xA4D1564e5f137bac938087229b0EA690ea8daecb"
 const PROD_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
 export let PRESALE_CONTRACT_ADDRESS = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {
