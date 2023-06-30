@@ -635,6 +635,7 @@ export async function mintOneKClubCard(quantity) {
     // return err.message;
     return {
       message: err.message,
+      error_data: err.data,
       error: 1
     }
   }
@@ -721,11 +722,18 @@ export async function mintPreSaleNFTV2(_tokenURIs, _referrerAddress) {
       });
     await transaction.wait();
     console.log("--------------------------------");
+    return {
+      message: "Success",
+      error: 0
+    }
   } catch (err) {
     console.log("err in mintPreSaleNFT ", err)
-    return false;
+    return {
+      message: err.message,
+      error_data: err.data,
+      error: 1
+    }
   }
-  return true;
 }
 
 export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tatoo, tag) {
@@ -754,6 +762,7 @@ export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tatoo, 
     // return false;
     return {
       message: err.message,
+      error_data: err.data,
       error: 1
     }
   }

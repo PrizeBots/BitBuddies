@@ -86,10 +86,18 @@ const ModalBoxWrapper = styled(Box)`
   h2 {
     font-family:'Cooper Black', sans-serif;
     font-style: bold;
-    font-size: 72px;
+    font-size: 40px;
+    color: aliceblue;
+    line-height: 75%;
+  }
+
+  h3 {
+    font-family:'Cooper Black', sans-serif;
+    font-style: bold;
+    font-size: 30px;
     color: grey;
     line-height: 75%;
-    padding-top: 20px;
+    padding-bottom: 10px;
   }
 `
 
@@ -140,12 +148,12 @@ function MintCard() {
     (state) => state.web3store.web3Connected
   );
 
-  const totalPresaleCount = 100;
+  const totalPresaleCount = 2000;
   const preSaleMintedNFT = useAppSelector(
     (state) => state.bitFighters.preSaleNFTMintedCount
   );
 
-  const totalDripPresaleCount = 100;
+  const totalDripPresaleCount = 2000;
   const dripPresaleMintedNFT = useAppSelector(
     (state) => state.bitFighters.drip_preSaleNFTMintedCount
   );
@@ -160,16 +168,16 @@ function MintCard() {
     (state) => state.bitFighters.currentPriceOfOneKClubCard
   );
 
-  const [onekClubQuantity, setOnekClubQuantity] = useState(0);
+  const [onekClubQuantity, setOnekClubQuantity] = useState(1);
 
-  const [mintCardsQuantity, setmintCardsQuantity] = useState(0);
+  const [mintCardsQuantity, setmintCardsQuantity] = useState(1);
   const [refAddrMintCard, setRefAddrMintCard] = useState("");
   const [refBoxMintCard, setRefBoxMintCard] = useState(0);
 
   const [mintingBool, setMintingBool] = useState(false);
   const [mintingState, setMintingState] = useState("");
 
-  const [dripMintCardsQuantity, setdripMintCardsQuantity] = useState(0);
+  const [dripMintCardsQuantity, setdripMintCardsQuantity] = useState(1);
   const [driprefAddrMintCard, setdripRefAddrMintCard] = useState("");
   // const [driptagMintCard, setdriptagMintCard] = useState(0);
   // const [driptatooMintCard, setdriptatooMintCard] = useState(0);
@@ -256,9 +264,9 @@ function MintCard() {
   }
 
   useEffect(() => {
-    initializeOneKVars()
-    initializeDripPreMintVars()
-    initializePreMintVars()
+    // initializeOneKVars()
+    // initializeDripPreMintVars()
+    // initializePreMintVars()
 
     if (global_ref_code !== "") {
       setRefAddrMintCard(global_ref_code)
@@ -281,44 +289,27 @@ function MintCard() {
       mintCardsQuantity < 1
     );
 
-    if (mintCardsQuantity < 1) {
-      // setmintCardsQuantity(1)
-      // console.log("in_presalemint2", mintCardsQuantity, refAddrMintCard, mintCardsQuantity <1)
+    setMintingState("");
 
-      setMintingBool(false);
+    if (mintCardsQuantity < 1) {
       setMintingState("");
       initializePreMintVars();
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(
-      //   SetFailureNotificationMessage("Quantity should be greater than 0")
-      // );
-
       setErrorState("Quantity should be greater than 0")
       dispatch(setCardState(PageStates.FailedState))
       bootstrap.play_err_sound();
-
       return;
     }
     
-
     if (refAddrMintCard === "") {
-
-      setMintingBool(false);
       setMintingState("");
       initializePreMintVars();
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(
-      //   SetFailureNotificationMessage("Enter Ref. Addr")
-      // );
-
-      setErrorState("Enter Ref. Addr")
+      setErrorState(`Please enter a ref code. \n If you do not have one, select "I dont have one"`)
       dispatch(setCardState(PageStates.FailedState))
-
       bootstrap.play_err_sound();
-
       return;
     }
     dispatch(setCardState(PageStates.Minting))
+    setMintingState("Initiating Transaction");
 
     let tempRefAddr = "";
     if (refAddrMintCard === "" || refBoxMintCard === 1) {
@@ -333,44 +324,34 @@ function MintCard() {
         setRefAddrMintCard(ethers.constants.AddressZero);
       }
     }
-    setMintingBool(true);
-    // setMintingState("Generating Mint Card");
 
     const allowance = await checkAllowancePresale(
       store.getState().web3store.userAddress
     );
     console.log("allowance -- >", allowance.toString());
     if (
-      ethers.BigNumber.from("100000000000000").gte(
+      ethers.BigNumber.from("100000000000").gte(
         ethers.BigNumber.from(allowance.toString())
       )
     ) {
       console.log("less allowance");
+      setMintingState("Approval in Progress");
       if (
         !(await approveWBTC2(
           PRESALE_CONTRACT_ADDRESS,
-          ethers.BigNumber.from("10000000000000000000")
+          ethers.BigNumber.from("10000000000000")
         ))
       ) {
-        setMintingBool(false);
-        setMintingState("");
-
-        // setErrorState("Quantity should be greater than 0")
-
         setErrorState("Approval Failed")
         dispatch(setCardState(PageStates.FailedState))
-
-
-        // store.dispatch(SetFailureNotificationBool(true));
-        // store.dispatch(SetFailureNotificationMessage("Approval Failed"));
         bootstrap.play_err_sound();
-
         initializePreMintVars();
         dispatch(setCardState(PageStates.DripPreSale))
-
         return;
       }
     }
+
+    setMintingState("Minting in Progress");
 
     const output = await randomGenaratePreSaleV2(
       store.getState().web3store.userAddress,
@@ -378,19 +359,11 @@ function MintCard() {
     );
     console.log("---output ", output);
 
-    // setMintingState("Minting Your Mint Card");
     const minted = await mintPreSaleNFTV2(output.data, tempRefAddr);
-    if (!minted) {
+    if (minted.error=== 1) {
       bootstrap.play_err_sound();
-      setMintingBool(false);
-      setMintingState("");
-
-      setErrorState("Minting Failed")
+      setErrorState(minted.message + "\n" + minted.error_data.message)
       dispatch(setCardState(PageStates.FailedState))
-
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(SetFailureNotificationMessage("Minting Failed"));
-
       initializePreMintVars();
       dispatch(setCardState(PageStates.DripPreSale))
       return;
@@ -398,7 +371,7 @@ function MintCard() {
       bootstrap.play_dr_bits_success_sound();
       store.dispatch(SetSuccessNotificationBool(true));
       store.dispatch(SetSuccessNotificationMessage(`Success`));
-      initializePreMintVars();
+      // initializePreMintVars();
       dispatch(setCardState(PageStates.DripPreSale))
       setTimeout(() => {
         setVideoToPlay(presaleMintVideoURL)
@@ -406,7 +379,6 @@ function MintCard() {
       }, 1000);
     }
 
-    setMintingBool(false);
     updatePresaleMintedCount();
      setTimeout(() => {
       dispatch(setCardState(PageStates.DripPreSale))
@@ -417,25 +389,25 @@ function MintCard() {
     console.log("in_presalemintDrip", dripMintCardsQuantity);
 
     if (dripMintCardsQuantity < 1) {
-      // setdripMintCardsQuantity(1)
-      setMintingBool(false);
-      setMintingState("");
-
       initializeDripPreMintVars();
-
-      // setErrorState("Quantity should be greater than 0")
-
       setErrorState("Quantity should be greater than 0")
       dispatch(setCardState(PageStates.FailedState))
-
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(SetFailureNotificationMessage("Quantity should be greater than 0"));
       bootstrap.play_err_sound();
+      return;
+    }
 
+    if (driprefAddrMintCard === "") {
+
+      setMintingState("");
+      initializeDripPreMintVars();
+      setErrorState(`Please enter a ref code. \n If you do not have one, select "I dont have one"`)
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
       return;
     }
 
     dispatch(setCardState(PageStates.Minting))
+    setMintingState("Initiating Transaction");
 
     let tempRefAddr = "";
     if (driprefAddrMintCard == "" || dripRefBoxMintCard === 1) {
@@ -450,7 +422,7 @@ function MintCard() {
         setdripRefAddrMintCard(ethers.constants.AddressZero);
       }
     }
-    setMintingBool(true);
+    // setMintingBool(true);
     // setMintingState("Generating Drip Mint Card");
 
     const allowance = await checkAllowanceGeneral(
@@ -464,26 +436,23 @@ function MintCard() {
       )
     ) {
       console.log("less allowance");
+      setMintingState("Initiating Approval");
       if (
         !(await approveWBTC2(
           PRESALE_DRIP_CONTRACT_V2,
-          ethers.BigNumber.from("10000000000000000000")
+          ethers.BigNumber.from("10000000000000000")
         ))
       ) {
-        setMintingBool(false);
-        setMintingState("");
-
         setErrorState("Approval Failed")
         dispatch(setCardState(PageStates.FailedState))
-
-        // store.dispatch(SetFailureNotificationBool(true));
-        // store.dispatch(SetFailureNotificationMessage("Approval Failed"));
         bootstrap.play_err_sound();
-
         initializeDripPreMintVars();
         return;
       }
     }
+
+    // setMintingState("Initiating Transaction");
+    setMintingState("Minting in Progress");
 
     let tempTatoo = false
     let tempTag = false
@@ -512,14 +481,8 @@ function MintCard() {
     );
     if (minted.error === 1) {
       bootstrap.play_err_sound();
-      setMintingBool(false);
-      setMintingState("");
-
-      setErrorState(minted.message)
+      setErrorState(minted.message + " \n " + minted.error_data.message)
       dispatch(setCardState(PageStates.FailedState))
-
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(SetFailureNotificationMessage("Minting Failed"));
 
       initializeDripPreMintVars();
       return;
@@ -536,9 +499,6 @@ function MintCard() {
       }, 1000);
     }
 
-    setMintingBool(false);
-    // setSnackBarOpen(true);
-
     updatePresaleMintedCount();
     updateDripPresaleMintedCount();
     setTimeout(() => {
@@ -548,25 +508,16 @@ function MintCard() {
   };
 
   const oneKClubMint = async () => {
-    // if (!validateFields()) return;
-    setMintingBool(true);
-    // setMintingState("Generating Your OneK Club Card");
-
     if (onekClubQuantity < 1) {
       console.log("here .........")
-      setMintingBool(false);
-      setMintingState("");
       initializeOneKVars();
       setErrorState("Quantity should be greater than 0")
       dispatch(setCardState(PageStates.FailedState))
-      // store.dispatch(SetFailureNotificationBool(true));
-      // store.dispatch(
-      //   SetFailureNotificationMessage("Quantity should be greater than 0")
-      // );
       bootstrap.play_err_sound();
       return;
     }
     dispatch(setCardState(PageStates.Minting))
+    setMintingState("Initiating Transaction");
 
 
     const allowance = await checkAllowanceOneKClub(store.getState().web3store.userAddress)
@@ -574,13 +525,7 @@ function MintCard() {
     if (ethers.BigNumber.from("1000000000000000").gte(ethers.BigNumber.from(allowance.toString()))) {
       console.log("less allowance")
       if (!await approveUSDC(onek_club_contract_adress, ethers.BigNumber.from("100000000000000000"))) {
-        setMintingBool(false);
-        setMintingState("");
         initializeOneKVars();
-
-        // store.dispatch(SetFailureNotificationBool(true))
-        // store.dispatch(SetFailureNotificationMessage("Approval Failed"))
-
         setErrorState("Approval Failed")
         dispatch(setCardState(PageStates.FailedState))
         bootstrap.play_err_sound()
@@ -588,40 +533,27 @@ function MintCard() {
       }
     }
 
-    // setMintingState("Minting Your Onek Club Card");
+    setMintingState("Minting in Progress");
     const minted = await mintOneKClubCard(onekClubQuantity);
     console.log("-------minted ------", minted)
     if (minted.error === 1) {
       bootstrap.play_err_sound()
-      setMintingBool(false);
-      setMintingState("");
-
-      // store.dispatch(SetFailureNotificationBool(true))
-      // store.dispatch(SetFailureNotificationMessage("Minting Failed"))
       initializeOneKVars();
 
-      setErrorState(minted.message)
+      setErrorState(minted.message + " \n " + minted.error_data.message)
       dispatch(setCardState(PageStates.FailedState))
       
       return;
     } else {
       bootstrap.play_dr_bits_success_sound()
       updateOneKclubNFTs(store.getState().web3store.userAddress)
-      // store.dispatch(SetSuccessNotificationBool(true))
-      // store.dispatch(SetSuccessNotificationMessage(`Success`))
-      initializeOneKVars();
       dispatch(setCardState(PageStates.OneKClub))
       setTimeout(() => {
         setVideoToPlay(oneKMintVideoURL)
         handleModalOpen()
       }, 1000)
     }
-
-    setMintingBool(false);
     updateOneKClubMintedCount()
-    // setTimeout(() => {
-    //   dispatch(setCardState(PageStates.OneKClub))
-    // }, 1000)
   }
 
   let titleState = "";
@@ -658,6 +590,21 @@ function MintCard() {
               ? statusNotReady
               : non_statusReady
           }
+          alt="status-photo"
+          className="mint-card-base__status__photo"
+        />
+      </>
+    );
+  } else if (cardState === PageStates.FailedState) {
+    photoState = (
+      <>
+        <img
+          src={statusNotReady}
+          alt="status-photo"
+          className="mint-card-base__status__photo"
+        />
+        <img
+          src={non_statusReady}
           alt="status-photo"
           className="mint-card-base__status__photo"
         />
@@ -744,7 +691,7 @@ function MintCard() {
         <p>
           {
             localStorage.getItem("state") === "Bit Fighter Mint Card" ?
-            `${preSaleMintedNFT} of ${totalPresaleCount}`:
+            `${preSaleMintedNFT} of ${totalPresaleCount.toLocaleString()}`:
             localStorage.getItem("state") === "The 1K Club"?
             `${onekClubMintedNFT} of ${totalOneKClubNFTs}`:
             `${dripPresaleMintedNFT} of ${totalDripPresaleCount}`
@@ -864,20 +811,17 @@ function MintCard() {
   else if (cardState === PageStates.Minting)
     displayInfoPart = (
       <>
-        <h3 style={{ marginTop: "30px" }}> {mintingState} </h3>
+        {/* <h3 style={{ marginTop: "30px" }}> {mintingState} </h3> */}
         <div className="progress-info--bar">
-          <p>Minting in Progress</p>
-          {/* <ProgressBarWrapper>
-            <ProgressBar
-              style={{
-                backgroundColor: "ff5b00",
-              }}
-            />
-          </ProgressBarWrapper> */}
+          <p>{mintingState}</p>
           <MiniProgressBar />
         </div>
         <div className="mint-card-base__info__btc">
-          <img src={btcIcon} alt="btc-info" />
+          {
+            localStorage.getItem("state") === "The 1K Club"?
+            <img src={usdcCoin} alt="btc-info" />:
+            <img src={btcIcon} alt="btc-info" />
+          }
         </div>
       </>
     );
@@ -997,7 +941,7 @@ function MintCard() {
               (dripMintCardsQuantity > 0?
                 tagAndTatoo?
                 dripMintCardsQuantity* (0.004):
-                dripMintCardsQuantity *  (0.001 + 0.002 * ((onlyTag || tagAndTatoo)?1:0) + 0.002* ((onlyTaoo || tagAndTatoo)?1:0)):
+                dripMintCardsQuantity *  (0.0002 + 0.002 * ((onlyTag || tagAndTatoo)?1:0) + 0.002* ((onlyTaoo || tagAndTatoo)?1:0)):
               0).toFixed(4)}{" "}
               BTC.b
             </span>
@@ -1075,8 +1019,8 @@ function MintCard() {
         </div>
         <div className="mint-card-base__info__btc">
           <span>
-            {(mintCardsQuantity * 0.0015
-              ? mintCardsQuantity * 0.0015
+            {(mintCardsQuantity * 0.0002
+              ? mintCardsQuantity * 0.0002
               : 0
             ).toFixed(4)}{" "}
             BTC.b
@@ -1217,6 +1161,9 @@ function MintCard() {
 
   const handleModalClose = () => {
     setOpenModal(false);
+    initializeDripPreMintVars()
+    initializeOneKVars()
+    initializePreMintVars()
   };
 
   const handleModalOpen = () => {
@@ -1234,9 +1181,16 @@ function MintCard() {
         aria-describedby="modal-modal-description"
       >
       <ModalBoxWrapper>
-        <h2>
+        <h2 className="text_shadows_success_text_modal">
           Success!
         </h2>
+          {
+            cardState === PageStates.DripPreSale ?
+            <h3>Get {mintCardsQuantity} Bit Fighter Pre-Launch Cards!</h3>:
+            cardState === PageStates.OneKClub?
+            <h3>Get {onekClubQuantity} Onek Club Cards!</h3>:
+            <h3>Get {dripMintCardsQuantity} Drip Fighter Pre-Launch Cards!</h3>
+          }
         <Typography id="modal-modal-title" variant="h2" component="h2"></Typography>
         {
             cardState === PageStates.DripPreSale ?

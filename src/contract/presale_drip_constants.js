@@ -82,6 +82,28 @@ export const PRESALE_DRIP_ABI = [{
   {
     "anonymous": false,
     "inputs": [{
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "_data",
+      "type": "uint256"
+    }],
+    "name": "PrintDataInt",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{
+      "indexed": false,
+      "internalType": "string",
+      "name": "_data",
+      "type": "string"
+    }],
+    "name": "PrintDataString",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{
         "indexed": true,
         "internalType": "address",
         "name": "from",
@@ -715,23 +737,6 @@ export const PRESALE_DRIP_ABI = [{
   {
     "inputs": [{
         "internalType": "address",
-        "name": "send_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenID",
-        "type": "uint256"
-      }
-    ],
-    "name": "transfer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -786,7 +791,7 @@ export const PRESALE_DRIP_ABI = [{
   }
 ]
 
-const DEV_DRIP_PRESALE_ADDRESS = "0xA54046feF06E8E66C5bA66d2D50674945754bE65"
+const DEV_DRIP_PRESALE_ADDRESS = "0xF3760e77989308C41293A748CFBf13307cEDE9fA"
 const PROD_DRIP_PRESALE_ADDRESS = "0x6b101CD871C6716aa618Ce738452f360DfcbeD88" // recheck snowtrace 
 export let PRESALE_DRIP_CONTRACT_V2 = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {
