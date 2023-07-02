@@ -498,11 +498,14 @@ if (process.env.REACT_APP_DEV_ENV === "production") {
 }
 
 const DEV_USDC_ADDRESS = "0xbd18FBE39EB22B94E07df532a88FfB4d61bE40Ad"
-const PROD_USDC_ADDRESS = ""
+const PROD_USDC_ADDRESS = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
 
 export let USDC_ADDRESS = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {
+  // console.log("--environment--", process.env.REACT_APP_DEV_ENV)
   USDC_ADDRESS = PROD_USDC_ADDRESS
 } else {
+  // console.log("--environment--", process.env.REACT_APP_DEV_ENV)
   USDC_ADDRESS = DEV_USDC_ADDRESS
 }
+console.log("--environment--", process.env.REACT_APP_DEV_ENV, USDC_ADDRESS)

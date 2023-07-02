@@ -365,11 +365,11 @@ function Header() {
               </Link>
             </li>
 
-            <li className="nav-item" key={uuidv4()}>
+            {/* <li className="nav-item" key={uuidv4()}>
               <Link className="nav-link" to="/game">
                 <div className="cooper-black-tab">Game</div>
               </Link>
-            </li>
+            </li> */}
 
             {/* <li className="nav-item" key={uuidv4()}>
               <Link className="nav-link" to="/presale">

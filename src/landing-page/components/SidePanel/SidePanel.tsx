@@ -8,6 +8,9 @@ import store from "../../../stores";
 import { SetSuccessNotificationBool, SetSuccessNotificationMessage } from "../../../stores/NotificationStore";
 import NotificationMessageHelper from "../../../game/Components/NotificationMessageHelper";
 import { SetMetaTagDescription } from "../../../stores/MetaInfoStore";
+import phaserGame from "../../../PhaserGame";
+import Bootstrap from "../../../game/scenes/Bootstrap";
+import { useState } from "react";
 
 
 export enum PageStates {
@@ -23,6 +26,7 @@ export enum PageStates {
 }
 
 const SidePanel = () => {
+  const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   const loggedInUserWalletAddress = useAppSelector(
     (state) => state.web3store.userAddress
   );
@@ -30,9 +34,13 @@ const SidePanel = () => {
   const state = useAppSelector(
     (state) => state.mintCardStateStore.state_selected
   );
+  const [onbutton, setOnButton] = useState(false);
+  const [hoverplace, startHover] = useState(0)
+
   const refrinkHandle = () => {
     const temp = document.URL;
     console.log(temp, document);
+    bootstrap.play_button_down_sound()
 
     const allMetaElements = document.getElementsByTagName('meta')
     console.log("meta -- ", allMetaElements)
@@ -72,7 +80,19 @@ const SidePanel = () => {
               <>
                 {state === PageStates.Presale ? (
                   <>
-                    <div className="btn-mint--small presale-state-active"></div>
+                    <div 
+                      className="btn-mint--small presale-state-active"
+                      onMouseOver={() => {
+                          if ( hoverplace !== 1) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 1 active ")
+                          setOnButton(false)
+                        }}
+                    ></div>
                   </>
                 ) : (
                   <>
@@ -83,6 +103,17 @@ const SidePanel = () => {
                         onClick={() => {
                           localStorage.setItem("state", "Drip Fighter Mint Card");
                           dispatch(setCardState(PageStates.Presale));
+                          bootstrap.play_button_down_sound()
+                        }}
+                        onMouseOver={() => {
+                          if ( hoverplace !== 1) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 1")
+                          setOnButton(false)
                         }}
                         className="btn-mint--small sidePanel-drip"
                       ></div>
@@ -91,7 +122,18 @@ const SidePanel = () => {
                 )}
                 {state === PageStates.DripPreSale ? (
                   <>
-                    <div className="btn-mint--small drippresale-state-active"></div>
+                    <div className="btn-mint--small drippresale-state-active"
+                    onMouseOver={() => {
+                          if ( hoverplace !== 2) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 2 active ")
+                          setOnButton(false)
+                        }}
+                    ></div>
                   </>
                 ) : (
                   <>
@@ -102,6 +144,18 @@ const SidePanel = () => {
                         onClick={() => {
                           localStorage.setItem("state", "Bit Fighter Mint Card");
                           dispatch(setCardState(PageStates.DripPreSale));
+                          bootstrap.play_button_down_sound()
+                        }}
+                        onMouseOver={() => {
+                          console.log("on mouse in fn. 2 ", onbutton)
+                          if (hoverplace !== 2) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 2")
+                          setOnButton(false)
                         }}
                         className="btn-mint--small sidePanel-bit"
                       ></div>
@@ -110,17 +164,41 @@ const SidePanel = () => {
                 )}
                 {state === PageStates.OneKClub ? (
                   <>
-                    <div className="btn-mint--small oneclub-state-active"></div>
+                    <div className="btn-mint--small oneclub-state-active" 
+
+                    onMouseOver={() => {
+                          if ( hoverplace !== 3) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 3 active ")
+                          setOnButton(false)
+                        }}
+                    ></div>
                   </>
                 ) : (
                   <>
                     {state === PageStates.NotConnectedState ? (
-                      <div className="btn-mint--small sidePanel-disabled"></div>
+                      <div className="btn-mint--small sidePanel-disabled"
+                      ></div>
                     ) : (
                       <div
                         onClick={() => {
                           localStorage.setItem("state", "The 1K Club");
                           dispatch(setCardState(PageStates.OneKClub));
+                          bootstrap.play_button_down_sound()
+                        }}
+                        onMouseOver={() => {
+                          if (hoverplace !== 3) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 3")
+                          setOnButton(false)
                         }}
                         className="btn-mint--small sidePanel-oneclub"
                       ></div>
@@ -135,6 +213,16 @@ const SidePanel = () => {
                   <div
                     onClick={refrinkHandle}
                     className="btn-mint--small sidePanel-refrink"
+                    onMouseOver={() => {
+                        if (hoverplace !== 4) {
+                          setOnButton(true)
+                          bootstrap.play_button_hover_sound()
+                        }
+                      }}
+                      onMouseOut={() => {
+                        console.log("on mouse out fn. 4")
+                        setOnButton(false)
+                      }}
                   ></div>
                 )}
               </>

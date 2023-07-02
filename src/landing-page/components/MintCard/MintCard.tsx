@@ -128,7 +128,11 @@ function MintCard() {
       
   const presaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mc.mp4"
   const dripPresaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/presaleData/Drip_Fighter_Pre_Sale_Mint_Card.mp4"
-  const oneKMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/1kClub_MintVid.mp4"
+  const oneKMintVideoURL = [
+    "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mint01.mp4",
+    "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mint02.mp4",
+    "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mint03.mp4"
+  ]
 
   // let videoToPlay = ""
   const [videoToPlay, setVideoToPlay] = useState(presaleMintVideoURL)
@@ -152,6 +156,9 @@ function MintCard() {
   const preSaleMintedNFT = useAppSelector(
     (state) => state.bitFighters.preSaleNFTMintedCount
   );
+
+  
+
 
   const totalDripPresaleCount = 2000;
   const dripPresaleMintedNFT = useAppSelector(
@@ -190,6 +197,8 @@ function MintCard() {
   const [tagAndTatoo, setTagAndTatoo] = useState(false);
 
   const [errorState, setErrorState] = useState("")
+
+  const [onbutton, setOnButton] = useState(false);
 
   const ondrip1 = () => {
     if (onlyTag === false) {
@@ -274,13 +283,6 @@ function MintCard() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (global_ref_code !== "") {
-  //     setRefAddrMintCard(global_ref_code)
-  //     setdripRefAddrMintCard(global_ref_code)
-  //   }
-  // }, [])
-
   const preSaleMint = async () => {
     console.log(
       "in_presalemint",
@@ -339,14 +341,14 @@ function MintCard() {
       if (
         !(await approveWBTC2(
           PRESALE_CONTRACT_ADDRESS,
-          ethers.BigNumber.from("10000000000000")
+          ethers.BigNumber.from("1000000000000")
         ))
       ) {
         setErrorState("Approval Failed")
         dispatch(setCardState(PageStates.FailedState))
         bootstrap.play_err_sound();
         initializePreMintVars();
-        dispatch(setCardState(PageStates.DripPreSale))
+        // dispatch(setCardState(PageStates.DripPreSale))
         return;
       }
     }
@@ -365,7 +367,7 @@ function MintCard() {
       setErrorState(minted.message + "\n" + minted.error_data.message)
       dispatch(setCardState(PageStates.FailedState))
       initializePreMintVars();
-      dispatch(setCardState(PageStates.DripPreSale))
+      // dispatch(setCardState(PageStates.DripPreSale))
       return;
     } else {
       bootstrap.play_dr_bits_success_sound();
@@ -486,7 +488,7 @@ function MintCard() {
 
       initializeDripPreMintVars();
       return;
-    } else {
+    } else if (minted.error === 0) {
       bootstrap.play_dr_bits_success_sound();
       store.dispatch(SetSuccessNotificationBool(true));
       store.dispatch(SetSuccessNotificationMessage(`Success`));
@@ -508,6 +510,7 @@ function MintCard() {
   };
 
   const oneKClubMint = async () => {
+    console.log("in onek club mint - ", onek_club_contract_adress)
     if (onekClubQuantity < 1) {
       console.log("here .........")
       initializeOneKVars();
@@ -549,7 +552,8 @@ function MintCard() {
       updateOneKclubNFTs(store.getState().web3store.userAddress)
       dispatch(setCardState(PageStates.OneKClub))
       setTimeout(() => {
-        setVideoToPlay(oneKMintVideoURL)
+        setVideoToPlay(oneKMintVideoURL[Math.floor(Math.random() * oneKMintVideoURL.length)])
+        // setVideoToPlay(oneKMintVideoURL[0])
         handleModalOpen()
       }, 1000)
     }
@@ -754,9 +758,13 @@ function MintCard() {
   if (cardState === PageStates.NotConnectedState) {
     displayFooterPart = (
       <div
-        onClick={async() => 
+        onClick={async() =>  {
           Web3Login()
-        }
+          bootstrap.play_button_down_sound()
+        }}
+
+        
+
         className="btn-mint--red btn-mint--big footer-connect"
       ></div>
     );
@@ -953,134 +961,144 @@ function MintCard() {
     }
   } else if (cardState === PageStates.DripPreSale)
     // this is the bitfighter mint card code
-    displayInfoPart = (
-      <>
-        <div className="mint-card__form">
-          <div className="mint-card__form__item mint-card__form__item--radio">
-            <label htmlFor="code">Ref. Code:</label>
-            <input
-              id="code"
-              type="text"
-              value={refAddrMintCard}
-              disabled={global_ref_code!==""}
-              onChange={(e) => {
-                setRefAddrMintCard(e.target.value);
-              }}
-            />
-          </div>
-          {
-            global_ref_code === ""?
+    if (totalPresaleCount - preSaleMintedNFT < 0) {
+      displayInfoPart = (
+        <h2 className="mint-card-base__info__sold">Sold Out</h2>
+      );
+    } else 
+      displayInfoPart = (
+        <>
+          <div className="mint-card__form">
             <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="haveone-select">
-                <label htmlFor="radio">I don&#39;t have one</label>
-                {refBoxMintCard ? (
-                    <>
-                      <div
-                        onClick={() => {
-                          console.log("1---------",refBoxMintCard)
-                          setRefBoxMintCard(refBoxMintCard===1?0:1)
-                          setRefAddrMintCard("")
-                        }}
-                        className="radio_dripTag_selected"
-                      ></div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        onClick={() => {
-                          console.log("2----------", refBoxMintCard)
-                          setRefBoxMintCard(refBoxMintCard===1?0:1)
-                          setRefAddrMintCard( ethers.constants.AddressZero)
-                        }}
-                        className="radio_dripTag"
-                      ></div>
-                    </>
-                  )}
-              </div>
-            </div>:<></>
-          }
-          <div className="mint-card__form__item mint-card__form__item--radio">
-            <label htmlFor="quantity">Quantity:</label>
-            <input
-              id="quantity"
-              type="number"
-              value={mintCardsQuantity}
-              onChange={(e) => {
-                // setmintCardsQuantity(parseInt(e.target.value));
-                if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
-                  setmintCardsQuantity(1);
-                } else {
-                  setmintCardsQuantity(parseInt(e.target.value));
-                }
-              }}
-              style={{
-                outline: "None",
-              }}
-            />
-          </div>
-        </div>
-        <div className="mint-card-base__info__btc">
-          <span>
-            {(mintCardsQuantity * 0.0002
-              ? mintCardsQuantity * 0.0002
-              : 0
-            ).toFixed(4)}{" "}
-            BTC.b
-          </span>
-          <img src={btcIcon} alt="btc-info" />
-        </div>
-      </>
-    );
-  else if (cardState === PageStates.OneKClub)
-    displayInfoPart = (
-      <>
-        <div className="mint-card__form">
-          <div className="mint-card__form__item mint-card__form__item--radio" style={{marginTop: '5px'}}>
-            {/* <h5> */}
-              <label htmlFor="quantity" className="slightly_bigger_label" >
-                Card #: {(onekClubMintedNFT + 1)}
-              </label>
-            {/* </h5> */}
-          </div>
-          <div className="mint-card__form__item mint-card__form__item--radio" >
-          {/* <h5> */}
-              <label htmlFor="price" className="slightly_bigger_label">
-                Price: ${parseUSDCBalance(priceOfOneKCLubNFT)}
-              </label>
-            {/* </h5> */}
-          </div>
-          <div className="mint-card__form__item mint-card__form__item--radio">
-            <label htmlFor="quantity" className="slightly_bigger_label">Quantity:</label>
-            <input
-              id="quantity"
-              type="number"
-              value={onekClubQuantity}
-              onChange={(e) => {
-                if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
-                  setOnekClubQuantity(1);
-                } else {
-                  setOnekClubQuantity(parseInt(e.target.value));
-                }
-              }}
-              style={{
-                outline: "None",
-                // width: "50px",
-              }}
-            />
-          </div>
-        </div>
-        <div className="mint-card-base__info__btc">
-          <span>
+              <label htmlFor="code">Ref. Code:</label>
+              <input
+                id="code"
+                type="text"
+                value={refAddrMintCard}
+                disabled={global_ref_code!==""}
+                onChange={(e) => {
+                  setRefAddrMintCard(e.target.value);
+                }}
+              />
+            </div>
             {
-              onekClubQuantity > 0?
-              parseUSDCBalance(priceOfOneKCLubNFT* (1-Math.pow(1.00555,onekClubQuantity))/(-0.00555) ) :
-              0
-            } USDC
-          </span>
-          <img src={usdcCoin} alt="btc-info" />
-        </div>
-      </>
-    );
+              global_ref_code === ""?
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="haveone-select">
+                  <label htmlFor="radio">I don&#39;t have one</label>
+                  {refBoxMintCard ? (
+                      <>
+                        <div
+                          onClick={() => {
+                            console.log("1---------",refBoxMintCard)
+                            setRefBoxMintCard(refBoxMintCard===1?0:1)
+                            setRefAddrMintCard("")
+                          }}
+                          className="radio_dripTag_selected"
+                        ></div>
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          onClick={() => {
+                            console.log("2----------", refBoxMintCard)
+                            setRefBoxMintCard(refBoxMintCard===1?0:1)
+                            setRefAddrMintCard( ethers.constants.AddressZero)
+                          }}
+                          className="radio_dripTag"
+                        ></div>
+                      </>
+                    )}
+                </div>
+              </div>:<></>
+            }
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <label htmlFor="quantity">Quantity:</label>
+              <input
+                id="quantity"
+                type="number"
+                value={mintCardsQuantity}
+                onChange={(e) => {
+                  // setmintCardsQuantity(parseInt(e.target.value));
+                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                    setmintCardsQuantity(1);
+                  } else {
+                    setmintCardsQuantity(parseInt(e.target.value));
+                  }
+                }}
+                style={{
+                  outline: "None",
+                }}
+              />
+            </div>
+          </div>
+          <div className="mint-card-base__info__btc">
+            <span>
+              {(mintCardsQuantity * 0.0002
+                ? mintCardsQuantity * 0.0002
+                : 0
+              ).toFixed(4)}{" "}
+              BTC.b
+            </span>
+            <img src={btcIcon} alt="btc-info" />
+          </div>
+        </>
+      );
+  else if (cardState === PageStates.OneKClub)
+  if (totalOneKClubNFTs - onekClubMintedNFT < 0) {
+      displayInfoPart = (
+        <h2 className="mint-card-base__info__sold">Sold Out</h2>
+      );
+    } else 
+      displayInfoPart = (
+        <>
+          <div className="mint-card__form">
+            <div className="mint-card__form__item mint-card__form__item--radio" style={{marginTop: '5px'}}>
+              {/* <h5> */}
+                <label htmlFor="quantity" className="slightly_bigger_label" >
+                  Card #: {(onekClubMintedNFT + 1)}
+                </label>
+              {/* </h5> */}
+            </div>
+            <div className="mint-card__form__item mint-card__form__item--radio" >
+            {/* <h5> */}
+                <label htmlFor="price" className="slightly_bigger_label">
+                  Price: ${parseUSDCBalance(priceOfOneKCLubNFT)}
+                </label>
+              {/* </h5> */}
+            </div>
+            <div className="mint-card__form__item mint-card__form__item--radio">
+              <label htmlFor="quantity" className="slightly_bigger_label">Quantity:</label>
+              <input
+                id="quantity"
+                type="number"
+                value={onekClubQuantity}
+                onChange={(e) => {
+                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                    setOnekClubQuantity(1);
+                  } else {
+                    setOnekClubQuantity(parseInt(e.target.value));
+                  }
+                }}
+                style={{
+                  outline: "None",
+                  // width: "50px",
+                }}
+              />
+            </div>
+          </div>
+          <div className="mint-card-base__info__btc">
+            <span>
+              {
+                onekClubQuantity > 0?
+                parseUSDCBalance(priceOfOneKCLubNFT* (1-Math.pow(1.00555,onekClubQuantity))/(-0.00555) ) :
+                0
+              } USDC
+            </span>
+            <img src={usdcCoin} alt="btc-info" />
+          </div>
+        </>
+      );
   else if (cardState === PageStates.FailedState) {
     displayInfoPart = (
       <>
@@ -1139,7 +1157,17 @@ function MintCard() {
                 {displayInfoPart}
               </div>
             </div>
-            <div className="mint-card-base__footer">
+            <div className="mint-card-base__footer"
+              onMouseOver={() => {
+                if (!onbutton) {
+                  setOnButton(true)
+                  bootstrap.play_button_hover_sound()
+                }
+              }}
+              onMouseOut={() => {
+                setOnButton(false)
+              }}
+            >
               {!mintingBool ? (
                 <>{displayFooterPart}</>
               ) : (
@@ -1214,7 +1242,7 @@ function MintCard() {
             cardState === PageStates.DripPreSale ?
             <ReactPlayer url={presaleMintVideoURL} controls={true} loop playing={true} />:
             cardState === PageStates.OneKClub?
-            <ReactPlayer url={oneKMintVideoURL} controls={true} loop playing={true} />:
+            <ReactPlayer url={(oneKMintVideoURL[Math.floor(Math.random() * oneKMintVideoURL.length)])} controls={true} loop playing={true} />:
             <ReactPlayer url={dripPresaleMintVideoURL} controls={true} loop playing={true} />
             
           }

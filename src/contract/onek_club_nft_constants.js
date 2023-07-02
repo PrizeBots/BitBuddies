@@ -624,7 +624,7 @@ export const ONEK_CLUB_CONTRACT_ABI = [{
 // export const onek_club_contract_adress = "0x68734AB34339bAc6C6C61462b60353F764E22b5B"
 
 const DEV_ONEK_CLUB_ADDRESS = "0xc2865507178CE9FAec11993aF39f799f48d11DDD"
-const PROD_ONEK_CLUB_ADDRESS = ""
+const PROD_ONEK_CLUB_ADDRESS = "0xD72e26baF7598C86D0CFC8f569838436f6EB98a1"
 export let onek_club_contract_adress = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {
   onek_club_contract_adress = PROD_ONEK_CLUB_ADDRESS

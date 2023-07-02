@@ -11,6 +11,8 @@ export default class Bootstrap extends Phaser.Scene {
   snap_sound!: Phaser.Sound.BaseSound
   button_press_sound!: Phaser.Sound.BaseSound
   dr_bits_success_sound!: Phaser.Sound.BaseSound
+  button_hover_sound!: Phaser.Sound.BaseSound
+  button_down_sound!: Phaser.Sound.BaseSound
 
   constructor() {
     super('bootstrap')
@@ -81,6 +83,9 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.audio('coins_drop', "bitfgihter_assets/sounds/coins_drop.mp3")
     this.load.audio('coins_collect', "bitfgihter_assets/sounds/coins_collect.mp3")
 
+    this.load.audio('button_hover', "bitfgihter_assets/sounds/buttonHover.wav")
+    this.load.audio('button_down', "bitfgihter_assets/sounds/buttonDown.mp3")
+
     // load css
     this.load.css('80s', 'bitfgihter_assets/80stypography.css');
 
@@ -133,16 +138,47 @@ export default class Bootstrap extends Phaser.Scene {
   create() {
     this.launchBackground(BackgroundMode.NIGHT)
     this.select_music = this.sound.add('select_music');
-    this.err_music = this.sound.add('err_music');
+    this.err_music = this.sound.add('button_hover');
     this.snap_sound = this.sound.add('snap-sound');
     this.button_press_sound = this.sound.add('button-press-sound')
 
     this.dr_bits_success_sound = this.sound.add('dr_bits_success_sound')
+    // this.button_hover_sound = this.sound.add('button_hover', {volume: 0.4})
+    this.button_hover_sound = this.sound.add('select_music', {volume: 0.2})
+    this.button_down_sound = this.sound.add('button_down')
   }
 
   play_dr_bits_success_sound() {
     if (this.dr_bits_success_sound.isPlaying) return;
     this.dr_bits_success_sound.play({loop: false})
+  }
+
+  play_button_hover_sound() {
+    // console.log("in play button hover sound ", this.button_hover_sound.isPlaying, this.sound.locked)
+
+    // if(this.sound.locked) {
+    //   const element = document.getElementById('root');
+    //   const event = new Event('change');
+    //   if (element) {
+    //     console.log("-----")
+    //     element.dispatchEvent(event);
+    //   }
+    // }
+    if (this.button_hover_sound.isPlaying) return;
+    // this.select_music.play({loop: false})
+    this.button_hover_sound.play({loop: false})
+  }
+
+  play_button_down_sound() {
+    console.log("in play button down sound ")
+    // if(!window.AudioContext) {
+    //   this.sound.resumeAll()
+    // }
+    // if (this.sound.sta === 'suspended') {
+    //   this.sound.context.resume();
+    // }
+    if (this.button_down_sound.isPlaying) return;
+    this.button_down_sound.play({loop: false})
   }
 
   private launchBackground(backgroundMode: BackgroundMode) {
