@@ -53,6 +53,10 @@ export function ServerListInfo() {
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
   const gameServersInfo = useAppSelector((state) => state.websiteStateStore.serversInfo)
 
+  const selectedPlayer = useAppSelector(
+    (state) => state.playerDataStore.current_game_player_info
+  );
+
   const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
 
@@ -75,6 +79,7 @@ export function ServerListInfo() {
     store.dispatch(SetGameStarted(true));
     store.dispatch(SetGameLoadingState(true));
     bootstrap.launchGame(store.getState().playerDataStore.current_game_player_info)
+    store.dispatch(SetShowGameServersList(false));
     store.dispatch(SetShowGameServersList(false));
   }
 
@@ -100,8 +105,8 @@ export function ServerListInfo() {
                     width: '300px',
                   }}
                 >
-                  <MenuItem value={"Washington_DC"}>Washington_DC</MenuItem>
-                  <MenuItem value={"Mumbai"}>Mumbai</MenuItem>
+                  <MenuItem value={"Washington_DC"}>US-East</MenuItem>
+                  <MenuItem value={"Mumbai"}>India</MenuItem>
                 </Select>
               </FormControl>
               {
@@ -110,48 +115,58 @@ export function ServerListInfo() {
                     return(
                       <>
                         <ListItemButton key={uuidv4()}>
-                <Grid container spacing={0}>
-                  <Grid item xs={1} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'start'
-                    }}>
-                      <h3 style={{color: 'aliceblue' }}> {index + 1} </h3>
-                  </Grid>
-                  <Grid item xs={8} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <ListItemText
-                      primary={
-                        <span style={{
-                          color: "aliceblue",
-                        }}>
-                          {`active - ${serverinfo.active_users}/ 100`}
-                        </span>
-                      } 
-                      secondary={getEllipsisTxt(serverinfo.room_id)}
-                    />
-          
-                  </Grid>
-                  <Grid item xs={3} style={{
-                    alignItems: 'center',
-                    display: 'flex'
-                  }}>
+                          <Grid container spacing={0}>
+                            <Grid item xs={1} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'start'
+                              }}>
+                                <h3 style={{color: 'aliceblue', fontSize: '20px' }} className="cooper-black-tab" > {index + 1} </h3>
+                            </Grid>
+                            <Grid item xs={8} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}>
+                              <ListItemText
+                                primary={
+                                  <span style={{
+                                    color: "aliceblue",
+                                  }}>
+                                    {`${serverinfo.region} - ${serverinfo.active_users}/ 100`}
+                                  </span>
+                                } 
+                                secondary={getEllipsisTxt(serverinfo.room_id)}
+                              />
                     
-                    <ButtonView variant="contained" onClick={() => {
-                      fetchServerUrlAndConnect(serverinfo.room_id)
-                    }}>
-                      <span>
-                        Connect
-                      </span>
-                    </ButtonView>
-                  </Grid>
-                </Grid>
-              
-              </ListItemButton>
-              <MyDivider></MyDivider>
+                            </Grid>
+                            <Grid item xs={3} style={{
+                              alignItems: 'center',
+                              display: 'flex'
+                            }}>
+                              
+                              <ButtonView 
+                                variant="contained" 
+                                onClick={() => {
+                                  fetchServerUrlAndConnect(serverinfo.room_id)
+                                }}
+                                disabled={selectedPlayer.nick_name === ""}
+                              >
+                                {
+                                  selectedPlayer.nick_name === ""?
+                                  <span>
+
+                                  </span>:
+                                  <span>
+                                    Connect
+                                  </span>
+                                }
+                              </ButtonView>
+                            </Grid>
+                          </Grid>
+                        
+                        </ListItemButton>
+                        <MyDivider></MyDivider>
                       </>
                     )
                   }):<div>

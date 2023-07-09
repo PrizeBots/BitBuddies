@@ -1,10 +1,10 @@
 import { BigNumber as BigNumberEthers } from "ethers";
-import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getDripMintCardsMintedCouponsCount, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
+import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getBitfightersMintedCount, getBitfightersTotalCountForGen, getDripMintCardsMintedCouponsCount, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
 import store from "../stores";
 import { SetBetBalance, SetWalletBalance, SetWbtcBalance } from "../stores/Web3StoreBalances";
 import BigNumber from "bignumber.js";
 import { isNullOrUndefined } from "util";
-import { SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
+import { SetBitfightersNftMintedCount, SetCurrentPriceOfOnekCard, SetTotalBitfightersNftCount, SetTotalDripPreSaleNFT, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
 
 export async function getBalances(currentUser: string) {
   console.log("in_get_balance---", currentUser)
@@ -134,4 +134,21 @@ export function parseUSDCBalance(balance: number| undefined) {
   }
   const bn = new BigNumber(balance);
   return Math.floor(Math.round(bn.dividedBy(10**6).toNumber() * 10)/10).toLocaleString();
+}
+
+
+export async function updateBitfightersMintedCountAndTotal() {
+  try {
+    const count = await getBitfightersTotalCountForGen(0)
+    console.log("updateBitfighters count Total ... ", count);
+    store.dispatch(SetTotalBitfightersNftCount(Number(count)));
+
+    const mintedCount = await getBitfightersMintedCount();
+    console.log("updateBitfighters Minted Count ... ", mintedCount);
+    store.dispatch(SetBitfightersNftMintedCount(Number(mintedCount)));
+  } catch (err) {
+    console.log("error in updateBitfightersMintedCountAndTotal count total ", err);
+    store.dispatch(SetTotalBitfightersNftCount(0))
+    store.dispatch(SetBitfightersNftMintedCount(0));
+  }
 }

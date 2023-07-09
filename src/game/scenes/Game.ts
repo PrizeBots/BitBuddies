@@ -32,6 +32,8 @@ import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 import { v4 as uuidv4 } from 'uuid';
 import { SetGameLoadingState, SetShowGameServersList } from "../../stores/WebsiteStateStore";
 import { BrewManager, IBrew } from "../characters/BrewMananger";
+import KeyControls from "../services/KeyControls";
+import Network from "../services/Networks";
 
 
 const textAreaVisible = false;
@@ -55,7 +57,7 @@ export default class Game extends Phaser.Scene {
   otherPlayersGroup!: Phaser.Physics.Arcade.Group
   pressedKeys: Array<any>;
   CurrentKeysPressed: any;
-  keys: IKeysInfo;
+  // keys: IKeysInfo;
   hq!: HQ;
 
   mousePressed = false;
@@ -107,6 +109,9 @@ export default class Game extends Phaser.Scene {
   
   frameTime = 0;
 
+  keyControls!: KeyControls;
+  network!: Network;
+
   constructor() {
     super('game')
     // this.lastKey = ""
@@ -115,35 +120,35 @@ export default class Game extends Phaser.Scene {
       movedLastFrame: null,
       gameObject: null,
     };
-    this.keys = {
-      keyA: {
-        pressed: false,
-        double_pressed: false,
-      },
-      keyD: {
-        pressed: false,
-        double_pressed: false,
-      },
-      keyS: {
-        pressed: false,
-      },
-      keyW: {
-        pressed: false,
-      },
-      keyP: {
-        pressed: false,
-      },
-      keyK: {
-        pressed: false,
-      },
-      leftShift: {
-        pressed: false,
-      },
-      keyBlock: {
-        pressed: false,
-      },
-      lastKey:"",
-    };
+    // this.keys = {
+    //   keyA: {
+    //     pressed: false,
+    //     double_pressed: false,
+    //   },
+    //   keyD: {
+    //     pressed: false,
+    //     double_pressed: false,
+    //   },
+    //   keyS: {
+    //     pressed: false,
+    //   },
+    //   keyW: {
+    //     pressed: false,
+    //   },
+    //   keyP: {
+    //     pressed: false,
+    //   },
+    //   keyK: {
+    //     pressed: false,
+    //   },
+    //   leftShift: {
+    //     pressed: false,
+    //   },
+    //   keyBlock: {
+    //     pressed: false,
+    //   },
+    //   lastKey:"",
+    // };
     this.lobbySocketConnected = false;
     this.collidingWithOtherPlayers = new Set();
     this.pressedKeys = [];
@@ -363,1018 +368,13 @@ export default class Game extends Phaser.Scene {
 
     }
 
+    this.keyControls = new KeyControls()
+    this.network = new Network()
+
     this.cameras.main.setZoom(2.2,2.2);
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-
     this.otherPlayersGroup = this.physics.add.group({ classType: Phaser.Physics.Arcade.Sprite })
-
     this.input.mouse.disableContextMenu();
-
-    this.input.keyboard.on('keydown', (event: {code: string}) => {
-      // console.log("keydown--",event.code)
-      switch(event.code) {
-        case 'KeyB':
-          this.keys.keyBlock.pressed = true
-          break
-        case 'ShiftLeft':
-          this.keys.leftShift.pressed = true
-          break
-        case 'KeyD':
-          this.keys.keyD.pressed = true
-          if (
-            this.keys.keyD.time_last_pressed 
-            && this.keys.keyD.time_last_lifted 
-            && !this.keys.keyD.double_pressed 
-          ) {
-            if (
-              (new Date().getTime() - this.keys.keyD.time_last_pressed) < 300
-            && (new Date().getTime() - this.keys.keyD.time_last_lifted) < 300) {
-              console.log("double pressed..d")
-              this.keys.keyD.double_pressed = true
-            }
-          }
-          if (this.keys.leftShift.pressed) {
-            this.keys.keyD.double_pressed = true
-          }
-          this.keys.keyD.time_last_pressed = new Date().getTime()
-          this.keys.lastKey = 'KeyD'
-          this.keys.keyA.double_pressed = false
-          break
-        case 'KeyA':
-          this.keys.keyA.pressed = true
-          if (
-            this.keys.keyA.time_last_pressed 
-            && this.keys.keyA.time_last_lifted 
-            && !this.keys.keyA.double_pressed 
-          ) {
-            if (
-              (new Date().getTime() - this.keys.keyA.time_last_pressed) < 300
-            && (new Date().getTime() - this.keys.keyA.time_last_lifted) < 300) {
-              console.log("double pressed..a")
-              this.keys.keyA.double_pressed = true
-            }
-          }
-          if (this.keys.leftShift.pressed) {
-            this.keys.keyA.double_pressed = true
-          }
-          this.keys.lastKey = 'KeyA'
-          this.keys.keyA.time_last_pressed = new Date().getTime()
-          this.keys.keyD.double_pressed = false
-          break
-        case 'KeyW':
-          if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
-            break
-          }
-          this.keys.keyW.pressed = true
-          this.keys.lastKey = 'KeyA'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false
-          break
-        case 'KeyS':
-          if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
-            break
-          }
-          this.keys.keyS.pressed = true
-          this.keys.lastKey = 'KeyS'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false
-          break
-        case 'KeyP':
-          if (this.keys.lastKey === 'KeyP') {
-            return
-          }
-          this.keys.keyP.pressed = true
-          this.keys.lastKey = 'KeyP'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false;
-          // if (this.fightMachineOverlapText.depth > 0) {
-          //   this.lobbySocketConnection.send(JSON.stringify({
-          //     event: "fight_machine_button_press",
-          //     walletAddress: store.getState().web3store.userAddress,
-          //   }))
-          //   this.punchArea.setDepth(-1)
-          //   setTimeout(() => {
-          //     this.punchArea.setDepth(1)
-          //     store.dispatch(HitFightMachine(true))
-          //     this.bootstrap.play_button_press_sound()
-          //   }, 500)
-          // }
-          break
-        case 'KeyK':
-          if (this.keys.lastKey === 'KeyK') {
-            return
-          }
-          // console.log("pressed_key_kicking... down", this.keys.lastKey)
-          this.keys.keyK.pressed = true
-          this.keys.lastKey = 'KeyK'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false;
-          // if (this.fightMachineOverlapText.depth > 0) {
-          //   this.lobbySocketConnection.send(JSON.stringify({
-          //     event: "fight_machine_button_press",
-          //     walletAddress: store.getState().web3store.userAddress,
-          //   }))
-          //   this.punchArea.setDepth(-1)
-          //   setTimeout(() => {
-          //     this.punchArea.setDepth(1)
-          //     store.dispatch(HitFightMachine(true))
-          //     this.bootstrap.play_button_press_sound()
-          //   }, 500)
-          // }
-          break
-        case 'KeyT':
-          console.log("T_pressed.. testing")
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === store.getState().web3store.userAddress) {
-                _player.gameObject.dead = true;
-                _player.gameObject.dead_last_time = new Date().getTime();
-              }
-            }
-          })
-            // this.lobbySocketConnection.send(JSON.stringify({
-            //   event: "equip_brew",
-            //   walletAddress: store.getState().web3store.userAddress,
-            // }))
-          // this.otherPlayers.forEach((_otherplayer) => {
-          //   if (_otherplayer.wallet_address === store.getState().web3store.userAddress) {
-          //     _otherplayer.gassed_lift_off_fall = true
-          //   }
-          // })
-          // store.dispatch(ShowDeadSprite(true))
-          break
-        case 'KeyQ': {
-          console.log("Q pressed..");
-          if (store.getState().assetStore.equippedBrewCount > 0) {
-            const temp = this.otherPlayers.get(store.getState().web3store.player_id)
-            if (temp?.gameObject) {
-              this.lobbySocketConnection.send(JSON.stringify({
-                event: "equip_brew",
-                walletAddress: store.getState().web3store.userAddress,
-              }))
-
-              // temp.hasBrewInHand = true
-              // store.dispatch(SetEquippedBrewCount(0))
-            }
-          }
-          
-          break;
-        }
-        case 'Enter':
-          if (this.enter_pressed) {
-            store.dispatch(SetFocussedOnChat(false))
-            store.dispatch(ShowChatWindow(false))
-            this.enter_pressed = false;
-          } else {
-            store.dispatch(SetFocussedOnChat(true))
-            store.dispatch(ShowChatWindow(true))
-            this.enter_pressed = true;
-          }
-          console.log("pressed enter focussed ");
-          break
-      }
-    })
-
-    this.input.keyboard.on('keyup', (event: {code: string}) => {
-      switch (event.code) {
-        case 'KeyB':
-          this.keys.keyBlock.pressed = false
-          break
-        case 'ShiftLeft':
-          this.keys.leftShift.pressed = false
-          break
-        case 'KeyD':
-          this.keys.keyD.pressed = false
-          this.keys.keyD.time_last_lifted = new Date().getTime()  
-          this.keys.keyD.double_pressed = false 
-          this.keys.keyA.double_pressed = false  
-          this.keys.lastKey = ""   
-          break
-        case 'KeyA':
-          this.keys.keyA.pressed = false
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false
-          this.keys.keyA.time_last_lifted = new Date().getTime()  
-          this.keys.lastKey = ""   
-          break
-        case 'KeyW':
-          this.keys.keyW.pressed = false;
-          // this.keys.keyD.double_pressed = false
-          // this.keys.keyA.double_pressed = false     
-          this.keys.lastKey = ""   
-          break
-        case 'KeyS':
-          this.keys.keyS.pressed = false;
-          // this.keys.keyD.double_pressed = false
-          // this.keys.keyA.double_pressed = false  
-          this.keys.lastKey = ""      
-          break
-        case 'KeyP':
-          this.keys.keyP.pressed = false;
-          this.keys.lastKey = ""   
-          break
-        case 'KeyK':
-          // console.log("pressed_key_kicking... down", this.keys.lastKey)
-          this.keys.keyK.pressed = false;
-          this.keys.lastKey = ""   
-          break
-      }
-    });
-
-    this.lobbySocketConnection.addEventListener("message", async (event) => {
-      const objs = JSON.parse(event.data.replace(/'/g, '"'))
-      // if (objs.length > 0) console.log("message_here --> ", objs)
-
-      for (let gameQueueMessageIndex = 0; gameQueueMessageIndex < objs.length; gameQueueMessageIndex++) {
-        const obj = objs[gameQueueMessageIndex];
-
-        // if (obj.event === "ping") {
-        //   // console.log(obj)
-        //   this.lobbySocketConnection.send(JSON.stringify({
-        //     event: "pong",
-        //     walletAddress: store.getState().web3store.userAddress,
-        //     orientation: "",
-        //     room_id:"lobby",
-        //     message: this.nftData.sprite_image
-        //   }))
-        //   const date = new Date();
-        //   const now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
-        //             date.getUTCDate(), date.getUTCHours(),
-        //             date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
-        //   const timezoneOffset = (new Date()).getTimezoneOffset();
-        //   const tempDiff =  Math.abs((new Date(now_utc).getTime() ) - (obj.server_time)) ;
-        //   console.log("received ping ", new Date().getTime(), new Date(now_utc).getTime(), obj.server_time, (2 * tempDiff).toString(), timezoneOffset, obj.server_offset)
-        //   store.dispatch(SetServerLatency((2 * tempDiff).toString()))
-        // }
-
-        // if (obj.event === "latency_check") {
-        //   console.log(obj)
-        //   this.otherPlayers.forEach(_player => {
-        //     if (_player.wallet_address === obj.walletAddress && _player.gameObject && _player.wallet_address !== store.getState().web3store.userAddress) {
-        //       const tempDiff =  obj.server_time - obj.client_time
-        //       console.log("latency_check--", (2 * tempDiff).toString())
-        //       store.dispatch(SetServerLatency((2 * tempDiff).toString()))
-        //     }
-        //   })
-        // }
-
-        if ( obj.event === "live_players" ) {
-          // console.log("live_players..", obj)
-          const tempList = []
-          // delete disconnected players
-          this.otherPlayers.forEach((_otherplayer) => {
-            tempList.push(_otherplayer.wallet_address)
-            if (!obj.live_players.includes(_otherplayer.wallet_address)) {
-              console.log("live_players removing player,", _otherplayer.wallet_address)
-              _otherplayer.gameObject?.DestroyGameObject()
-              if (_otherplayer.gameObject) {
-                // console.log("live_players removing sprite,", _otherplayer.wallet_address)
-                this.otherPlayersGroup.remove(_otherplayer.gameObject?.sprite)
-              }
-              _otherplayer.gameObject = undefined
-              this.otherPlayers.delete(_otherplayer.wallet_address + "_" + _otherplayer.minted_id)
-              // this.textures.remove(_otherplayer.wallet_address)
-            }
-          })
-        }
-
-        if ( obj.event === "live_players_init" ) {
-          // console.log("live_players_init --- 1", obj.live_players)
-          // console.log("live_players_init --- 1", this.otherPlayers)
-          obj.live_players.forEach(( _details : INFTDataOfConnections) => {
-            // if (
-            //   // _details.walletAddress !== store.getState().web3store.userAddress
-            //   true
-            // ) {
-              if (!this.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)) {
-                console.log("live_players_init player exists ", this.otherPlayers.size, _details)
-                if (this.textures.exists(_details.walletAddress+ "_"+_details.minted_id)) {
-                  console.log("live_players_init texture exists ", this.otherPlayers.size, _details)
-                  // if (!isNullOrUndefined(this.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id))) {
-                    
-                    const _otherplayer = this.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
-                    if (_otherplayer) {
-                      console.log("live_players_init deleting the other player ... ")
-                      _otherplayer.gameObject?.DestroyGameObject()
-                      if (_otherplayer.gameObject) this.otherPlayersGroup.remove(_otherplayer.gameObject.sprite)
-                      _otherplayer.gameObject = undefined
-                      this.otherPlayers.delete(_otherplayer.wallet_address + "_" + _otherplayer.minted_id)
-                    }
-                    this.otherPlayers.set(_details.walletAddress + "_" + _details.minted_id, {
-                      wallet_address: _details.walletAddress,
-                      nick_name: _details.nick_name,
-                      setupDone: false,
-                      all_data: _details.all_nft_data,
-                      sprite_url: _details.sprite_url,
-                      profile_image: _details.profile_image,
-                      x: _details.last_position_x,
-                      y: _details.last_position_y,
-                      minted_id: _details.minted_id.toString(),
-                      lastKickTime: 0,
-                      lastPunchTime: 0,
-                    })
-                    const otherPlayer = this.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
-
-                    if (otherPlayer) {
-                      otherPlayer.setupDone = true;
-                      // otherPlayer.gameObject = new OtherPlayer(
-                      //   this, otherPlayer.x, otherPlayer.y, _details.walletAddress, 'idle-'+ otherPlayer.wallet_address + "_" + otherPlayer.minted_id, otherPlayer.nick_name, otherPlayer.all_data,
-                      // );
-                      const otherP = otherPlayer.wallet_address !== store.getState().web3store.userAddress
-                      otherPlayer.gameObject = new OtherPlayer(
-                        this, 
-                        otherPlayer.x, 
-                        otherPlayer.y, 
-                        `${otherPlayer.wallet_address}_${otherPlayer.minted_id.toString()}`,
-                        `idle-${otherPlayer.wallet_address}_${otherPlayer.minted_id.toString()}`,
-                        otherPlayer.nick_name, 
-                        otherPlayer.all_data,
-                        this.lobbySocketConnection,
-                        otherP,
-                        otherPlayer.wallet_address,
-                        parseInt(otherPlayer.minted_id.toString())
-                      );
-                      otherPlayer.gameObject.currHealth = _details.health;
-                      otherPlayer.sprite = otherPlayer.gameObject.sprite;
-                      this.otherPlayers.set(_details.walletAddress, otherPlayer)
-                      this.otherPlayersGroup.add(otherPlayer.sprite)
-                    }
-                    console.log("live_players_init check ", _details, this.otherPlayers.size)
-                  // }
-                } 
-                else {
-                  console.log("live_players_init texture not found ", this.otherPlayers.size, _details.walletAddress+ "_" + _details.minted_id.toString())
-                  // createOtherCharacterAnims(this.anims, _details.walletAddress + "_" + _details.minted_id.toString())
-                  this.load.atlas(
-                    _details.walletAddress+ "_" + _details.minted_id.toString(),
-                    _details.sprite_url,
-                    'bitfgihter_assets/player/texture-v2.json'
-                  )
-                  this.otherPlayers.set(_details.walletAddress + "_" + _details.minted_id.toString(), {
-                    wallet_address: _details.walletAddress,
-                    nick_name: _details.nick_name,
-                    setupDone: false,
-                    all_data: _details.all_nft_data,
-                    sprite_url: _details.sprite_url,
-                    profile_image: _details.profile_image,
-                    x: _details.last_position_x,
-                    y: _details.last_position_y,
-                    minted_id: _details.minted_id.toString(),
-                    lastKickTime: 0,
-                    lastPunchTime: 0,
-                  })
-                  this.load.start();
-                  console.log("adding other player live_players_init", this.otherPlayers)
-                }
-              }
-            // }
-          })
-        }
-
-
-        if (obj.event === "show_stunned") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.stunned = false;
-                _player.stunnedStarted = true;
-                _player.gameObject.currStamina = obj.stamina;
-              }
-            }
-          })
-        }
-
-        if (obj.event === "equip_brew") {
-          // console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.hasBrewInHand = true
-                _player.showEquipAnimationStarted = true
-                if (_player.wallet_address === store.getState().web3store.userAddress) {
-                  store.dispatch(SetEquippedBrewCount(0))
-                  store.dispatch(SetInHandBrew(true))
-                }
-              }
-            }
-          })
-        }
-
-        if (obj.event === "unequip_brew") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.hasBrewInHand = false
-                if (_player.wallet_address === store.getState().web3store.userAddress) {
-                  store.dispatch(SetEquippedBrewCount(0))
-                  store.dispatch(SetInHandBrew(false))
-                }
-              }
-            }
-          })
-        }
-
-        if (obj.event === "showWinAnimation") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.winningStarted = true;
-              }
-            }
-          })
-        }
-
-        if (obj.event === "showLosingAnimation") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.losingStarted = true;
-              }
-            }
-          })
-        }
-
-        if (obj.event === "showDeadAnim") {
-          // console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.gameObject.dead = true;
-                _player.gameObject.dead_last_time = new Date().getTime();
-              }
-            }
-          })
-        }
-
-        if (obj.event === "stop_show_stunned") {
-          // console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === obj.walletAddress) {
-                _player.stunned = false;
-                _player.stunnedStarted = false;
-                _player.gameObject.currStamina = obj.stamina;
-              }
-            }
-          })
-        }
-
-        if (obj.event === "fight_update") {
-          // console.log(obj);
-          // store.dispatch(SetFightersInfo(obj))
-          const newObj: IfightersInfo = {...obj}
-          
-          // if (newObj.player1.walletAddress === store.getState().web3store.userAddress) {
-          //   this.myPlayer.EnableHealthBars()
-          // }
-          // if (newObj.player2.walletAddress === store.getState().web3store.userAddress) {
-          //   this.myPlayer.EnableHealthBars()
-          // }
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === newObj.player1.walletAddress && _player.gameObject) {
-              newObj.player1.max_health = _player.gameObject.max_health;
-              newObj.player1.max_stamina = _player.gameObject.max_stamina;
-              newObj.player1.defense = _player.gameObject.defense;
-              newObj.player1.kickpower = _player.gameObject.kickPower;
-              newObj.player1.punchpower = _player.gameObject.punchPower;
-              newObj.player1.speed = _player.gameObject.speed;
-              newObj.player1.profile_image = _player.profile_image;
-              // newObj.player1.last_position_x = _player
-              _player.gameObject?.EnableHealthBars()
-              if (_player.gameObject) {
-                _player.moving = true;
-                // _player.gameObject.target_position_stored = {x: newObj.player1.last_position_x, y: newObj.player1.last_position_y};
-              }
-            }
-            if (_player.wallet_address === newObj.player2.walletAddress && _player.gameObject) {
-              newObj.player2.max_health = _player.gameObject.max_health;
-              newObj.player2.max_stamina = _player.gameObject.max_stamina;
-              newObj.player2.defense = _player.gameObject.defense;
-              newObj.player2.kickpower = _player.gameObject.kickPower;
-              newObj.player2.punchpower = _player.gameObject.punchPower;
-              newObj.player2.speed = _player.gameObject.speed;
-              newObj.player2.profile_image = _player.profile_image;
-              _player.gameObject?.EnableHealthBars()
-              if (_player.gameObject) {
-                _player.moving = true;
-                // _player.gameObject.target_position_stored = {x: newObj.player2.last_position_x, y: newObj.player2.last_position_y};
-              }
-            }
-          })
-          store.dispatch(SetFightersInfo(newObj))
-        }
-
-        if (obj.event === "teleport") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject
-              //  && _player.wallet_address !== store.getState().web3store.userAddress && _player.gameObject
-               ) {
-              // console.log("only move ", obj)
-              _player.gameObject.moving = false;
-              _player.moving = false;
-              _player.kicking = false;
-              _player.punching = false;
-              // _player.gameObject.sprite.x = obj.x
-              // _player.gameObject.sprite.y = obj.y
-              _player.gameObject.teleport = true
-              _player.gameObject.teleport_coordinates = {x: obj.x, y: obj.y};
-              _player.gameObject.target_position_stored = {x: obj.x, y: obj.y};
-              if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
-              else _player.gameObject.sprite.flipX = true
-            } 
-            // else if (_player.wallet_address === obj.walletAddress && _player.wallet_address === store.getState().web3store.userAddress && _player.gameObject) {
-            //   // _player.gameObject.sprite.x = obj.x;
-            //   // _player.gameObject.sprite.y = obj.y;
-            //   // ActionManager.AddTomoveActionQueue({ action_id, task_state: true, x: this.sprite.x, y: this.sprite.y } );
-            //   _player.gameObject.teleport = true
-            //   _player.gameObject.teleport_coordinates = {x: obj.x, y: obj.y};
-            //   _player.gameObject.server_position_stored = {x: obj.x, y: obj.y};
-            //   // _player.gameObject.last_server_move_action_id = obj.action_id;
-            //   _player.gameObject.last_server_move_updated_at = new Date().getTime()
-            // }
-          })
-        }
-
-        if (obj.event === "got_hit_lift_off_fall" ) {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              _player.gameObject.gassed_lift_off_fall = true
-              if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
-              else _player.gameObject.sprite.flipX = true
-            }
-          })
-        }
-
-        if (obj.event === "swing_sound") {
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              this.playSwingSOund()
-            }
-          })
-        }
-
-        if (obj.event === "showGotBackHitAnimation") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              _player.gotBackHit = true;
-            }
-          })
-        }
-
-        if (obj.event === "showGotHitAnimation") {
-          console.log(obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              _player.gotHit = true;
-            }
-          })
-        }
-
-        if (obj.event === "queue_info") {
-          console.log("queue_info--> ", obj.data)
-          // store.dispatch(ChangeQueueData(obj.data))
-          store.dispatch(ChangeCombinedQueueData(obj.data))
-          const queueData: Array<IQueueCombined> = obj.data;
-          // console.log("queue info 2--> ", queueData)
-          queueData.map((data) => {
-            // console.log("queue ",  data.user_wallet_address,
-            //   (data.user_wallet_address === store.getState().web3store.userAddress 
-            //   && !store.getState().userActionsDataStore.fightersInfo.fightStarted))
-            if (
-              (data.p1_wallet === store.getState().web3store.userAddress 
-              || data.p2_wallet === store.getState().web3store.userAddress )
-              && !store.getState().userActionsDataStore.fightersInfo.fightStarted
-              && !store.getState().userActionsDataStore.fightPreStart
-            ) {
-              store.dispatch(ChangeShowQueueBox(true))
-              store.dispatch(ChangeShowMenuBox(true))
-            }
-          })
-        }
-
-        if (obj.event === "fight_confirmation" ) {
-          console.log(" in fight_confirmation msg,,, ", obj)
-          if (obj.walletAddress === store.getState().web3store.userAddress) {
-            store.dispatch(ShowFightConfirmationStartTime(new Date().getTime()))
-            store.dispatch(ShowFightConfirmationBox(true))
-            setTimeout(() => {
-              store.dispatch(ShowFightConfirmationBox(false))
-              store.dispatch(ShowFightConfirmationStartTime(0))
-            }, 20* 1000)
-          }
-        }
-
-        if (obj.event === "fight_start_pre_announcement") {
-          console.log(obj)
-          store.dispatch(SetCurrentFightId(obj.fight_id))
-          if (obj.message === "Fight!") {
-            // this.myPlayer.movementAbility = true;
-            this.playFightStartMusic()
-          } else if (obj.message !== "") {
-            this.playBoopMusic()
-          }
-          store.dispatch(ChangeFightAnnouncementMessageFromServer(obj.message))
-          store.dispatch(ChangeFightAnnouncementStateFromServer(true))
-
-          setTimeout(() => {
-            store.dispatch(ChangeFightAnnouncementStateFromServer(false))
-          }, 5000)
-
-          let you_are_player_state = ""
-          if (obj.player1 === store.getState().web3store.userAddress ) {
-            store.dispatch(FightPreStart(true));
-            // store.dispatch(FightPlayerSide("left"));
-            you_are_player_state = "p1";
-            store.dispatch(SetCurrentPlayerFighting(true));
-            // store.dispatch(SetCurrentOtherPlayerFighting(obj.player2))
-          } else if (obj.player2 === store.getState().web3store.userAddress) {
-            store.dispatch(FightPreStart(true));
-            // store.dispatch(FightPlayerSide("right"));
-            you_are_player_state = "p2";
-            store.dispatch(SetCurrentPlayerFighting(true));
-            // store.dispatch(SetCurrentOtherPlayerFighting(obj.player1))
-          }
-          if (you_are_player_state != "") {
-            this.cameras.main.stopFollow();
-            this.cameras.main.centerOn(this.centerCoordinatesStage.x, this.centerCoordinatesStage.y);
-          }
-          // console.log("fight_start_announcement", "you are ", you_are_player_state, obj)
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.player1 || _player.wallet_address === obj.player2) {
-              if (_player.gameObject) {
-                _player.gameObject.playerContainer.remove(_player.gameObject.playerInfoIcon)
-              }
-            }
-          })
-          // console.log("fight_start_announcement", "other player ", this.fighterOtherPlayer)
-        }
-
-        if (obj.event === "fight_end_announcement") {
-          console.log(obj)
-          // store.dispatch(ChangeFightAnnouncementMessageFromServer(obj.message))
-          // store.dispatch(ChangeFightAnnouncementStateFromServer(true))
-          const newObj: IfightersInfo = {...obj}
-          store.dispatch(ClearFighterInfo())
-          store.dispatch(SetFightWinner(obj.winner))
-
-          store.dispatch(FightContinue(false))
-          store.dispatch(FightEnd(false))
-          store.dispatch(FightPreStart(false))
-          store.dispatch(FightStart(false))
-          
-          store.dispatch(SetCurrentOtherPlayerFighting(""))
-
-          setTimeout(() => {
-            console.log("fight_end_announcement 4 seconds done.")
-            store.dispatch(ChangeFightAnnouncementStateFromServer(false))
-            store.dispatch(SetCurrentPlayerFighting(false));
-          }, 6000)
-
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === newObj.player1.walletAddress || _player.wallet_address === newObj.player2.walletAddress) {
-              if (_player.gameObject && _player.wallet_address !== store.getState().web3store.userAddress) {
-                _player.gameObject.playerContainer.add(_player.gameObject.playerInfoIcon)
-              } else {
-                if (_player.gameObject && _player.wallet_address === store.getState().web3store.userAddress) {
-                  // this.cameras.main.startFollow(_player.gameObject.sprite, false, 0.2);
-                  this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-                  this.cameras.main.startFollow(_player.gameObject.sprite);
-                  if (store.getState().web3store.userAddress === obj.winner) {
-                    // show that card.. 
-                    console.log("in here fight_end_announcement ",obj.winner )
-                    setTimeout(() => {
-                      store.dispatch(ShowWinnerCardAtFightEnd(true))
-                    }, 8000)
-                  } else {
-                    store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
-                    store.dispatch(ChangeFightAnnouncementStateFromServer(true))
-                  }
-                }
-              }
-            }
-          })
-
-          this.fighterOtherPlayer = "";
-        }
-
-        if (obj.event === "gotKickHit" || obj.event === "gotPunchHit") {
-          // console.log("attacked --", obj)
-          const newObj: IfightersInfo = {...obj}
-          // store.dispatch(SetFightersInfo(newObj))
-          const tempHealthP1 = newObj.player1.health;
-          const tempHealthP2 = newObj.player2.health;
-          const last_health_p1 = obj.last_health_p1;
-          const last_health_p2 = obj.last_health_p2;
-
-          this.otherPlayers.forEach((_player) => {
-            if (_player.wallet_address === newObj.player1.walletAddress) {
-              _player.gameObject?.EnableHealthBars()
-              if (_player.wallet_address === store.getState().web3store.userAddress) {
-                _player.gameObject?.DecreaseHealthValue(tempHealthP1, last_health_p1, "red")
-              } else {
-                _player.gameObject?.DecreaseHealthValue(tempHealthP1, last_health_p1)
-              }
-            }
-            if (_player.wallet_address === newObj.player2.walletAddress) {
-              _player.gameObject?.EnableHealthBars()
-              if (_player.wallet_address === store.getState().web3store.userAddress) {
-                _player.gameObject?.DecreaseHealthValue(tempHealthP2, last_health_p2, "red")
-              } else {
-                _player.gameObject?.DecreaseHealthValue(tempHealthP2, last_health_p2)
-              }
-            }
-          })
-        }
-
-        if (obj.event === "kick" ) {
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject 
-              // && _player.wallet_address !== store.getState().web3store.userAddress
-              ) {
-              _player.runStart = false;
-              _player.running = false;
-              _player.kicking = true;
-              _player.kickStart = true;
-              _player.kickStartTime = new Date().getTime()
-            }
-          })
-        }
-
-        if (obj.event === "punch") {
-          this.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === obj.walletAddress && _player.gameObject 
-              // && _player.wallet_address !== store.getState().web3store.userAddress
-              ) {
-              _player.runStart = false;
-              _player.running = false;
-              _player.punching = true;
-              _player.punchStart = true;
-              _player.punchStartTime = new Date().getTime()
-            }
-          })
-        }
-
-        if (obj.event === "fight_machine_button_press") {
-          // if (this.fightMachineOverlapText.depth > 0) {
-            if (obj.walletAddress !== store.getState().web3store.userAddress) {
-              this.punchArea.setDepth(-1)
-              setTimeout(() => {
-                this.punchArea.setDepth(1)
-                this.bootstrap.play_button_press_sound()
-              }, 500)
-            }
-            
-          // }
-        }
-
-        if ( obj.event === "chat" ) {
-          // console.log("here --> ", obj)
-          if (
-            obj.walletAddress === store.getState().web3store.userAddress
-          ) {
-            store.dispatch(addToChatArray({
-              nick_name: obj.nick_name,
-              walletAddress: obj.walletAddress,
-              message: obj.message,
-              direction: "right",
-              type: MessageType.Chat
-            }));
-          } else {
-            store.dispatch(addToChatArray({
-              nick_name: obj.nick_name,
-              walletAddress: obj.walletAddress,
-              message: obj.message,
-              direction: "left",
-              type: MessageType.Chat
-            }));
-          }
-          this.otherPlayers.forEach((_player) => {
-            console.log(_player.wallet_address, obj.walletAddress)
-            if (_player.wallet_address === obj.walletAddress) _player.gameObject?.createNewDialogBox(obj.message)
-          })
-        }
-
-        if (obj.event === "player_left") {
-        // console.log(obj);
-          store.dispatch(addToChatArray({
-            nick_name: obj.nick_name,
-            walletAddress: obj.walletAddress,
-            message: " Left",
-            direction: "left",
-            type: MessageType.Announcement
-          }));
-        }
-
-        if (obj.event === "joined") {
-          console.log(obj);
-          if (obj.walletAddress !== store.getState().web3store.userAddress) {
-            store.dispatch(addToChatArray({
-              nick_name: obj.nick_name,
-              walletAddress: obj.walletAddress,
-              message: " Joined",
-              direction: "left",
-              type: MessageType.Announcement
-            }));
-          } else {
-            this.otherPlayers.forEach((_player) => {
-              if (_player.wallet_address === obj.walletAddress && obj.walletAddress === store.getState().web3store.userAddress) {
-                if (_player.gameObject) {
-                  _player.gameObject.actualLastHealth = obj.health;
-                  _player.gameObject.currStamina = objs.stamina;
-                  _player.gameObject.currHealth = objs.health;
-                }
-              }
-            })
-          }
-        }
-
-        if (obj.event === "typing") {
-          this.otherPlayers.forEach((_player) => {
-            if (_player.wallet_address === obj.walletAddress) _player.gameObject?.createNewDialogBox(obj.message)
-          })
-        }
-
-        if (obj.event === "update_balance") {
-          // console.log(obj)
-          if (obj.walletAddress === store.getState().web3store.userAddress) {
-            getBalances(store.getState().web3store.userAddress)
-          }
-        }
-
-        if (obj.event === "fetch_balance") {
-          console.log("in fetchPlayerWalletInfo",obj, store.getState().web3store.userAddress)
-          if (obj.user_wallet_address === store.getState().web3store.userAddress) {
-            fetchPlayerWalletInfo()
-            // getBalances(store.getState().web3store.userAddress)
-          }
-        }
-
-        if (obj.event === "assets_update") {
-          console.log(obj)
-          // if (obj.walletAddress === store.getState().web3store.userAddress) {
-          //   store.dispatch(SetAssetsInfo(obj.data))
-          // }
-        }
-
-        if (obj.event === "update_health") {
-          this.otherPlayers.forEach(_player => {
-            // console.log("health joined .. in ", _player.wallet_address === obj.walletAddress && _player.wallet_address === store.getState().web3store.userAddress && _player.gameObject)
-            if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
-              _player.gameObject.currHealth = obj.health;
-            }
-          })
-        }
-
-        if (obj.event === "brew_used") {
-          this.otherPlayers.forEach(_player => {
-            if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
-              _player.drinkStarted = true;
-              _player.drinking = false;
-              _player.hasBrewInHand = false
-            }
-          })
-        }
-
-        if (obj.event === "eject_brew_server") {
-          console.log(obj)
-          this.brews.push({
-              brew_id: obj.brew_id,
-              gameObject: new BrewManager(this, obj.fromX, obj.fromY, obj.toX, obj.toY)
-            }
-          )
-        }
-
-        if (obj.event === "magnet_move_brew") {
-          console.log(obj)
-          for(let i =0; i < this.brews.length;i++) {
-            if (this.brews[i].brew_id === obj.brew_id) {
-              this.brews[i].gameObject.MagnetMoveBrew(obj.toX, obj.toY)
-              break
-            }
-          }
-        }
-      }
-
-      if (objs.event === "all_chats") {
-        // console.log(obj)
-        const chats = [];
-        for (let i = 0; i < objs.chats.length; i++) {
-          if (objs.chats[i].type === MessageType.Chat && objs.chats[i].walletAddress === store.getState().web3store.userAddress ) {
-            objs.chats[i].direction = 'right'
-          } else {
-            objs.chats[i].direction = 'left'
-          }
-          chats.push(objs.chats[i])
-        }
-        store.dispatch(AddInitialToChatArray(objs.chats))
-      }
-
-      if (objs.event === "ping") {
-        // console.log(objs)
-        this.lobbySocketConnection.send(JSON.stringify({
-          event: "pong",
-          walletAddress: store.getState().web3store.userAddress,
-          orientation: "",
-          room_id:"lobby",
-          message: this.nftData.sprite_image
-        }))
-        const date = new Date();
-        const now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
-                  date.getUTCDate(), date.getUTCHours(),
-                  date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
-        const timezoneOffset = (new Date()).getTimezoneOffset();
-        const tempDiff =  Math.abs((new Date(now_utc).getTime() ) - (objs.server_time)) ;
-        // console.log("received ping ", new Date().getTime(), new Date(now_utc).getTime(), objs.server_time, (2 * tempDiff).toString(), timezoneOffset, objs.server_offset)
-        // store.dispatch(SetServerLatency((2 * tempDiff).toString()))
-        store.dispatch(SetServerLatency((objs.latency_time).toString()))
-      }
-
-      if (objs.event === "move" || objs.event === "running") {
-        // console.log("--- ", objs)
-        this.otherPlayers.forEach(_player => {
-          if (_player.wallet_address === objs.walletAddress && _player.gameObject 
-            // && _player.wallet_address !== store.getState().web3store.userAddress
-            ) {
-            // console.log("only move ", objs)
-            if (objs.event === "running") {
-              _player.runStart = true;
-            } else {
-              _player.moving = true;
-            }
-            _player.gameObject.moving = true;
-            _player.kicking = false;
-            _player.punching = false;
-            _player.gameObject.currStamina = objs.stamina;
-            // console.log("move_current_stamina ", _player.gameObject.currStamina )
-            _player.gameObject.currHealth = objs.health;
-            
-            _player.gameObject.target_position_stored = {x: objs.x, y: objs.y};
-            _player.orientation = objs.orientation;
-            if (objs.orientation === 'right') _player.gameObject.sprite.flipX = false
-            else _player.gameObject.sprite.flipX = true
-          } 
-          // else if (_player.wallet_address === objs.walletAddress && _player.wallet_address === store.getState().web3store.userAddress && _player.gameObject) {
-          //   // console.log("---- ", obj)
-
-          //   _player.gameObject.currStamina = objs.stamina;
-          //   _player.gameObject.currHealth = objs.health;
-          //   // if (objs.stamina > 3) {}
-          //   _player.gameObject.server_position_stored = {x: objs.x, y: objs.y};
-          //   _player.gameObject.last_server_move_action_id = objs.action_id;
-          //   _player.gameObject.last_server_move_updated_at = new Date().getTime()
-          //   // console.log("pos_from_server", obj.walletAddress,  obj.x, obj.y, "pos_from_client", _player.gameObject?.sprite.x, _player.gameObject?.sprite.y, _player.stunned)
-          // }
-        })
-      }
-
-      this.load.on('filecomplete', (key: string, val:any) => {
-        // console.log("filecomplete- live_players_init", key, val)
-        if (this.otherPlayers.get(key) && key.split("_").length === 2) { 
-          const otherPlayer = this.otherPlayers.get(key)
-          if (otherPlayer) {
-            if (!otherPlayer.setupDone) {
-              console.log("filecomplete- live_players_init ---", key)
-              createOtherCharacterAnimsV2(this.anims, key)
-              otherPlayer.setupDone = true;
-              const otherP = otherPlayer.wallet_address !== store.getState().web3store.userAddress
-              otherPlayer.gameObject = new OtherPlayer(
-                this, 
-                otherPlayer.x, 
-                otherPlayer.y, 
-                key,
-                `idle-${key}`,
-                otherPlayer.nick_name, 
-                otherPlayer.all_data,
-                this.lobbySocketConnection,
-                otherP,
-                otherPlayer.wallet_address,
-                parseInt(otherPlayer.minted_id.toString())
-                // otherPlayer.extra_data
-              );
-              otherPlayer.sprite = otherPlayer.gameObject.sprite;
-              this.otherPlayers.set(key, otherPlayer)
-              this.otherPlayersGroup.add(otherPlayer.sprite)
-              console.log("--- live_players_init all players ---",this.otherPlayers.size, this.otherPlayers)
-              if (otherPlayer.wallet_address === store.getState().web3store.userAddress) {
-                console.log("following live_players_init --", this.otherPlayers.size)
-                // this.cameras.main.startFollow(otherPlayer.gameObject.sprite, false, 0.2);
-                this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-                this.cameras.main.startFollow(otherPlayer.gameObject.sprite);
-                // otherPlayer.gameObject.sprite.setScrollFactor(1)
-              }
-            }
-          }
-        }
-      }, this);
-
-    })
   }
 
   resetRats(newRats: IRatsStateManager) {
@@ -1443,10 +443,10 @@ export default class Game extends Phaser.Scene {
       if (pointer.rightButtonDown() && !this.mousePressed){
         this.mousePressed = true
         // console.log("right button down")
-        this.keys.keyK.pressed = true
-          this.keys.lastKey = 'KeyK'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false;
+        this.keyControls.keys.keyK.pressed = true
+          this.keyControls.keys.lastKey = 'KeyK'
+          this.keyControls.keys.keyD.double_pressed = false
+          this.keyControls.keys.keyA.double_pressed = false;
           if (this.fightMachineOverlapText.depth > 0) {
             // this.lobbySocketConnection.send(JSON.stringify({
             //   event: "fight_machine_button_press",
@@ -1463,10 +463,10 @@ export default class Game extends Phaser.Scene {
       else if (pointer.leftButtonDown() && !this.mousePressed){
         console.log("left button down ", this.mousePressed, this.fightMachineOverlapText.depth)
         this.mousePressed = true
-        this.keys.keyP.pressed = true
-          this.keys.lastKey = 'KeyP'
-          this.keys.keyD.double_pressed = false
-          this.keys.keyA.double_pressed = false;
+        this.keyControls.keys.keyP.pressed = true
+          this.keyControls.keys.lastKey = 'KeyP'
+          this.keyControls.keys.keyD.double_pressed = false
+          this.keyControls.keys.keyA.double_pressed = false;
           if (this.fightMachineOverlapText.depth > 0) {
             // this.lobbySocketConnection.send(JSON.stringify({
             //   event: "fight_machine_button_press",
@@ -1482,12 +482,12 @@ export default class Game extends Phaser.Scene {
       } 
       else if (pointer.leftButtonReleased() && this.mousePressed) {
         // console.log("left button up")
-        this.keys.keyP.pressed = false;
+        this.keyControls.keys.keyP.pressed = false;
         this.mousePressed = false;
       } 
       else if (pointer.rightButtonReleased() && this.mousePressed) {
         // console.log("right button up")
-        this.keys.keyK.pressed = false;
+        this.keyControls.keys.keyK.pressed = false;
         this.mousePressed = false;
       }
     }
@@ -1503,10 +503,10 @@ export default class Game extends Phaser.Scene {
       //   }))
       // }
       if (
-        this.keys.keyA.pressed 
-      || this.keys.keyD.pressed 
-      || this.keys.keyS.pressed 
-      || this.keys.keyW.pressed
+        this.keyControls.keys.keyA.pressed 
+      || this.keyControls.keys.keyD.pressed 
+      || this.keyControls.keys.keyS.pressed 
+      || this.keyControls.keys.keyW.pressed
       ) {
 
         const action_id = uuidv4();
@@ -1539,7 +539,7 @@ export default class Game extends Phaser.Scene {
                     event: "move",
                     delta: delta,
                     walletAddress: store.getState().web3store.userAddress,
-                    keys: this.keys,
+                    keys: this.keyControls.keys,
                     action_id,
                     orientation_switch: true,
                   }));
@@ -1559,7 +559,7 @@ export default class Game extends Phaser.Scene {
         })
         
         
-      } if ( this.keys.keyK.pressed  ) {
+      } if ( this.keyControls.keys.keyK.pressed  ) {
         this.otherPlayers.forEach((_otherplayer) => {
           if (
             _otherplayer.wallet_address === store.getState().web3store.userAddress
@@ -1619,7 +619,7 @@ export default class Game extends Phaser.Scene {
             // _otherplayer.kickStart = true
           }
         }) 
-      } if ( this.keys.keyP.pressed ) {
+      } if ( this.keyControls.keys.keyP.pressed ) {
         this.otherPlayers.forEach((_otherplayer) => {
           if (
             _otherplayer.wallet_address === store.getState().web3store.userAddress
@@ -1664,7 +664,7 @@ export default class Game extends Phaser.Scene {
     if (this.mapKey === 'lobby') {
       this.clubFrontLayer.setDepth(this.player.sprite.y+ 1000);
     } else if (this.mapKey === "hq_map") {
-      this.hq.update(this.keys)
+      this.hq.update(this.keyControls.keys)
       // this code check if player is near fight box.
       // this.otherPlayers.forEach((_player) => {
       //   if (_player.wallet_address === store.getState().web3store.userAddress && _player.gameObject) {
@@ -2053,7 +1053,7 @@ export default class Game extends Phaser.Scene {
     })
 
     // reset
-    this.keys.keyP.pressed = false;
-    this.keys.keyK.pressed = false;
+    this.keyControls.keys.keyP.pressed = false;
+    this.keyControls.keys.keyK.pressed = false;
   }
 }

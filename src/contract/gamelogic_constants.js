@@ -362,33 +362,48 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
+        "internalType": "address",
+        "name": "_treasryWalletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_jackpotWalletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_systemWalletAddress1",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_systemWalletAddress2",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_prizePoolWalletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_depositWalletAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setAllWallets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
       "internalType": "address",
       "name": "bitfightersNFTAddress",
       "type": "address"
     }],
     "name": "setBitFightersContract",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_depositWalletAddress",
-      "type": "address"
-    }],
-    "name": "setDepositWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_jackpotWalletAddress",
-      "type": "address"
-    }],
-    "name": "setJackpotWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -416,50 +431,6 @@ export const GameLogicABI = [{
       }
     ],
     "name": "setMintShares",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_prizePoolWalletAddress",
-      "type": "address"
-    }],
-    "name": "setPrizeWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_systemWalletAddress",
-      "type": "address"
-    }],
-    "name": "setSystemWallet1",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_systemWalletAddress",
-      "type": "address"
-    }],
-    "name": "setSystemWallet2",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_treasryWalletAddress",
-      "type": "address"
-    }],
-    "name": "setTreasuryWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -587,4 +558,4 @@ export const GameLogicABI = [{
   }
 ]
 
-export const gamelogic_contract_address = "0xe575564e44D32fb7114d8232eC8C5E6637f1dC83"
+export const gamelogic_contract_address = "0x91F6F0ACee44216A7CDbb695937d31434eD99617"

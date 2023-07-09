@@ -8,7 +8,7 @@ import store from '../stores';
 import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import detectEthereumProvider from '@metamask/detect-provider'
-import { getBalances, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
+import { getBalances, updateBitfightersMintedCountAndTotal, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
 import { setCardState } from '../stores/MintCardStateStore';
 import { PageStates } from './components/SidePanel/SidePanel';
 // import { SetWbtcBalance } from '../stores/Web3StoreBalances';
@@ -143,6 +143,7 @@ export async function Web3Login() {
   await getBalances(store.getState().web3store.userAddress);
 
   // update nfts infos
+  await updateBitfightersMintedCountAndTotal()
   await updatePresaleMintedCount()
   await updateOneKClubMintedCount()
 

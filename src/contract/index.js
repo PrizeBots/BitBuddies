@@ -788,3 +788,102 @@ export async function mintPreSaleDripNFTV2(_tokenURIs, _referrerAddress, tattoo,
 //     console.log("err in mintPreSaleNFT ", err)
 //   }
 // }
+
+
+
+export async function getBitfightersTotalCountForGen(_gen) {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: bitfighter_contract_adress,
+    functionName: "getNFTsLimitCountForGenN",
+    abi: ABI,
+    params: {
+      _gen
+    }
+  };
+  const presaleMintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- getBitfightersTotalCountForGen ", presaleMintedCount);
+  return presaleMintedCount;
+}
+
+export async function getBitfightersMintedCount() {
+  await Moralis.enableWeb3()
+  const sendOptions = {
+    contractAddress: bitfighter_contract_adress,
+    functionName: "getMintedBFsCount",
+    abi: ABI
+  };
+  const presaleMintedCount = await Moralis.executeFunction(sendOptions);
+  console.log("----- getBitfightersMintedCount ", presaleMintedCount);
+  return presaleMintedCount;
+}
+
+
+export async function createBitFighterV4(_tokenURIs, referer_address, _gen, _partner, tatoo, tag) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  // console.log("ethers... ", ethers)
+  // console.log("web3Provider... ", web3Provider)
+  console.log("in_createBitFighterV4 ", _tokenURIs, referer_address, _gen, tatoo, tag)
+  console.log("gasPrice... ", gasPrice.toNumber())
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+  try {
+    const transaction = await contract.mintMultiBitfighter(
+      _tokenURIs,
+      referer_address,
+      _gen,
+      _partner,
+      tatoo, tag, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+    return {
+      message: "Success",
+      error: 0
+    }
+  } catch (err) {
+    console.log("err in createBitFighterV4 ", err)
+    return {
+      message: err.message,
+      error_data: err.data,
+      error: 1
+    }
+  }
+}
+
+export async function registerBitfighter(_name, lucky_number, _tokenID) {
+
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("in registerBitfighter gasPrice... ", gasPrice.toNumber(), _name, lucky_number, _tokenID)
+  const signer = web3Provider.getSigner();
+
+  const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+  try {
+    const transaction = await contract.registerBitfighter(
+      _name,
+      lucky_number,
+      _tokenID
+    );
+    await transaction.wait();
+    console.log("--------------------------------");
+    return {
+      message: "Success",
+      error: 0
+    }
+  } catch (err) {
+    console.log("err in registerBitfighter ", err)
+    return {
+      message: err.message,
+      error_data: err.data,
+      error: 1
+    }
+  }
+}

@@ -17,6 +17,7 @@ import { SetGameStarted } from "../stores/PlayerData";
 import MintCardsPage from "./MintCardsPage/MintCardsPage";
 import { SetGlobalRefCode } from "../stores/MintCardStateStore";
 import { isNullOrUndefined } from "util";
+import NewFighters from "./FightersNew";
 // import MintPage3 from './MintPage3';
 
 const Backdrop = styled.div`
@@ -99,7 +100,8 @@ const Landing = (props: any) => {
       dispatch(SetGameStarted(false));
     } else if (location.pathname.includes("/game")) {
       console.log("debug.. -", location.pathname);
-      View = <Fighters />;
+      // View = <Fighters />;
+      View = <NewFighters />
       // dispatch(setGameStarted(false));
     } else if (location.pathname.includes("/mint")) {
 

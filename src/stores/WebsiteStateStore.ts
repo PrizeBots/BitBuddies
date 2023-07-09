@@ -4,6 +4,7 @@ export interface ServersInfo {
   room_id: string,
   active_users: string,
   total_users: string,
+  region: string,
 }
 
 interface IWebsiteStateStore {

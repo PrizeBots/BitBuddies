@@ -11,6 +11,11 @@ interface BitFightersCollection {
   oneKClubMintedCards: number;
   totalOneKClubCards: number;
   currentPriceOfOneKClubCard: number;
+
+  bitfightersNFTsMintedCount: number;
+  totalBitfightersToMint: number;
+  dripfightersNFTsMintedCount: number;
+  totalDripFightersToMint: number;
 }
 
 const initialState: BitFightersCollection = {
@@ -22,7 +27,11 @@ const initialState: BitFightersCollection = {
   drip_preSaleNFTMintedCount: 0,
   oneKClubMintedCards: 0,
   totalOneKClubCards: 0,
-  currentPriceOfOneKClubCard: 0
+  currentPriceOfOneKClubCard: 0,
+  bitfightersNFTsMintedCount: 0,
+  dripfightersNFTsMintedCount: 0,
+  totalBitfightersToMint: 0,
+  totalDripFightersToMint: 0
 }
 
 export const bitFightersCollection = createSlice({
@@ -71,10 +80,34 @@ export const bitFightersCollection = createSlice({
     SetCurrentPriceOfOnekCard: (state: { currentPriceOfOneKClubCard: number; }, action: PayloadAction<number>) => {
       state.currentPriceOfOneKClubCard = action.payload;
     },
+
+
+    SetBitfightersNftMintedCount: (state: { bitfightersNFTsMintedCount: number; }, action: PayloadAction<number>) => {
+      state.bitfightersNFTsMintedCount = action.payload;
+    },
+
+    SetDripfightersNftMintedCount: (state: { bitfightersNFTsMintedCount: number; }, action: PayloadAction<number>) => {
+      state.bitfightersNFTsMintedCount = action.payload;
+    },
+
+    SetTotalBitfightersNftCount: (state: { totalBitfightersToMint: number; }, action: PayloadAction<number>) => {
+      state.totalBitfightersToMint = action.payload;
+    },
+
+    SetTotalDripfightersNftCount: (state: { totalDripFightersToMint: number; }, action: PayloadAction<number>) => {
+      state.totalDripFightersToMint = action.payload;
+    },
+
   },
 })
 
-export const { addIntoArray, clearArray, setArray, setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, SetTotalOneKClubNF, SetTotalMintedOneKClubNF, SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT } =
+export const { addIntoArray, clearArray, setArray, 
+  setNFTDetails, setNFTLoadedBool, setTotalNFTData, SetTotalPreSaleNFT, 
+  SetTotalOneKClubNF, SetTotalMintedOneKClubNF, 
+  SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT,
+  SetBitfightersNftMintedCount, SetDripfightersNftMintedCount, 
+  SetTotalBitfightersNftCount, SetTotalDripfightersNftCount
+ } =
   bitFightersCollection.actions
 
 export default bitFightersCollection.reducer

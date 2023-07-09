@@ -52,6 +52,22 @@ export const updateNFTsInDB = async (userAddress: string) => {
   return output;
 }
 
+export const updateSingleBfInDB = async (userAddress: string, minted_id: number) => {
+  if (userAddress === "") {
+    console.log("nill user address updateSingleBfInDB");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/web3/update/bitfighters/${userAddress}/${minted_id}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  const output = await result.json();
+  console.log(output)
+  return output;
+}
+
 export const updateOneKclubNFTs = async (userAddress: string) => {
   console.log("in_updateOneKclubNFTs ..", userAddress)
   if (userAddress === "") {
@@ -731,5 +747,28 @@ export const FetchGameServerConnectionURL = async (userAddress: string, room_id:
   })
   const output = await result.json();
   console.log("output in FetchGameServerConnectionURL --", output)
+  return output;
+}
+
+export const randomGenarateBitfightersV2 = async (userAddress: string, referer: string, quantity: number, user_type='web3') => {
+  console.log("mint clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v2/generator/create/bitfighter/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "user_wallet_address" : userAddress,
+      "referer_address" : referer,
+      'user_type': user_type,
+      "quantity": quantity
+    })
+  })
+  const output = await result.json();
+  console.log("output in randm generate --", output)
   return output;
 }

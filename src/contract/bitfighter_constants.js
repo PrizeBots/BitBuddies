@@ -229,6 +229,38 @@ export const ABI = [{
 		"type": "function"
 	},
 	{
+		"inputs": [{
+				"internalType": "address",
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_mintedId",
+				"type": "uint256"
+			}
+		],
+		"name": "checkIfUserOwns",
+		"outputs": [{
+			"internalType": "bool",
+			"name": "",
+			"type": "bool"
+		}],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "dripMintCardContractAddress",
+		"outputs": [{
+			"internalType": "address",
+			"name": "",
+			"type": "address"
+		}],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "gameLogicContract",
 		"outputs": [{
@@ -246,6 +278,62 @@ export const ABI = [{
 			"internalType": "address",
 			"name": "",
 			"type": "address"
+		}],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{
+			"internalType": "uint256",
+			"name": "_mintedId",
+			"type": "uint256"
+		}],
+		"name": "getAllInfoOfBitfighter",
+		"outputs": [{
+			"components": [{
+					"internalType": "uint8",
+					"name": "LuckyNumber",
+					"type": "uint8"
+				},
+				{
+					"internalType": "address",
+					"name": "Referer",
+					"type": "address"
+				},
+				{
+					"internalType": "string",
+					"name": "NickName",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "Partner",
+					"type": "string"
+				},
+				{
+					"internalType": "bool",
+					"name": "locked",
+					"type": "bool"
+				},
+				{
+					"internalType": "bool",
+					"name": "tag",
+					"type": "bool"
+				},
+				{
+					"internalType": "bool",
+					"name": "tatoo",
+					"type": "bool"
+				},
+				{
+					"internalType": "address",
+					"name": "originalMinter",
+					"type": "address"
+				}
+			],
+			"internalType": "struct BitFightersNFT.ExtraInfoForNFTs",
+			"name": "result",
+			"type": "tuple"
 		}],
 		"stateMutability": "view",
 		"type": "function"
@@ -281,16 +369,27 @@ export const ABI = [{
 		"type": "function"
 	},
 	{
-		"inputs": [{
+		"inputs": [],
+		"name": "getMintedBFsCount",
+		"outputs": [{
 			"internalType": "uint256",
-			"name": "_mintedId",
+			"name": "",
 			"type": "uint256"
 		}],
-		"name": "getNickNameForBitfighter",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{
+			"internalType": "uint8",
+			"name": "_gen",
+			"type": "uint8"
+		}],
+		"name": "getNFTsLimitCountForGenN",
 		"outputs": [{
-			"internalType": "string",
-			"name": "nick_name",
-			"type": "string"
+			"internalType": "uint256",
+			"name": "",
+			"type": "uint256"
 		}],
 		"stateMutability": "view",
 		"type": "function"
@@ -301,11 +400,11 @@ export const ABI = [{
 			"name": "_mintedId",
 			"type": "uint256"
 		}],
-		"name": "getOriginalMinter",
+		"name": "getNickNameForBitfighter",
 		"outputs": [{
-			"internalType": "address",
-			"name": "",
-			"type": "address"
+			"internalType": "string",
+			"name": "nick_name",
+			"type": "string"
 		}],
 		"stateMutability": "view",
 		"type": "function"
@@ -407,25 +506,26 @@ export const ABI = [{
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "mintCardContractAddress",
+		"outputs": [{
+			"internalType": "address",
+			"name": "",
+			"type": "address"
+		}],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [{
-				"internalType": "string",
-				"name": "_tokenURI",
-				"type": "string"
+				"internalType": "string[]",
+				"name": "_tokenURIs",
+				"type": "string[]"
 			},
 			{
 				"internalType": "address",
 				"name": "referrer_address",
 				"type": "address"
-			},
-			{
-				"internalType": "uint8",
-				"name": "lucky_number",
-				"type": "uint8"
-			},
-			{
-				"internalType": "string",
-				"name": "nick_name",
-				"type": "string"
 			},
 			{
 				"internalType": "uint8",
@@ -436,62 +536,21 @@ export const ABI = [{
 				"internalType": "string",
 				"name": "_partner",
 				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "tatoo",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "tag",
+				"type": "bool"
 			}
 		],
-		"name": "mintBitFighter",
-		"outputs": [{
-			"internalType": "uint256",
-			"name": "",
-			"type": "uint256"
-		}],
+		"name": "mintMultiBitfighter",
+		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-				"internalType": "string",
-				"name": "_tokenURI",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "referrer_address",
-				"type": "address"
-			},
-			{
-				"internalType": "uint8",
-				"name": "lucky_number",
-				"type": "uint8"
-			},
-			{
-				"internalType": "string",
-				"name": "nick_name",
-				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_gen",
-				"type": "uint8"
-			}
-		],
-		"name": "mintBitFighterMitCard",
-		"outputs": [{
-			"internalType": "uint256",
-			"name": "",
-			"type": "uint256"
-		}],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "mintCardContractAddress",
-		"outputs": [{
-			"internalType": "address",
-			"name": "",
-			"type": "address"
-		}],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -536,23 +595,23 @@ export const ABI = [{
 				"internalType": "bool",
 				"name": "locked",
 				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "tag",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "tatoo",
+				"type": "bool"
+			},
+			{
+				"internalType": "address",
+				"name": "originalMinter",
+				"type": "address"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-			"internalType": "uint256",
-			"name": "",
-			"type": "uint256"
-		}],
-		"name": "originalMinters",
-		"outputs": [{
-			"internalType": "address",
-			"name": "",
-			"type": "address"
-		}],
 		"stateMutability": "view",
 		"type": "function"
 	},
@@ -624,6 +683,28 @@ export const ABI = [{
 		"type": "function"
 	},
 	{
+		"inputs": [{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "lucky_number",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenID",
+				"type": "uint256"
+			}
+		],
+		"name": "registerBitfighter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -692,6 +773,17 @@ export const ABI = [{
 			}
 		],
 		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [{
+			"internalType": "address",
+			"name": "_dripMintCardContractAddress",
+			"type": "address"
+		}],
+		"name": "setDripMintCardContract",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -858,23 +950,6 @@ export const ABI = [{
 	{
 		"inputs": [{
 				"internalType": "address",
-				"name": "send_to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenID",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-				"internalType": "address",
 				"name": "from",
 				"type": "address"
 			},
@@ -907,4 +982,4 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0xAb9c7295c340180AA330227502674b0b9dD46458"
+export const bitfighter_contract_adress = "0x782e52265069eB1C03ecf7026F31FC72cD4C5018"

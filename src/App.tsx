@@ -132,7 +132,7 @@ function App() {
                 <Route path="/" element={<Landing name="" />} />
                 <Route path="home" element={<Landing name="home" />} />
                 {/* <Route path="roadmap" element={<Landing name="roadmap" />} /> */}
-                {/* <Route path="game" element={<Landing name="game" />} /> */}
+                <Route path="game" element={<Landing name="game" />} />
                 <Route path="mint" element={<Landing name="mint" />} />
                 <Route path="login" element={<Landing name="login" />} />
                 {/* <Route path="presale" element={<Landing name="presale" />} /> */}
