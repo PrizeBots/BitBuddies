@@ -55,11 +55,14 @@
         max-width: 40px;
         text-align: center;
         font-family: "Cooper Black";
-        font-size: 16px;
+        font-size: 14px;
         color: $dark;
       }
       .red{
         color: #ae0606;
+      }
+      &--center {
+        text-align: center;
       }
       &--radio:last-child{
         position: absolute;
@@ -111,6 +114,11 @@
         }
         .slightly_bigger_label {
           font-size: 18px;
+          letter-spacing: 0.5px;
+          margin-left: 5px;
+        }
+        .slightly_smaller_label {
+          font-size: 14px;
           letter-spacing: 0.5px;
           margin-left: 5px;
         }

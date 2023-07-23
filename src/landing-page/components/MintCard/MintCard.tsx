@@ -28,7 +28,9 @@ import {
 import Bootstrap from "../../../game/scenes/Bootstrap";
 import NotificationMessageHelper from "../../../game/Components/NotificationMessageHelper";
 import {
+  FetchDripPresaleInfoMintedByUser,
   parseUSDCBalance,
+  updateBitfightersMintedCountAndTotal,
   updateDripPresaleMintedCount,
   updateOneKClubMintedCount,
   updatePresaleMintedCount,
@@ -41,6 +43,8 @@ import {
   checkAllowanceOneKClub,
   checkAllowancePresale,
   createBitFighterV4,
+  createBitFighterV4WithDripPresaleCards,
+  createBitFighterV4WithPreSaleCards,
   mintOneKClubCard,
   mintPreSaleDripNFTV2,
   mintPreSaleNFTV2,
@@ -48,6 +52,7 @@ import {
 import {
   fetchNFTsFromDB,
   randomGenarateBitfightersV2,
+  randomGenarateDripBitfightersV2,
   randomGenarateDripPreSaleV2,
   randomGenaratePreSaleV2,
   updateNFTsInDB,
@@ -55,7 +60,7 @@ import {
 } from "../../../hooks/ApiCaller";
 import { PRESALE_CONTRACT_ADDRESS } from "../../../contract/presale_constants";
 import styled from "styled-components";
-import { Box, Button, LinearProgress, Modal, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, LinearProgress, Modal, Typography } from "@mui/material";
 import { PRESALE_DRIP_CONTRACT_V2 } from "../../../contract/presale_drip_constants";
 import { Web3Login } from "../../Web3Login";
 import { onek_club_contract_adress } from "../../../contract/onek_club_nft_constants";
@@ -64,7 +69,8 @@ import ReactPlayer from "react-player";
 import { MiniProgressBar } from "./MiniProgressbar";
 import { gamelogic_contract_address } from "../../../contract/gamelogic_constants";
 import { fetchAllNFTsFromDbEntries } from "../../../hooks/FetchNFT";
-import { setNFTDetails, setTotalNFTData } from "../../../stores/BitFighters";
+import { DripFighterInfo, setNFTDetails, setTotalNFTData } from "../../../stores/BitFighters";
+import { SetMintGameQuantity, SetMintGameStarted } from "../../../stores/PlayerData";
 
 const ModalWrapper = styled.div`
 `
@@ -129,11 +135,6 @@ const ProgressBar = styled(LinearProgress)`
 function MintCard() {
   const dispatch = useDispatch();
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-
-   {/* https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mc.mp4 */}
-      {/* https://production-bitfighters.s3.ap-south-1.amazonaws.com/presaleData/Drip_Fighter_Pre_Sale_Mint_Card.mp4 */}
-      {/* https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/1kClub_MintVid.mp4 */}
-      
   const presaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mc.mp4"
   const dripPresaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/presaleData/Drip_Fighter_Pre_Sale_Mint_Card.mp4"
   const oneKMintVideoURL = [
@@ -142,15 +143,33 @@ function MintCard() {
     "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mint03.mp4"
   ]
 
-  // let videoToPlay = ""
-  const [videoToPlay, setVideoToPlay] = useState(presaleMintVideoURL)
-  // const setVideoToPlay = (val: string) => {
-  //   videoToPlay = val
-  // }
+  const totalInfoOfUsersDripPresaleCards = useAppSelector((state) => state.bitFighters.totalInfoOfUsersDripPresaleCards)
+  const totalInfoOfUsersDripPresaleCardsLoaded = useAppSelector((state) => state.bitFighters.totalInfoOfUsersDripPresaleCardsLoaded)
 
+  const onlyTattooCards:Array<DripFighterInfo> = []
+  const onlyTagCards:Array<DripFighterInfo> = []
+  const tagAndTattooCards: Array<DripFighterInfo> = []
+  const noTagOrTattooCards: Array<DripFighterInfo> = []
+  for (let i=0; i < totalInfoOfUsersDripPresaleCards.length; i++) {
+    if (totalInfoOfUsersDripPresaleCards[i].tag && totalInfoOfUsersDripPresaleCards[i].tattoo) {
+      tagAndTattooCards.push(totalInfoOfUsersDripPresaleCards[i]);
+    } else if (totalInfoOfUsersDripPresaleCards[i].tag) {
+      onlyTagCards.push(totalInfoOfUsersDripPresaleCards[i]);
+    } else if (totalInfoOfUsersDripPresaleCards[i].tattoo) {
+      onlyTattooCards.push(totalInfoOfUsersDripPresaleCards[i]);
+    } else {
+      noTagOrTattooCards.push(totalInfoOfUsersDripPresaleCards[i]);
+    }
+  }
+
+  const [videoToPlay, setVideoToPlay] = useState(presaleMintVideoURL)
   const [openModal, setOpenModal] = useState(false);
   const loggedInUserWalletAddress = useAppSelector(
     (state) => state.web3store.userAddress
+  );
+
+  const mintGameStarted = useAppSelector(
+    (state) => state.playerDataStore.mintGameStarted
   );
 
   const global_ref_code = useAppSelector(
@@ -213,13 +232,25 @@ function MintCard() {
   const [bitfightersRefAddr, setBitfightersRefAdd] = useState("")
   const [bitfightersRefBoxMintCard, setBitfightersRefBoxMintCard] = useState(0);
   const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(1);
+  const [bitfighterUseMintCardCheckBox, setBitfighterUseMintCardCheckBox] = useState(false);
 
   const [dripfightersRefAddr, setDripfightersRefAdd] = useState("")
   const [dripFightersRefBoxMintCard, setDripFightersRefBoxMintCard] = useState(0);
+  const [dripFightersMintQuantity, setDripFightersMintQuantity] = useState(1);
+  const [dripfighterUseMintCardCheckBox, setDripfighterUseMintCardCheckBox] = useState(false);
+
+  const [notagOrTattooCardsPick, setNotagOrTattooCardsPick] = useState(0)
+  const [onlyTagCardPick, setOnlyTagCardPick] = useState(0)
+  const [onlyTattooCardsPick, setOnlyTattooCardsPick] = useState(0)
+  const [tagAndTattooCardsPick, setTagAndTattooCardsPick] = useState(0)
 
   const [onlyTag, setOnlyTag] = useState(false);
   const [onlyTaoo, setOnlyTatoo] = useState(false);
   const [tagAndTatoo, setTagAndTatoo] = useState(false);
+
+  const [onlyTagFighter, setOnlyTagFighter] = useState(false);
+  const [onlyTaooFighter, setOnlyTatooFighter] = useState(false);
+  const [tagAndTatooFighter, setTagAndTatooFighter] = useState(false);
 
   const [errorState, setErrorState] = useState("")
 
@@ -265,6 +296,47 @@ function MintCard() {
     }
   };
 
+  const ondrip1Fighter = () => {
+    console.log("ondrip1Fighter ", onlyTagFighter, onlyTaooFighter)
+    if (onlyTagFighter === false) {
+      if (onlyTaooFighter === true) {
+        setOnlyTagFighter(false);
+        setOnlyTatooFighter(false);
+        setTagAndTatooFighter(true);
+      } else {
+        setOnlyTagFighter(true);
+        setTagAndTatooFighter(false);
+      }
+    } else {
+      setOnlyTagFighter(false);
+    }
+  };
+
+  const ondrip2Fighter = () => {
+    if (onlyTaooFighter === false) {
+      if (onlyTagFighter === true) {
+        setOnlyTagFighter(false);
+        setOnlyTatooFighter(false);
+        setTagAndTatooFighter(true);
+      } else {
+        setTagAndTatooFighter(false);
+        setOnlyTatooFighter(true);
+      }
+    } else {
+      setOnlyTatooFighter(false);
+    }
+  };
+
+  const ondrip3Fighter = () => {
+    if (tagAndTatooFighter === false) {
+      setOnlyTagFighter(false);
+      setOnlyTatooFighter(false);
+      setTagAndTatooFighter(true);
+    } else {
+      setTagAndTatooFighter(false);
+    }
+  };
+
   const cardState = useAppSelector(
     (state) => state.mintCardStateStore.state_selected
   );
@@ -283,6 +355,14 @@ function MintCard() {
     setBitfightersRefAdd("");
     setBitfightersRefBoxMintCard(0);
     setBitFightersMintQuantity(1);
+  };
+
+  const initializeDripBitfightersMintVars = () => {
+    console.log("initializing drip bitfighters mint vars");
+    setDripfightersRefAdd("");
+    setDripFightersRefBoxMintCard(0);
+    setDripFightersMintQuantity(1);
+    setDripfighterUseMintCardCheckBox(false);
   };
 
   const initializeDripPreMintVars = () => {
@@ -308,10 +388,13 @@ function MintCard() {
     // initializeOneKVars()
     // initializeDripPreMintVars()
     // initializePreMintVars()
+    console.log("debug_global_ref_code", global_ref_code)
 
     if (global_ref_code !== "") {
       setRefAddrMintCard(global_ref_code)
       setdripRefAddrMintCard(global_ref_code)
+
+      setBitfightersRefAdd(global_ref_code)
     }
   }, [])
 
@@ -427,6 +510,14 @@ function MintCard() {
       bitfightersRefBoxMintCard
     );
 
+    // store.dispatch(SetMintGameStarted(true))
+    // store.dispatch(SetMintGameQuantity(5))
+    
+    // bootstrap.launchMintingGame({
+    //   quantity: 5
+    // })
+    // return
+
     setMintingState("");
 
     if (bitFightersMintQuantity < 1) {
@@ -438,7 +529,7 @@ function MintCard() {
       return;
     }
     
-    if (bitfightersRefAddr === "") {
+    if (!bitfighterUseMintCardCheckBox && bitfightersRefAddr === "") {
       setMintingState("");
       initializeBitfightersMintVars();
       setErrorState(`Please enter a ref code. \n If you do not have one, select "I dont have one"`)
@@ -488,7 +579,7 @@ function MintCard() {
       }
     }
 
-    setMintingState("Genrating Bitfighters");
+    setMintingState("Generating Bitfighters");
 
     const output = await randomGenarateBitfightersV2(
       store.getState().web3store.userAddress,
@@ -499,15 +590,383 @@ function MintCard() {
 
     setMintingState("Minting in Progress");
 
-    const minted = await createBitFighterV4(output.data, tempRefAddr, 0, "", false, false);
+    if (!bitfighterUseMintCardCheckBox){
+      const minted = await createBitFighterV4(output.data, tempRefAddr, 0, "", false, false);
+      if (minted.error === 1) {
+        bootstrap.play_err_sound();
+        setErrorState(minted.message + "\n" + minted.error_data.message)
+        dispatch(setCardState(PageStates.FailedState))
+        initializeBitfightersMintVars();
+        return;
+      } else {
+
+        await updateNFTsInDB(store.getState().web3store.userAddress);
+        const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
+        console.log("-------dataofnfts--*******-- .", result);
+
+        const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
+        console.log("dataofnfts -- ", dataOfNFTS )
+
+        store.dispatch(setTotalNFTData(result.message))
+        store.dispatch(setNFTDetails(dataOfNFTS))
+        
+        bootstrap.play_dr_bits_success_sound();
+        store.dispatch(SetSuccessNotificationBool(true));
+        store.dispatch(SetSuccessNotificationMessage(`Success`));
+        dispatch(setCardState(PageStates.Bitfighter))
+
+        store.dispatch(SetMintGameStarted(true))
+        store.dispatch(SetMintGameQuantity(bitFightersMintQuantity))
+        
+        // bootstrap.launchMintingGame({
+        //   quantity: bitFightersMintQuantity
+        // })
+
+        bootstrap.launchMintingGame({
+          quantity: bitFightersMintQuantity
+        })
+      }
+    } else {
+      const minted = await createBitFighterV4WithPreSaleCards(output.data, 0, "", false, false);
+      if (minted.error === 1) {
+        bootstrap.play_err_sound();
+        setErrorState(minted.message + "\n" + minted.error_data.message)
+        dispatch(setCardState(PageStates.FailedState))
+        initializeBitfightersMintVars();
+        return;
+      } else {
+
+        await updateNFTsInDB(store.getState().web3store.userAddress);
+        const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
+        console.log("-------dataofnfts--*******-- .", result);
+
+        const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
+        console.log("dataofnfts -- ", dataOfNFTS )
+
+        store.dispatch(setTotalNFTData(result.message))
+        store.dispatch(setNFTDetails(dataOfNFTS))
+        
+        bootstrap.play_dr_bits_success_sound();
+        store.dispatch(SetSuccessNotificationBool(true));
+        store.dispatch(SetSuccessNotificationMessage(`Success`));
+        dispatch(setCardState(PageStates.Bitfighter))
+
+        store.dispatch(SetMintGameStarted(true))
+        store.dispatch(SetMintGameQuantity(bitFightersMintQuantity))
+
+        bootstrap.launchMintingGame({
+          quantity: bitFightersMintQuantity
+        })
+      }
+    }
+
+    // updatePresaleMintedCount();
+    updateBitfightersMintedCountAndTotal()
+     setTimeout(() => {
+      dispatch(setCardState(PageStates.Bitfighter))
+      initializeBitfightersMintVars();
+    }, 1000)
+  };
+
+  const DripBitfightersMint = async () => {
+    console.log(
+      "DripBitfightersMint---", dripFightersMintQuantity, dripFightersRefBoxMintCard, dripfightersRefAddr
+    );
+
+
+    setMintingState("");
+
+    if (dripFightersMintQuantity < 1) {
+      setMintingState("");
+      initializeDripBitfightersMintVars();
+      setErrorState("Quantity should be greater than 0")
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return;
+    }
+    
+    if (!dripfighterUseMintCardCheckBox && dripfightersRefAddr === "") {
+      setMintingState("");
+      initializeDripBitfightersMintVars();
+      setErrorState(`Please enter a ref code. \n If you do not have one, select "I dont have one"`)
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return;
+    }
+    dispatch(setCardState(PageStates.Minting))
+    setMintingState("Initiating Transaction");
+
+    let tempRefAddr = "";
+    if (dripfightersRefAddr === "" || dripFightersRefBoxMintCard === 1) {
+      setDripfightersRefAdd(ethers.constants.AddressZero);
+      tempRefAddr = ethers.constants.AddressZero;
+    } else {
+      try {
+        tempRefAddr = ethers.utils.getAddress(dripfightersRefAddr);
+      } catch (err) {
+        console.log(" error in getting proper address from this .. ", err);
+        tempRefAddr = ethers.constants.AddressZero;
+        setDripfightersRefAdd(ethers.constants.AddressZero);
+      }
+    }
+
+    const allowance = await checkAllowance(
+      store.getState().web3store.userAddress
+    );
+    console.log("allowance -- >", allowance.toString());
+    if (
+      ethers.BigNumber.from("10000000000").gte(
+        ethers.BigNumber.from(allowance.toString())
+      )
+    ) {
+      console.log("less allowance");
+      setMintingState("Approval in Progress");
+      if (
+        !(await approveWBTC2(
+          gamelogic_contract_address,
+          ethers.BigNumber.from("10000000000")
+        ))
+      ) {
+        setErrorState("Approval Failed")
+        dispatch(setCardState(PageStates.FailedState))
+        bootstrap.play_err_sound();
+        initializeDripBitfightersMintVars();
+        return;
+      }
+    }
+
+    setMintingState("Generating Bitfighters");
+    console.log("---- debug ,,,", onlyTaooFighter || tagAndTatooFighter)
+
+    const output = await randomGenarateDripBitfightersV2(
+      store.getState().web3store.userAddress,
+      dripfightersRefAddr,
+      dripFightersMintQuantity,
+      onlyTaooFighter || tagAndTatooFighter
+    );
+    console.log("---output ", output);
+
+    setMintingState("Minting in Progress");
+
+    if (!dripfighterUseMintCardCheckBox){
+      const minted = await createBitFighterV4(
+        output.data, 
+        tempRefAddr, 0, "drip", onlyTaooFighter || tagAndTatooFighter, onlyTagFighter || tagAndTatooFighter);
+      if (minted.error === 1) {
+        bootstrap.play_err_sound();
+        setErrorState(minted.message + "\n" + minted.error_data.message)
+        dispatch(setCardState(PageStates.FailedState))
+        initializeDripBitfightersMintVars();
+        return;
+      } else {
+        await updateNFTsInDB(store.getState().web3store.userAddress);
+        const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
+        console.log("-------dataofnfts--*******-- .", result);
+
+        const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
+        console.log("dataofnfts -- ", dataOfNFTS )
+
+        store.dispatch(setTotalNFTData(result.message))
+        store.dispatch(setNFTDetails(dataOfNFTS))
+        
+        bootstrap.play_dr_bits_success_sound();
+        store.dispatch(SetSuccessNotificationBool(true));
+        store.dispatch(SetSuccessNotificationMessage(`Success`));
+        dispatch(setCardState(PageStates.Bitfighter))
+
+        store.dispatch(SetMintGameStarted(true))
+        store.dispatch(SetMintGameQuantity(bitFightersMintQuantity))
+        
+        bootstrap.launchMintingGame({
+          quantity: bitFightersMintQuantity
+        })
+      }
+    } else {
+      // const minted = await createBitFighterV4WithPreSaleCards(output.data, 0, "", false, false);
+      // if (minted.error === 1) {
+      //   bootstrap.play_err_sound();
+      //   setErrorState(minted.message + "\n" + minted.error_data.message)
+      //   dispatch(setCardState(PageStates.FailedState))
+      //   initializeBitfightersMintVars();
+      //   return;
+      // } else {
+
+      //   await updateNFTsInDB(store.getState().web3store.userAddress);
+      //   const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
+      //   console.log("-------dataofnfts--*******-- .", result);
+
+      //   const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
+      //   console.log("dataofnfts -- ", dataOfNFTS )
+
+      //   store.dispatch(setTotalNFTData(result.message))
+      //   store.dispatch(setNFTDetails(dataOfNFTS))
+        
+      //   bootstrap.play_dr_bits_success_sound();
+      //   store.dispatch(SetSuccessNotificationBool(true));
+      //   store.dispatch(SetSuccessNotificationMessage(`Success`));
+      //   dispatch(setCardState(PageStates.Bitfighter))
+
+      //   store.dispatch(SetMintGameStarted(true))
+      //   store.dispatch(SetMintGameQuantity(bitFightersMintQuantity))
+        
+      //   // bootstrap.launchMintingGame({
+      //   //   quantity: bitFightersMintQuantity
+      //   // })
+
+      //   bootstrap.launchMintingGame({
+      //     quantity: bitFightersMintQuantity
+      //   })
+      // }
+    }
+
+    // updatePresaleMintedCount();
+    updateBitfightersMintedCountAndTotal()
+     setTimeout(() => {
+      dispatch(setCardState(PageStates.DripFighter))
+      initializeDripBitfightersMintVars();
+    }, 1000)
+  };
+
+  const DripFightersMintUsingMintCard = async () => {
+    console.log("------ DripFightersMintUsingMintCard -- ", 
+      notagOrTattooCardsPick, 
+      tagAndTattooCardsPick, 
+      onlyTagCardPick, 
+      onlyTattooCardsPick
+    )
+
+    setMintingState("");
+    const totalQuantity = notagOrTattooCardsPick + tagAndTattooCardsPick + onlyTagCardPick + onlyTattooCardsPick;
+
+    if (totalQuantity < 1 ) {
+      setMintingState("");
+      initializeDripBitfightersMintVars();
+      setErrorState("Quantity should be greater than 0")
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return;
+    }
+
+    if (
+      notagOrTattooCardsPick > noTagOrTattooCards.length 
+      || onlyTagCardPick > onlyTagCards.length 
+      || onlyTattooCardsPick > onlyTattooCards.length 
+      || tagAndTattooCardsPick > tagAndTattooCards.length 
+    ) {
+      setMintingState("");
+      initializeDripBitfightersMintVars();
+      setErrorState("Quantity is more than max amount")
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return;
+    }
+
+    setMintingState("Generating Bitfighters");
+    console.log("---- debug ,,,", onlyTaooFighter || tagAndTatooFighter)
+    const allowance = await checkAllowance(
+      store.getState().web3store.userAddress
+    );
+    console.log("allowance -- >", allowance.toString());
+    if (
+      ethers.BigNumber.from("10000000000").gte(
+        ethers.BigNumber.from(allowance.toString())
+      )
+    ) {
+      console.log("less allowance");
+      setMintingState("Approval in Progress");
+      if (
+        !(await approveWBTC2(
+          gamelogic_contract_address,
+          ethers.BigNumber.from("10000000000")
+        ))
+      ) {
+        setErrorState("Approval Failed")
+        dispatch(setCardState(PageStates.FailedState))
+        bootstrap.play_err_sound();
+        initializeDripBitfightersMintVars();
+        return;
+      }
+    }
+
+
+    //
+
+    let tokenURIs: any[] = [];
+    const tokenIDs = []
+    if (notagOrTattooCardsPick > 0) {
+      const output: any = await randomGenarateDripBitfightersV2(
+        store.getState().web3store.userAddress,
+        dripfightersRefAddr,
+        notagOrTattooCardsPick,
+        false,
+      );
+      tokenURIs = tokenURIs.concat(output.data);
+      for (let i=0; i < notagOrTattooCardsPick; i++) { // 
+        tokenIDs.push(noTagOrTattooCards[i].id)
+      }
+      
+      console.log("---debug notagOrTattooCardsPick output ", output, tokenURIs.length, tokenIDs.length);
+    }
+    if (onlyTagCardPick > 0) {
+      const output: any = await randomGenarateDripBitfightersV2(
+        store.getState().web3store.userAddress,
+        dripfightersRefAddr,
+        onlyTagCardPick,
+        false,
+      );
+      tokenURIs = tokenURIs.concat(output.data)
+      for (let i=0; i < onlyTagCardPick; i++) { // 
+        tokenIDs.push(onlyTagCards[i].id)
+      }
+      console.log("---debug onlyTagCardPick output ", output , tokenURIs.length, tokenIDs.length);
+    }
+    if (onlyTattooCardsPick > 0) {
+      const output: any = await randomGenarateDripBitfightersV2(
+        store.getState().web3store.userAddress,
+        dripfightersRefAddr,
+        onlyTattooCardsPick,
+        true,
+      );
+      tokenURIs = tokenURIs.concat(output.data)
+      for (let i=0; i < onlyTattooCardsPick; i++) { // 
+        tokenIDs.push(onlyTattooCards[i].id)
+      }
+      console.log("---debug onlyTattooCardsPick output ", output, tokenURIs.length, tokenIDs.length);
+    }
+    if (tagAndTattooCardsPick > 0) {
+      const output: any = await randomGenarateDripBitfightersV2(
+        store.getState().web3store.userAddress,
+        dripfightersRefAddr,
+        tagAndTattooCardsPick,
+        true,
+      );
+      tokenURIs = tokenURIs.concat(output.data)
+      for (let i=0; i < tagAndTattooCardsPick; i++) { // 
+        tokenIDs.push(tagAndTattooCards[i].id)
+      }
+      console.log("---debug tagAndTattooCardsPick output ", output, tokenURIs.length, tokenIDs.length);
+    }
+
+    console.log("----- debug important -- ", tokenURIs, tokenIDs, tokenURIs.length, totalQuantity, tokenIDs.length)
+    //
+    if (tokenURIs.length !== totalQuantity || tokenURIs.length !== tokenIDs.length) {
+      setMintingState("");
+      initializeDripBitfightersMintVars();
+      setErrorState("Unknown Error happened while generating")
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return
+    }
+
+    const minted = await createBitFighterV4WithDripPresaleCards(tokenURIs, tokenIDs);
+
     if (minted.error === 1) {
       bootstrap.play_err_sound();
       setErrorState(minted.message + "\n" + minted.error_data.message)
       dispatch(setCardState(PageStates.FailedState))
-      initializeBitfightersMintVars();
+      initializeDripBitfightersMintVars();
       return;
     } else {
-
       await updateNFTsInDB(store.getState().web3store.userAddress);
       const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
       console.log("-------dataofnfts--*******-- .", result);
@@ -522,12 +981,23 @@ function MintCard() {
       store.dispatch(SetSuccessNotificationBool(true));
       store.dispatch(SetSuccessNotificationMessage(`Success`));
       dispatch(setCardState(PageStates.Bitfighter))
+
+      store.dispatch(SetMintGameStarted(true))
+      store.dispatch(SetMintGameQuantity(totalQuantity))
+
+      FetchDripPresaleInfoMintedByUser()
+      
+      bootstrap.launchMintingGame({
+        quantity: totalQuantity
+      })
     }
 
-    updatePresaleMintedCount();
+
+    // updatePresaleMintedCount();
+    updateBitfightersMintedCountAndTotal()
      setTimeout(() => {
-      dispatch(setCardState(PageStates.Bitfighter))
-      initializeBitfightersMintVars();
+      // dispatch(setCardState(PageStates.DripFighter))
+      initializeDripBitfightersMintVars();
     }, 1000)
   };
 
@@ -791,6 +1261,8 @@ function MintCard() {
             `${onekClubMintedNFT} of ${totalOneKClubNFTs.toLocaleString()}`:
             localStorage.getItem("state") === "Bitfighters"?
             `${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`:
+            localStorage.getItem("state") === "DripFighters"?
+            `${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`:
             `${dripPresaleMintedNFT} of ${totalDripPresaleCount.toLocaleString()}`
           }
           <br></br> Minted
@@ -840,9 +1312,10 @@ function MintCard() {
   } else if (cardState === PageStates.DripFighter) {
     displayInnerPart = (
       <>
-        <h5>Dripfighters</h5>
+        <h5>Drip Fighters</h5>
         <p>
-          {`${dripfightersMintedCount.toLocaleString()} of ${totalDripfightersCount.toLocaleString()}`}
+          {`${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`}
+          {/* {`${dripfightersMintedCount.toLocaleString()} of ${totalDripfightersCount.toLocaleString()}`} */}
           <br></br> Minted
         </p>
       </>
@@ -863,7 +1336,7 @@ function MintCard() {
         </p>
       </>
     );
-  }else {
+  } else {
     displayInnerPart = <img src={welcome} alt="welcome-img" />;
   }
 
@@ -928,7 +1401,11 @@ function MintCard() {
       <div 
         className="btn-mint--red btn-mint--big footer-go"
         onClick={() => {
-          // oneKClubMint()
+          if (dripfighterUseMintCardCheckBox) {
+            DripFightersMintUsingMintCard()
+          } else {
+            DripBitfightersMint()
+          }
         }}
       >
       </div>
@@ -1186,47 +1663,53 @@ function MintCard() {
       displayInfoPart = (
         <>
           <div className="mint-card__form">
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <label htmlFor="code">Ref. Code:</label>
-              <input
-                id="code"
-                type="text"
-                value={bitfightersRefAddr}
-                disabled={global_ref_code!==""}
-                onChange={(e) => {
-                  setBitfightersRefAdd(e.target.value);
-                }}
-                required
-              />
-            </div>
-            {
-            global_ref_code===""? <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="haveone-select">
-                <label htmlFor="radio">I don&#39;t have one</label>
-                {bitfightersRefBoxMintCard ? (
-                  <>
-                    <div
-                      onClick={() => {
-                        setBitfightersRefBoxMintCard(bitfightersRefBoxMintCard===1?0:1)
-                        setBitfightersRefAdd("")
-                      }}
-                      className="radio_dripTag_selected"
-                    ></div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      onClick={() => {
-                        setBitfightersRefBoxMintCard(bitfightersRefBoxMintCard===1?0:1)
-                        setBitfightersRefAdd( ethers.constants.AddressZero)
-                      }}
-                      className="radio_dripTag"
-                    ></div>
-                  </>
-                )}
+            { !bitfighterUseMintCardCheckBox && <>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <label htmlFor="code">Ref. Code:</label>
+                <input
+                  id="code"
+                  type="text"
+                  value={bitfightersRefAddr}
+                  disabled={global_ref_code!==""}
+                  onChange={(e) => {
+                    setBitfightersRefAdd(e.target.value);
+                  }}
+                  required
+                />
               </div>
-            </div>:<></>
+            {
+              global_ref_code===""? 
+                <div className="mint-card__form__item mint-card__form__item--radio">
+                  <div className="haveone-select">
+                    <label htmlFor="radio">I don&#39;t have one</label>
+                    {bitfightersRefBoxMintCard ? (
+                      <>
+                        <div
+                          onClick={() => {
+                            setBitfightersRefBoxMintCard(bitfightersRefBoxMintCard===1?0:1)
+                            setBitfightersRefAdd("")
+                          }}
+                          className="radio_dripTag_selected"
+                        ></div>
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          onClick={() => {
+                            setBitfightersRefBoxMintCard(bitfightersRefBoxMintCard===1?0:1)
+                            setBitfightersRefAdd( ethers.constants.AddressZero)
+                          }}
+                          className="radio_dripTag"
+                        ></div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              :<></>
             }
+            </>}
+
+
             <div className="mint-card__form__item mint-card__form__item--radio">
               <label htmlFor="quantity">Quantity:</label>
               <input
@@ -1247,143 +1730,269 @@ function MintCard() {
               />
             </div>
           </div>
-          <div className="mint-card-base__info__btc">
+
+          <div className="mint-card-base__info__btc2">
             <span>
               {
               (bitFightersMintQuantity > 0?
+                bitfighterUseMintCardCheckBox?0:
                 bitFightersMintQuantity* (0.0003):
               0).toFixed(4)}{" "}
               BTC.b
             </span>
             <img src={btcIcon} alt="btc-info" />
+
+
+            <div className="mint-card__form__item mint-card__form__item--checkbox-circle">
+              <label htmlFor="mint-card-checkbox">
+                <p>
+                  Use Mint Card:
+                </p>
+              </label>
+              <input 
+                type="checkbox" 
+                id="mint-card-checkbox"
+                checked={bitfighterUseMintCardCheckBox}
+                onChange={() => {
+                  console.log("debug pressed checkbox ",bitfighterUseMintCardCheckBox)
+                  setBitfighterUseMintCardCheckBox(!bitfighterUseMintCardCheckBox)
+                }} 
+              />
+            </div>
           </div>
+
         </>
       );
     }
   }
   else if (cardState === PageStates.DripFighter){
-    // this is the bitfighter mint card code
     if (totalDripfightersCount - dripfightersMintedCount < 0) {
-      displayInfoPart = (
-        <h2 className="mint-card-base__info__sold">Sold Out</h2>
-      );
+      displayInfoPart = (<h2 className="mint-card-base__info__sold">Sold Out</h2>);
     } else {
       displayInfoPart = (
         <>
-          <div className="mint-card__form">
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <label htmlFor="code">Ref. Code:</label>
-              <input
-                id="code"
-                type="text"
-                value={driprefAddrMintCard}
-                disabled={global_ref_code!==""}
-                onChange={(e) => {
-                  setdripRefAddrMintCard(e.target.value);
-                }}
-                required
-              />
-            </div>
-            {
-            global_ref_code===""? <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="haveone-select">
-                <label htmlFor="radio">I don&#39;t have one</label>
-                {dripRefBoxMintCard ? (
-                  <>
-                    <div
-                      onClick={() => {
-                        console.log("1---------")
-                        setDripRefBoxMintCard(dripRefBoxMintCard===1?0:1)
-                        setdripRefAddrMintCard("")
-                      }}
-                      className="radio_dripTag_selected"
-                    ></div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      onClick={() => {
-                        console.log("2----------")
-                        setDripRefBoxMintCard(dripRefBoxMintCard===1?0:1)
-                        setdripRefAddrMintCard( ethers.constants.AddressZero)
-                      }}
-                      className="radio_dripTag"
-                    ></div>
-                  </>
-                )}
+          { !dripfighterUseMintCardCheckBox?
+            <div className="mint-card__form">
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <label htmlFor="code">Ref. Code:</label>
+                <input
+                  id="code"
+                  type="text"
+                  value={dripfightersRefAddr}
+                  disabled={global_ref_code!==""}
+                  onChange={(e) => {
+                    setDripfightersRefAdd(e.target.value);
+                  }}
+                  required
+                />
               </div>
-            </div>:<></>
-            }
-            <div className="mint-card__form__item">
-              <p className="red">100% of Addons goes to Drip Vault</p>
-            </div>
+              {
+              global_ref_code===""? <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="haveone-select">
+                  <label htmlFor="radio">I don&#39;t have one</label>
+                  {dripFightersRefBoxMintCard ? (
+                    <>
+                      <div
+                        onClick={() => {
+                          setDripFightersRefBoxMintCard(dripFightersRefBoxMintCard===1?0:1)
+                          setDripfightersRefAdd("")
+                        }}
+                        className="radio_dripTag_selected"
+                      ></div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        onClick={() => {
+                          setDripFightersRefBoxMintCard(dripFightersRefBoxMintCard===1?0:1)
+                          setDripfightersRefAdd( ethers.constants.AddressZero)
+                        }}
+                        className="radio_dripTag"
+                      ></div>
+                    </>
+                  )}
+                </div>
+              </div>:<></>
+              }
+              <div className="mint-card__form__item">
+                <p className="red">100% of Addons goes to Drip Vault</p>
+              </div>
 
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="driptag-select">
-                <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
-                <div
-                  onClick={() => ondrip1()}
-                  className={
-                    onlyTag ? "radio_dripTag_selected" : "radio_dripTag"
-                  }
-                ></div>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="driptag-select">
+                  <label htmlFor="radio">Add Drip Tag: 0.002BTC.b</label>
+                  <div
+                    onClick={() => ondrip1Fighter()}
+                    className={
+                      onlyTagFighter ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
               </div>
-            </div>
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="driptatoo-select">
-                <label htmlFor="radio">Add Drip Tattoo: 0.002BTC.b</label>
-                <div
-                  onClick={() => ondrip2()}
-                  className={
-                    onlyTaoo ? "radio_dripTag_selected" : "radio_dripTag"
-                  }
-                ></div>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="driptatoo-select">
+                  <label htmlFor="radio">Add Drip Tattoo: 0.002BTC.b</label>
+                  <div
+                    onClick={() => ondrip2Fighter()}
+                    className={
+                      onlyTaooFighter ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
               </div>
-            </div>
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <div className="addboth-select">
-                <label htmlFor="radio">Add Both: 0.003BTC.b</label>
-                <div
-                  onClick={() => ondrip3()}
-                  className={
-                    tagAndTatoo ? "radio_dripTag_selected" : "radio_dripTag"
-                  }
-                ></div>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="addboth-select">
+                  <label htmlFor="radio">Add Both: 0.003BTC.b</label>
+                  <div
+                    onClick={() => ondrip3Fighter()}
+                    className={
+                      tagAndTatooFighter ? "radio_dripTag_selected" : "radio_dripTag"
+                    }
+                  ></div>
+                </div>
               </div>
-            </div>
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <label htmlFor="quantity">Quantity:</label>
-              <input
-                id="quantity"
-                type="number"
-                value={dripMintCardsQuantity}
-                onChange={(e) => {
-                  // setdripMintCardsQuantity(parseInt(e.target.value));
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  value={dripFightersMintQuantity}
+                  onChange={(e) => {
+                    if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                      setDripFightersMintQuantity(1);
+                    } else {
+                      setDripFightersMintQuantity(parseInt(e.target.value));
+                    }
+                  }}
+                  style={{
+                    outline: "None",
+                  }}
+                  required
+                />
+              </div>
+            </div>:
+            <div className="mint-card__form">
+              {
+                totalInfoOfUsersDripPresaleCardsLoaded ?
+                <>
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <label htmlFor="code">No tag or tattoo:</label>
+                    <input
+                      id="code"
+                      type="number"
+                      value={notagOrTattooCardsPick}
+                      onChange={(e) => {
+                        if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) <= 0) {
+                          setNotagOrTattooCardsPick(0);
+                        } else {
+                          setNotagOrTattooCardsPick(parseInt(e.target.value));
+                        }
+                      }}
+                      required
+                    /> /{noTagOrTattooCards.length}
+                  </div>
 
-                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
-                    setdripMintCardsQuantity(1);
-                  } else {
-                    setdripMintCardsQuantity(parseInt(e.target.value));
-                  }
-                }}
-                style={{
-                  outline: "None",
-                }}
-                required
-              />
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <label htmlFor="code">Only Tag Cards:</label>
+                    <input
+                      id="code"
+                      type="number"
+                      value={onlyTagCardPick}
+                      onChange={(e) => {
+                        if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) <= 0) {
+                          setOnlyTagCardPick(0);
+                        } else {
+                          setOnlyTagCardPick(parseInt(e.target.value));
+                        }
+                      }}
+                      required
+                    /> /{onlyTagCards.length}
+                  </div>
+
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <label htmlFor="code">Only Tattoo Cards:</label>
+                    <input
+                      id="code"
+                      type="number"
+                      value={onlyTattooCardsPick}
+                      onChange={(e) => {
+                        if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) <= 0) {
+                          setOnlyTattooCardsPick(0);
+                        } else {
+                          setOnlyTattooCardsPick(parseInt(e.target.value));
+                        }
+                      }}
+                      required
+                    /> /{onlyTattooCards.length}
+                  </div>
+
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <label htmlFor="code">Tag And Tattoo Cards:</label>
+                    <input
+                      id="code"
+                      type="number"
+                      value={tagAndTattooCardsPick}
+                      onChange={(e) => {
+                        if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                          setTagAndTattooCardsPick(0);
+                        } else {
+                          setTagAndTattooCardsPick(parseInt(e.target.value));
+                        }
+                      }}
+                      required
+                    /> /{tagAndTattooCards.length}
+                  </div>
+
+                  <div className="mint-card__form__item mint-card__form__item--radio">
+                    <label htmlFor="quantity" className="slightly_smaller_label">Total Quantity:</label>
+                    <input
+                      id="quantity"
+                      type="number"
+                      value={notagOrTattooCardsPick+onlyTagCardPick+onlyTattooCardsPick+tagAndTattooCardsPick}
+                      disabled={true}
+                      style={{
+                        outline: "None",
+                      }}
+                    />
+                  </div>
+                </>
+                :<div className="mint-card__form__item mint-card__form__item--center">
+                  <CircularProgress />
+                </div>
+              }
             </div>
-          </div>
-          <div className="mint-card-base__info__btc">
+          }
+
+          <div className="mint-card-base__info__btc2">
             <span>
               {
               (dripMintCardsQuantity > 0?
+                dripfighterUseMintCardCheckBox? 0:
                 tagAndTatoo?
                 dripMintCardsQuantity* (0.003 + 0.0002):
-                dripMintCardsQuantity *  (0.0002 + 0.002 * ((onlyTag || tagAndTatoo)?1:0) + 0.002* ((onlyTaoo || tagAndTatoo)?1:0)):
+                dripMintCardsQuantity *  (0.0003 + 0.002 * ((onlyTag || tagAndTatoo)?1:0) + 0.002* ((onlyTaoo || tagAndTatoo)?1:0)):
               0).toFixed(4)}{" "}
               BTC.b
             </span>
             <img src={btcIcon} alt="btc-info" />
+
+            <div className="mint-card__form__item mint-card__form__item--checkbox-circle">
+              <label htmlFor="mint-card-checkbox">
+                <p>
+                  Use Mint Card:
+                </p>
+              </label>
+              <input 
+                type="checkbox" 
+                id="mint-card-checkbox"
+                checked={dripfighterUseMintCardCheckBox}
+                onChange={() => {
+                  console.log("debug pressed checkbox ",dripfighterUseMintCardCheckBox)
+                  setDripfighterUseMintCardCheckBox(!dripfighterUseMintCardCheckBox)
+                }} 
+              />
+            </div>
+
           </div>
         </>
       );
@@ -1463,8 +2072,7 @@ function MintCard() {
         {/* <h5>{errorState}</h5> */}
       </>
     );
-  } 
-      
+  }   
   else
     displayInfoPart = (
       <>
@@ -1480,7 +2088,6 @@ function MintCard() {
     <div className="mint-card-base__wrapper">
       <article className="mint-card-base">
         <div className="mint-card-base__layer">
-          {/* <div className="mint-card-honey"> */}
           <div className="mint-card-base__inner">
             <div className="mint-card-base__status">
               <div className="mint-card-base__status__title">
@@ -1527,7 +2134,6 @@ function MintCard() {
               <h3>M-o-M Inc.</h3>
             </div>
           </div>
-          {/* </div> */}
         </div>
       </article>
       <SidePanel />
@@ -1542,7 +2148,7 @@ function MintCard() {
   };
 
   const handleModalOpen = () => {
-    console.log("debug..... ", cardState)
+    // console.log("debug..... ", cardState)
     setOpenModal(true);
   }
 
@@ -1596,6 +2202,10 @@ function MintCard() {
       </Modal>
     </ModalWrapper>
 
+  }
+
+  if (mintGameStarted) {
+    CustomUI = <></>
   }
 
   return (

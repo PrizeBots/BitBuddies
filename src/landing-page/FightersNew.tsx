@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { Box, Button, FormControl, Grid, ImageList, ImageListItem, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, Snackbar, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, Grid, ImageList, ImageListItem, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, Snackbar, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
 import Carousel from 'react-material-ui-carousel'
 import phaserGame from '../PhaserGame'
 import Bootstrap from '../game/scenes/Bootstrap'
@@ -29,7 +29,7 @@ import { ATMView } from '../game/Components/ATMView';
 import NewMenuSideBar from '../game/Components/NewMenuSideBar';
 import { InventoryView } from '../game/Components/InventoryView/InventoryView';
 import InGameAssetPurchase from '../game/Components/MenuComponents/InGameAsssetPurchase';
-import { fetchNFTsFromDB, loginAndAuthenticatePlayer, updateNFTsInDB } from '../hooks/ApiCaller';
+import { fetchNFTsFromDB, loginAndAuthenticatePlayer, updateNFTsInDB, updateSingleBfInDB } from '../hooks/ApiCaller';
 import store from '../stores';
 import { setPlayerAuthToken } from '../stores/AuthStore';
 import NotificationMessageHelper from '../game/Components/NotificationMessageHelper';
@@ -44,6 +44,7 @@ import { SetFailureNotificationBool, SetFailureNotificationMessage } from '../st
 import { registerBitfighter } from '../contract';
 import { fetchAllNFTsFromDbEntries } from '../hooks/FetchNFT';
 import { setTotalNFTData, setNFTDetails } from '../stores/BitFighters';
+import Footer from './Footer';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -145,6 +146,8 @@ const FixedForm = styled.div`
 
   opacity: 0.9;
 
+  border-radius: 20px;
+
 
 
   label {
@@ -209,6 +212,7 @@ const BoxWrapper2 = styled(Box)`
     color: black;
     line-height: 75%;
     margin: 10px;
+    margin-top: 25px;
   }
 `;
 
@@ -217,18 +221,56 @@ const BoxWrapper = styled(Box)`
   overflow-y: scroll;
   position: relative;
   background-color:#2d2a2a;
+  // background-color: #111b28;
   
   height: 80vh;
   max-width: 36vw;
-
+  margin-left: 10px;
   color: white;
+
+  border-right: 10px solid #626d7c;
+  border-left: 10px solid #626d7c;
+  border-bottom: 10px solid #626d7c;
+
+  img {
+    height: 132px;
+    width: 132px;
+  }
+`;
+
+const BoxImageList = styled(ImageList)`
+  background-color:#2d2a2a;
   border-right: 10px solid #626d7c;
   border-left: 10px solid #626d7c;
   border-bottom: 10px solid #626d7c;
 `;
 
+const ImageView = styled.div`
+  h1 {
+    font-family:'Cooper Black', sans-serif;
+    font-style: bold;
+    font-size: 30px;
+    color: aliceblue;
+    line-height: 75%;
+    // margin: 10px;
+    // margin-top: 25px;
+  }
 
+  img {
+    margin-top: 10px;
+  }
+`
 
+const ListImageView = styled.div`
+  h1 {
+    font-family:'Cooper Black', sans-serif;
+    font-style: bold;
+    font-size: 16px;
+    color: aliceblue;
+    line-height: 75%;
+    margin: 10px;
+  }
+`
 
 const AttributeInfo = styled.div`
   display: flex;
@@ -281,40 +323,33 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
   // background: #A1A7B8;
-const vertical= 'top';
-const horizontal = 'center';
-// const baseHeight = 70;
-// const baseWidth = 40;
 
 
 function NewFighters() {
-  const navigate = useNavigate();
-  const { height, width } = Utils();
-  let baseWidth =  width/45;
-  if (getSystemInfo() ) {
-    if (width > 1000) {
-      baseWidth = width/40;
-    } else if (width > 800) {
-      baseWidth = width/35;
-    } else if (width > 700) {
-      baseWidth = width/30;
-    } else if (width > 600) {
-      baseWidth = width/20;
-    } else {
-      baseWidth = width/14;
-    }
-  }
-  const baseHeight = height/14;
-  // const baseWidth = width/45;
-  console.log("***********baseheight", height, width, baseHeight, baseWidth)
   const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
   const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
   console.log("--------total_data-------", bitFightersTotalData)
-  console.log("--------total_data2-------", bitFighterNFTData)
+  // console.log("--------total_data2-------", bitFighterNFTData)
 
   const selectedPlayer = useAppSelector(
     (state) => state.playerDataStore.current_game_player_info
   );
+
+
+  // const tempAllData = JSON.parse(JSON.stringify(bitFightersTotalData))
+  // console.log("--------total_data_temp2-------", tempAllData)
+  // if (bitFightersTotalData.length > 0) {
+  //   for (let i =0; i < 50; i++) {
+  //     const temp = tempAllData[0];
+  //     temp.data.first_frame_image = "https://images.unsplash.com/photo-1589118949245-7d38baf380d6"
+  //     temp.dummy = true;
+
+  //     tempAllData.push(temp)
+  //   }
+  // }
+
+  // console.log("--------total_data_temp-------", tempAllData)
+  
 
   const dummyBfsData: any[] = []
   const attributesHTML: Array<any> = []
@@ -325,6 +360,8 @@ function NewFighters() {
   // }
 
   const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
+
+  const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
 
   const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
 
@@ -346,13 +383,13 @@ function NewFighters() {
   // const [gameStarted, setGameStarted] = useState(false);
   const [cardSelected, setCardSelected] = useState("")
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-  let noBitFighter = false;
-  let boxWidth = 500;
-  let carouselUI = null;
+  // let noBitFighter = false;
+  // let boxWidth = 500;
+  // let carouselUI = null;
   // let NewUI = null;
   let totalUI = null;
-  let animationView = <>Animation View</>;
-  let animationUI = null;
+  // let animationView = <>Animation View</>;
+  // let animationUI = null;
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
@@ -427,7 +464,7 @@ function NewFighters() {
   const registerFormValidate = async () => {
     setRegisterProcessRunning(true)
 
-    console.log("in ---- register fn... ", formLuckyNumber, formNickNameame)
+    console.log("in ---- register fn... ", formLuckyNumber, formNickNameame, playerSelected?.minted_id)
 
     if (!(formLuckyNumber > 0 && formLuckyNumber < 100)) {
       store.dispatch(SetFailureNotificationBool(true))
@@ -436,10 +473,18 @@ function NewFighters() {
       return
     }
 
-    if (!(formNickNameame.length > 5 && formNickNameame.length < 11)) {
+    if (!(formNickNameame.length > 3 && formNickNameame.length < 11)) {
       store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Nick name should be of length 5-10"))
+      store.dispatch(SetFailureNotificationMessage("Nick name should be of length 3-10"))
       setRegisterProcessRunning(false)
+      return
+    }
+
+    if (playerSelected && playerSelected?.minted_id === 0) {
+      return
+    }
+
+    if (!playerSelected) {
       return
     }
 
@@ -455,7 +500,7 @@ function NewFighters() {
 
     } else {
       //
-      await updateNFTsInDB(store.getState().web3store.userAddress);
+      await updateSingleBfInDB(store.getState().web3store.userAddress, playerSelected.minted_id);
       const result = await fetchNFTsFromDB(store.getState().web3store.userAddress);
       console.log("-------dataofnfts--*******-- .", result);
 
@@ -464,22 +509,29 @@ function NewFighters() {
 
       store.dispatch(setTotalNFTData(result.message))
       store.dispatch(setNFTDetails(dataOfNFTS))
+
+      console.log("--dataofnfts-", playerSelected.minted_id)
+
+      for (let i = 0; i < result.message.length; i++) {
+        console.log("--dataofnfts-", playerSelected.minted_id, result.message[i].minted_id)
+        if (playerSelected.minted_id === result.message[i].minted_id) {
+          store.dispatch(SetCurrentGamePlayer(result.message[i]));
+        }
+      }
     }
 
     setRegisterProcessRunning(false)
     
   }
 
-  const carouselItems = [];
-  let carouselItemsLength = 5;
-  const nftDataCopy = [];
-  const nftTotalData = [];
-  // store.dispatch(SetShowGameServersList(true));
-
   useEffect(() => {
     if (bitFighterNFTData.length > 0) {
       // store.dispatch(SetShowGameServersList(true));
     }
+
+    console.log("--------- in fightersnew -- ", selectedPlayer)
+
+    // if (selectedPlayer)
     
     window.addEventListener('beforeunload', beforeUnloadFun)
     function beforeUnloadFun() {
@@ -493,18 +545,18 @@ function NewFighters() {
 
 
   if (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool) {
-    carouselUI = <Title>  :( No Bit Fighters detected in this wallet. </Title>
+    // carouselUI = <Title>  :( No Bit Fighters detected in this wallet. </Title>
     // totalUI = <Title>  :( No Bit Fighters detected in this wallet. </Title>
-    boxWidth = 400;
-    noBitFighter = true;
+    // boxWidth = 400;
+    // noBitFighter = true;
   } else if (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool) {
-    carouselUI = <Title> Loading.. </Title>
-    boxWidth = 400;
-    noBitFighter = true;
+    // carouselUI = <Title> Loading.. </Title>
+    // boxWidth = 400;
+    // noBitFighter = true;
   } else if (loggedInUserWalletAddress === "") {
-    carouselUI = <Title>  Checking for Bitfighters </Title>
-    boxWidth = 400;
-    noBitFighter = true;
+    // carouselUI = <Title>  Checking for Bitfighters </Title>
+    // boxWidth = 400;
+    // noBitFighter = true;
   } else {
     if (!gameStarted) {
       store.dispatch(SetShowGameServersList(true));
@@ -512,142 +564,15 @@ function NewFighters() {
       store.dispatch(SetShowGameServersList(false));
     }
     
-
-    for(let i = 0; i < bitFighterNFTData.length + carouselItemsLength -1; i++) {
-      if (i < bitFighterNFTData.length) {
-        nftDataCopy[i] = bitFighterNFTData[i]
-        nftTotalData[i] = bitFightersTotalData[i]
-        continue
-      } else {
-        nftDataCopy[i] = bitFighterNFTData[i - bitFighterNFTData.length]
-        nftTotalData[i] = bitFightersTotalData[i - bitFighterNFTData.length]
-      }
-    }
-
-
-    if (getSystemInfo()) {
-      boxWidth = 300 * 1;
-      carouselItemsLength = 1;
-    } else {
-      if (bitFighterNFTData.length >= 5) {
-        boxWidth = 300 * 3;
-        carouselItemsLength = 5;
-      } else {
-        boxWidth = 300 * bitFighterNFTData.length;
-        carouselItemsLength = bitFighterNFTData.length;
-      }
-    }
-    
-    // console.log("@@#$%$#@#$$#@", bitFighterNFTData.length, boxWidth, carouselItemsLength, "#$%^&*(")
-
-    let count = 0;
-    let width = baseWidth;
-    let height = baseWidth;
-    for (let i = 0 ; i < bitFighterNFTData.length; i++) {
-      // console.log("-----carouselItemsLength- i--", i, carouselItemsLength)
-      count = 0;
-      width = baseWidth;
-      height = baseHeight;
-      carouselItems.push(
-      // <Card raised className="Banner" key={i.toString()} style={{backgroundColor: "#A1A7B8"}}>
-        <Grid container spacing={0} >
-          {nftTotalData.slice(i, i + carouselItemsLength).map((da, index) => {
-            // console.log(" ---------- da -- index ----------- ", index, da)
-            if (carouselItemsLength === 5) {
-              if ((index === 1) || (index === 3)) {
-                height = baseHeight*5;
-                width = baseWidth*5;
-              } else if (index === 2) {
-                height = baseHeight*6;
-                width = baseWidth*6;
-              } else if ((index === 0) || (index === 4)) {
-                height = baseHeight*4;
-                width = baseWidth*4;
-              }
-            } else if (carouselItemsLength === 1 || carouselItemsLength === 2) {
-              height = baseHeight*6;
-              width = baseWidth*6;
-            } else if (carouselItemsLength === 3) {
-              if ((index === 2)) {
-                height = baseHeight*5;
-                width = baseWidth*5;
-              } else if (index === 1) {
-                height = baseHeight*6;
-                width = baseWidth*6;
-              } else if ((index === 0)) {
-                height = baseHeight*5;
-                width = baseWidth*5;
-              }
-            } else if (carouselItemsLength === 4) {
-              if ((index === 1) || (index === 2)) {
-                height = baseHeight*6;
-                width = baseWidth*6;
-              } else if ((index === 0) || (index === 3)) {
-                height = baseHeight*4;
-                width = baseWidth*4;
-              }
-            } 
-            // console.log('height , width, ', height, width, baseHeight, baseWidth)
-
-            return (
-              <ImageWraper key={uuidv4()}>
-                <HeadingText>{da.nick_name}</HeadingText>
-                <img
-                  className="imageSelector"
-                  src={da.data.image}
-                  alt={"Hello"}
-                  loading="lazy"
-                  key={uuidv4()}
-                  style={{
-                    height:`${height}px`,
-                    width:`${width}px`,
-                  }}
-                  onClick={() => handlePlayerSelection(da)}
-                />
-              </ImageWraper>
-            )
-          })}
-        </Grid>
-      )
-    }
   }
-
-  animationView = <div>
-      <div style={{position:'absolute'}}>
-        <Tooltip title="Click to go back">
-          <CancelIcon
-            color='disabled'
-            style={{float:"left"}}
-            fontSize='large'
-            onClick={() => {
-              setPlayerSelectedBool(false)
-              store.dispatch(SetShowGameServersList(false));
-              bootstrap.play_select_sound()
-            }}
-            key={uuidv4()}
-          />
-        </Tooltip>
-        
-      </div>
-      
-      <img
-        className="imageSelector"
-        src={cardSelected}
-        alt={"Hello"}
-        loading="lazy"
-        // key={(100).toString()}
-        style={{
-          height: (baseHeight * 7).toString()+'px',
-          width: (baseWidth*7).toString()+'px',
-        }}
-        key={uuidv4()}
-      />
-  </div>
 
   if (gameStarted) {
     totalUI = <>
       <NotificationMessageHelper />
-      <NewMenuSideBar />
+      <>
+        {ProfilemenuClicked && <NewMenuSideBar />}
+      </>
+      
       <InventoryView />
       <EquipView />
       <BroadCastCombiner2 />
@@ -662,6 +587,7 @@ function NewFighters() {
       <QueueAddInfoWindow />
       <WinnersReceipt />
       <SendingFriendRequest />
+      <Footer />
     </>
   } else {
     totalUI = 
@@ -696,15 +622,17 @@ function NewFighters() {
         </Content>
           :
         <>
-          <BoxWrapper sx={{ flexGrow: 1 }} >
+          {/* <BoxWrapper sx={{ flexGrow: 1 }} >
+
 
             <ImageList 
-              cols={5} 
+              cols={4} 
               gap={0}
+              rowHeight={164}
             >
               {bitFightersTotalData.map((data) => (
                 <ImageListItem key={uuidv4()} style={{
-                  border: '1px solid #bababa'
+                  border: '2px solid #bababa'
                 }}>
                   <HtmlTooltip title={
                     <React.Fragment>
@@ -762,22 +690,214 @@ function NewFighters() {
                         }
                     </React.Fragment>
                   }>
-                    <img
-                      src={`${data.data.first_frame_image}`}
-                      alt={"Hero"}
-                      loading="lazy"
-                      style={{
-                        margin: '10px',
-                        aspectRatio: `${12/16}`
-                      }}
-                      onClick={() => {
-                        handlePlayerSelection(data)
-                      }}
-                    />
+                    <ImageListItem key={uuidv4()}>
+                      <img
+                        src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+                        srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        // src={`${data.data.first_frame_image}`}
+                        alt={"Hero"}
+                        loading="lazy"
+                        style={{
+                          // margin: '20px',
+                          // aspectRatio: `${15/16}`,
+                          // backgroundColor: 'red'
+                        }}
+                        onClick={() => {
+                          handlePlayerSelection(data)
+                        }}
+                      />
+                    </ImageListItem>
                   </HtmlTooltip>
                 </ImageListItem>
               ))}
             </ImageList>
+          </BoxWrapper> */}
+
+          {/* <ImageList 
+              cols={5} 
+              gap={0}
+              sx={{
+                width: `36vw`,
+                height: `80vh`
+              }}
+            >
+              {bitFightersTotalData.map((data: any) => (
+                <ImageListItem key={uuidv4()} style={{
+                  border: '2px solid #bababa'
+                }}>
+                  <HtmlTooltip title={
+                    <React.Fragment>
+                        {
+                          data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+                            return(
+                              attr.trait_type === "defense"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/diamond_icon.png" 
+                                  alt="." />
+                                <h5> Defense : {attr.value} </h5>
+                              </AttributeInfo>
+                              :
+                              attr.trait_type === "health"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/heart_icon.png" 
+                                  alt="." />
+                                <h5> Health : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "kick"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/kick_icon.png" 
+                                  alt="." />
+                                <h5> Kick : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "punch"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/punch_icon.png" 
+                                  alt="." />
+                                <h5> Punch : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "speed"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/flash_icon.png" 
+                                  alt="." />
+                                <h5> Speed : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "stamina"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/water_drop_icon.png" 
+                                  alt="." />
+                                <h5> Stamina : {attr.value} </h5>
+                              </AttributeInfo>:
+                            <></>
+                          )
+                          
+                          })) 
+                        }
+                    </React.Fragment>
+                  }>
+                    <ListImageView>
+                      <h1>
+                        {data?.nick_name !== ""? data?.nick_name: "?"}
+                      </h1>
+                      <ImageListItem key={uuidv4()}>
+                        <img
+                          src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+                          srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                          alt={"Hero"}
+                          loading="lazy"
+                          onClick={() => {
+                            handlePlayerSelection(data)
+                          }}
+                        />
+                      </ImageListItem>
+                    </ListImageView>
+                  </HtmlTooltip>
+                </ImageListItem>
+              ))}
+          </ImageList> */}
+
+          <BoxWrapper sx={{ flexGrow: 1}}>
+            <Grid container spacing={0}>
+
+              {bitFightersTotalData.map((data) => (
+                <Grid key={uuidv4()} item xs={3} style={{
+                  border: '2px solid #bababa'
+                }}>
+                  <HtmlTooltip title={
+                    <React.Fragment>
+                        {
+                          data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+                            return(
+                              attr.trait_type === "defense"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/diamond_icon.png" 
+                                  alt="." />
+                                <h5> Defense : {attr.value} </h5>
+                              </AttributeInfo>
+                              
+                              :
+                              attr.trait_type === "health"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/heart_icon.png" 
+                                  alt="." />
+                                <h5> Health : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "kick"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/kick_icon.png" 
+                                  alt="." />
+                                <h5> Kick : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "punch"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/punch_icon.png" 
+                                  alt="." />
+                                <h5> Punch : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "speed"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/flash_icon.png" 
+                                  alt="." />
+                                <h5> Speed : {attr.value} </h5>
+                              </AttributeInfo>:
+                              attr.trait_type === "stamina"?
+                              <AttributeInfo>
+                                <img 
+                                  src="bitfgihter_assets/icons/water_drop_icon.png" 
+                                  alt="." />
+                                <h5> Stamina : {attr.value} </h5>
+                              </AttributeInfo>:
+                            <></>
+                          )
+                          
+                          })) 
+                        }
+                    </React.Fragment>
+                  }>
+                    <Grid key={uuidv4()}>
+                      <ListImageView>
+                      <h1>
+                        {data?.nick_name !== ""? data?.nick_name: "?"}
+                      </h1>
+
+                      {/* <h1 style={{
+                        position:'relative',
+                        left: `-50px`,
+                      }}>
+                        {data.data.total_ap}
+                      </h1> */}
+                      <img
+                        // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+                        // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${data.data.first_frame_image}`}
+                        alt={"Hero"}
+                        loading="lazy"
+                        style={{
+                          marginBottom: '20px',
+                          // marginTop: '-10px'
+                          // aspectRatio: `${15/16}`,
+                          // backgroundColor: 'red'
+                        }}
+                        onClick={() => {
+                          handlePlayerSelection(data)
+                        }}
+                      />
+                      </ListImageView>
+                    </Grid>
+                  </HtmlTooltip>
+                </Grid>
+              ))}
+            </Grid>
           </BoxWrapper>
 
           <BoxWrapper2>
@@ -816,22 +936,33 @@ function NewFighters() {
                     required
                   />
 
+                  { !registerProcessRunning? 
                   <ButtonView style={{marginTop: '40px'}}
                     onClick={() => {
                       registerFormValidate()
                     }}
                     >
-                    { 
                        <span>
                         Submit!
-                    </span>}
+                    </span>
+                  </ButtonView>: 
+                  <ButtonView style={{marginTop: '40px'}}>
+                    <span>
+                      <CircularProgress />
+                    </span>
                   </ButtonView>
+                  
+                  
+                  }
                 </FixedForm>
               :<></>
             }
-
             {
               cardSelected !== ""?
+              <ImageView>
+                <h1>
+                  {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+                </h1>
                 <img
                   className="imageSelector"
                   src={cardSelected}
@@ -842,118 +973,19 @@ function NewFighters() {
                     width: (300).toString()+'px',
                   }}
                   key={uuidv4()}
-                />:<> </>
+                />
+              </ImageView>
+                :<> </>
             }
-            
           </BoxWrapper2>
         </>
       }
     </div>
     
-
-    animationUI = <>
-      Hello
-    </>
-      // totalUI = <>
-      //       <Title> 
-      //         <div className="cooper-black-tab" style={{
-      //           fontSize: '30px'
-      //         }}>Your Bitfighters </div>
-      //       </Title>
-      //         <Content>
-      //           <Box sx={{ 
-      //             width: boxWidth,
-      //             }}
-      //           >
-      //             {carouselUI}
-      //           </Box>
-      //           { noBitFighter 
-      //             ? <div>
-                    // <Link 
-                    //   className="primary" 
-                    //   to="/mint" 
-                    // >
-                    //   <ButtonView variant="contained" >
-                    //     <span>
-                    //       Mint BitFighters
-                    //     </span>
-                    //   </ButtonView>
-                    // </Link>
-      //             </div>
-      //            : <div style={{
-      //             display: 'flex',
-      //             flexDirection: 'column'
-      //            }}>
-      //             <LoadingButton 
-      //               variant="contained" 
-      //               color="info"
-      //               onClick={(event) => startGame(event)}
-      //               loading={!playerSelectedBool}
-      //               loadingIndicator="Select one"
-      //           >
-      //             Start Game
-      //           </LoadingButton>
-      //           {
-      //             (!isNullOrUndefined(localStorage.getItem("connected_matic_network"))) && 
-      //               <Link 
-      //               className="primary" 
-      //               to="/mint" 
-      //             >
-      //               <ButtonView 
-      //                 variant="contained" 
-      //                 color="info"
-      //                 style={{
-      //                   // width: 200,
-      //                   marginTop: '30px'
-      //                 }}
-      //                 >
-      //                   <span>
-      //                     Mint BitFighters
-      //                   </span>
-                        
-      //               </ButtonView>
-      //             </Link>
-      //           }
-
-      //           </div>}
-
-      //         </Content>
-      //       </>
-
-      // animationUI = <>
-      //       <NewContent>
-      //         <Box sx={{ 
-      //           width: baseWidth*7,
-      //           }}
-      //         >
-      //           {animationView}
-      //         </Box>
-
-            
-
-      //         <ButtonView 
-      //           variant="contained" 
-      //           color="info"
-      //           onClick={(event) => startGame(event)}
-      //         >
-      //           <span>
-      //               Start Game
-      //           </span>
-      //         </ButtonView>
-
-      //     </NewContent>
-      //   </>
   }
 
   return(
     <div>
-      {/* <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={snackBarOpen}
-        onClose={handleClose}
-        message={snackBarMessage}
-        key={vertical + horizontal}
-      /> */}
       <NotificationMessageHelper />
       <ServerListWindow />
       <Loader />

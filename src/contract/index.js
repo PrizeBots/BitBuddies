@@ -271,7 +271,7 @@ export async function checkAllowanceGeneral(owner, spender) {
 }
 
 export async function checkAllowanceOneKClub(owner) {
-  console.debug("debug...", owner, USDC_ADDRESS, onek_club_contract_adress)
+  // console.debug("debug...", owner, USDC_ADDRESS, onek_club_contract_adress)
   // await Moralis.enableWeb3()
   const sendOptions = {
     contractAddress: USDC_ADDRESS,
@@ -856,6 +856,65 @@ export async function createBitFighterV4(_tokenURIs, referer_address, _gen, _par
   }
 }
 
+export async function createBitFighterV4WithDripPresaleCards(_tokenURIs, _tokenIDs) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  const signer = web3Provider.getSigner();
+  const _gen = 0
+  const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+
+  try {
+    const transaction = await contract.mintDripBitFighterMitCard(
+      _tokenURIs,
+      _tokenIDs, _gen, {
+        gasPrice: 2 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+    return {
+      message: "Success",
+      error: 0
+    }
+  } catch (err) {
+    console.log("err in createBitFighterV4WithDripPresaleCards ", err)
+    return {
+      message: err.message,
+      error_data: err.data,
+      error: 1
+    }
+  }
+}
+
+export async function createBitFighterV4WithPreSaleCards(_tokenURIs, _gen, _partner, tatoo, tag) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("in_createBitFighterV4WithPreSaleCards ", _tokenURIs, _gen, tatoo, tag)
+  const signer = web3Provider.getSigner();
+  const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
+  try {
+    const transaction = await contract.mintBitFighterWithMitCard(
+      _tokenURIs,
+      _gen, {
+        gasPrice: 1 * gasPrice,
+      });
+    await transaction.wait();
+    console.log("--------------------------------");
+    return {
+      message: "Success",
+      error: 0
+    }
+  } catch (err) {
+    console.log("err in createBitFighterV4WithPreSaleCards ", err)
+    return {
+      message: err.message,
+      error_data: err.data,
+      error: 1
+    }
+  }
+}
+
 export async function registerBitfighter(_name, lucky_number, _tokenID) {
 
   const ethers = Moralis.web3Library; // get ethers.js library
@@ -885,5 +944,76 @@ export async function registerBitfighter(_name, lucky_number, _tokenID) {
       error_data: err.data,
       error: 1
     }
+  }
+}
+
+export async function getMintedDripPresaleCardsByUser(_userAddress) {
+  // await Moralis.enableWeb3()
+  // const sendOptions = {
+  //   contractAddress: PRESALE_DRIP_CONTRACT_V2,
+  //   functionName: "fetchPreSaleCardsOfUser",
+  //   abi: PRESALE_DRIP_ABI,
+  //   params: {
+  //     _userAddress,
+  //   }
+  // };
+  // const dripPresaleMintedCountArr = await Moralis.executeFunction(sendOptions);
+  // console.log("----- fetchPreSaleCardsOfUser ", dripPresaleMintedCountArr);
+  // return dripPresaleMintedCountArr;
+
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("fetchPreSaleCardsOfUser fetchInfoOfDripCardMintedByUser ", _userAddress)
+  const signer = web3Provider.getSigner();
+  const contract = new ethers.Contract(PRESALE_DRIP_CONTRACT_V2, PRESALE_DRIP_ABI, signer);
+  try {
+    const data = await contract.fetchPreSaleCardsOfUser(_userAddress);
+    // await transaction.wait();
+    return data;
+  } catch (err) {
+    console.log("err in fetchPreSaleCardsOfUser getMintedDripPresaleCardsByUser ", err)
+    return []
+  }
+}
+
+
+export async function FetchInfoOfDripCardMintedByUser(tokenId) {
+  // await Moralis.enableWeb3()
+  // const sendOptions = {
+  //   contractAddress: PRESALE_DRIP_CONTRACT_V2,
+  //   functionName: "fetchTagInfoOfCard",
+  //   abi: PRESALE_DRIP_ABI,
+  //   params: {
+  //     tokenId,
+  //   }
+  // };
+  // const tagBool = await Moralis.executeFunction(sendOptions);
+  // const sendOptions1 = {
+  //   contractAddress: PRESALE_DRIP_CONTRACT_V2,
+  //   functionName: "fetchTattooInfoOfCard",
+  //   abi: PRESALE_DRIP_ABI,
+  //   params: {
+  //     tokenId,
+  //   }
+  // };
+  // const tattooBool = await Moralis.executeFunction(sendOptions1);
+  // console.log("----- fetchPreSaleCardsOfUser fetchTattooInfoOfCard ", tattooBool, tagBool);
+
+  // return {
+  //   tagBool,
+  //   tattooBool
+  // };
+
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  console.log("fetchPreSaleCardsOfUser fetchInfoOfDripCardMintedByUser ", tokenId)
+  const signer = web3Provider.getSigner();
+  const contract = new ethers.Contract(PRESALE_DRIP_CONTRACT_V2, PRESALE_DRIP_ABI, signer);
+  try {
+    const data = await contract.nftIdToExtraInfoMapping(tokenId);
+    return data;
+  } catch (err) {
+    console.log("err in fetchPreSaleCardsOfUser fetchInfoOfDripCardMintedByUser ", err)
   }
 }

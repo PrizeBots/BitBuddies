@@ -8,6 +8,8 @@ interface PlayersData {
   current_game_player_info: any,
 
   gameStarted: boolean;
+  mintGameStarted: boolean;
+  mintingGameNftQuantity: number;
 }
 
 const initialState: PlayersData = {
@@ -17,6 +19,8 @@ const initialState: PlayersData = {
   current_game_player_info: {},
 
   gameStarted: false,
+  mintGameStarted: false,
+  mintingGameNftQuantity: 0
 }
 
 export const playerDataCollection = createSlice({
@@ -41,13 +45,29 @@ export const playerDataCollection = createSlice({
     SetGameStarted: (state: { gameStarted: boolean; }, action: PayloadAction<boolean>) => {
       state.gameStarted = action.payload;
     },
+
+    SetMintGameStarted: (state: { mintGameStarted: boolean; }, action: PayloadAction<boolean>) => {
+      state.mintGameStarted = action.payload;
+    },
+
+    SetMintGameQuantity: (state: { mintingGameNftQuantity: number; }, action: PayloadAction<number>) => {
+      state.mintingGameNftQuantity = action.payload;
+    },
+
     // clearPlayerSelected: (state: { info_button_clicked: boolean; }, action: PayloadAction<boolean>) => {
     //   state.info_button_clicked = action.payload;
     // },
   },
 })
 
-export const { setNickName, setInfoButtonClicked, SetPlayerSelected, SetCurrentGamePlayer, SetGameStarted } =
+export const { setNickName, 
+  setInfoButtonClicked, 
+  SetPlayerSelected, 
+  SetCurrentGamePlayer, 
+  SetGameStarted,
+  SetMintGameStarted,
+  SetMintGameQuantity
+} =
   playerDataCollection.actions
 
 export default playerDataCollection.reducer

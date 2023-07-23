@@ -4,11 +4,8 @@ import { Box, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { ChangeBetWindowViewState, TurnMouseClickOff } from '../../../stores/UserActions';
 import { useState } from 'react';
-import { BetOnOtherPlayerAndFightId, fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
-import { updateBetInfOfPlayer } from '../../../utils/fight_utils';
 import { useDetectClickOutside } from 'react-detect-click-outside';
 import store from '../../../stores';
-import { isNullOrUndefined } from 'util';
 
 const Backdrop = styled.div`
   position: fixed;

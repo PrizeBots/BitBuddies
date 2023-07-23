@@ -6,9 +6,10 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { TurnMouseClickOff } from '../../../stores/UserActions';
 import { fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
 import { IQueueCombined, ShowWinnerCardAtFightEnd } from '../../../stores/UserWebsiteStore';
-import { parseWBTCBalanceV3 } from '../../../utils/web3_utils';
+import { parseWBTCBalanceV3, parseWBTCBalanceV4 } from '../../../utils/web3_utils';
 import store from '../../../stores';
 import { isNullOrUndefined } from 'util';
+import { useEffect, useState } from 'react';
 
 
 
@@ -100,55 +101,48 @@ const TextInfo = styled.div`
 `
 
 
+let lastP1 = ""
+let lastP2 = ""
+
+let p1 = "";
+let p2 = "";
+
+let p1_win_pot = 0;
+let p2_win_pot = 0;
+let p1_self_bet = 0;
+let p2_self_bet = 0;
 
 
 export default function WinnersReceipt() {
+
   const showWinnersCardBool = useAppSelector((state) => state.userPathStore.showWinnerCardAtFightEnd);
-  // const p1_total_bet = useAppSelector((state) => state.fightInfoStore.total_bet_p1)
-  // const p2_total_bet = useAppSelector((state) => state.fightInfoStore.total_bet_p2)
-
-  // const p1_self_bet = useAppSelector((state) => state.fightInfoStore.self_bet_p1)
-  // const p2_self_bet = useAppSelector((state) => state.fightInfoStore.self_bet_p2)
-
-  // const p1_win_pot = useAppSelector((state) => state.fightInfoStore.win_pot_p1)
-  // const p2_win_pot = useAppSelector((state) => state.fightInfoStore.win_pot_p2)
-
-  // const p1 = useAppSelector((state) => state.fightInfoStore.player1)
-  // const p2 = useAppSelector((state) => state.fightInfoStore.player2)
-
   const fight_winner = useAppSelector((state) => state.fightInfoStore.fight_winner)
-
-//   export interface QueueSingleEntry {
-//   fight_id: string,
-
-//   total_bet_p1: number,
-//   total_bet_p2: number,
-
-//   player1_end_health: number;
-//   player2_end_health: number;
-
-//   win_pot_p1: number,
-//   win_pot_p2: number,
-
-//   player1: string,
-//   player2: string,
-
-//   self_bet_p1: number,
-//   self_bet_p2: number,
-
-//   fight_winner: string,
-// }
-
   const combinedQueueData = useAppSelector((state) => state.userPathStore.CombinedQueueData)
   const queueDetailsInfo = useAppSelector((state) => state.queueDetailedInfo.queue_to_fight_info_map)
-  let p1_win_pot = 0;
-  let p2_win_pot = 0;
-  let p1_self_bet = 0;
-  let p2_self_bet = 0;
 
-  let p1 = "";
-  // let p2 = "";
-  if (combinedQueueData.length > 0) {
+
+  let updateOrNot = true;
+  // let lastUpdated = 0;
+
+  if (
+    lastP1 === store.getState().web3store.userAddress 
+    || lastP2 === store.getState().web3store.userAddress
+  ) {
+    // if (queueDetailsInfo.win_pot_p1 !== 0 && queueDetailsInfo.win_pot_p2 !== 0) {
+    //   updateOrNot = true;
+    // } else {
+    //   updateOrNot = false;
+    // }
+    if (p1_win_pot  === 0 || p2_win_pot ===0) {
+      updateOrNot = true;
+    }
+  } else {
+    updateOrNot = true;
+    // lastUpdated = new Date().getTime()
+  }
+
+  // console.log("debug--11 ", updateOrNot, p1, p2, store.getState().web3store.userAddress, combinedQueueData.length )
+  if (combinedQueueData.length > 0 && updateOrNot ) {
     combinedQueueData.map((data: IQueueCombined, index) => {
       if (index > 0) {
         return
@@ -162,9 +156,27 @@ export default function WinnersReceipt() {
         p2_self_bet = tempQueueDetailInfo.self_bet_p2? tempQueueDetailInfo.self_bet_p2: 0;
 
         p1 = tempQueueDetailInfo.player1? tempQueueDetailInfo.player1: "";
+        p2 = tempQueueDetailInfo.player2? tempQueueDetailInfo.player2: "";
+
+          // setP1Info({
+          //   address: tempQueueDetailInfo.player1? tempQueueDetailInfo.player1: "",
+          //   win_pot: tempQueueDetailInfo.win_pot_p1? tempQueueDetailInfo.win_pot_p1: 0,
+          //   self_bet: tempQueueDetailInfo.self_bet_p1? tempQueueDetailInfo.self_bet_p1: 0,
+          // })
+
+          // setP2Info({
+          //   address: tempQueueDetailInfo.player2? tempQueueDetailInfo.player2: "",
+          //   win_pot: tempQueueDetailInfo.win_pot_p2? tempQueueDetailInfo.win_pot_p2: 0,
+          //   self_bet: tempQueueDetailInfo.self_bet_p2? tempQueueDetailInfo.self_bet_p2: 0,
+          // })
+        lastP1 = p1;
+        lastP2 = p2;
       }
     })
   }
+  // console.log("debug--22 ", updateOrNot, p1, p2, store.getState().web3store.userAddress, combinedQueueData.length )
+
+  console.log("debug___receipt__", p1, p2_win_pot, p1_win_pot)
 
   // showWinnersCardBool = true
   const closeDialogMenu = () => {
@@ -177,12 +189,7 @@ export default function WinnersReceipt() {
   const dispatch = useAppDispatch()
   return(
     <div>
-      {showWinnersCardBool && <Backdrop 
-        onClick={() => {
-          closeDialogMenu()
-        }}
-        // ref={ref}
-      >
+      {showWinnersCardBool && <Backdrop onClick={() => {closeDialogMenu()}}>
         <Wrapper 
           onMouseOver={() => {
             dispatch(TurnMouseClickOff(true))
@@ -204,8 +211,8 @@ export default function WinnersReceipt() {
             <MyDivider />
 
             <TextInfo>
-                <h4> Your Ante: 1000 bits</h4>
-                <h4> Their Ante: 1000 bits</h4>
+                <h4> Your Ante: 10 bits</h4>
+                <h4> Their Ante: 10 bits</h4>
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
@@ -222,25 +229,49 @@ export default function WinnersReceipt() {
                     <h4>Their Max Bet: { parseWBTCBalanceV3(p1_self_bet) } bits </h4>
                   }
                 </div>
+
+                <div>
+                  {
+                    (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
+                    <h4>Total Prize: { parseWBTCBalanceV3(p1_win_pot) } bits</h4>:
+                    <h4>Total Prize: { parseWBTCBalanceV3(p2_win_pot) } bits </h4>
+                  }
+                </div>
             </TextInfo>
             <DottedDivider />
 
             <TextInfo>
-                <h4> 3% BLDG</h4>
-                <h4> 3% GANG</h4>
-                <h4> 1% Treasury</h4>
-                <h4> 5% System</h4>
-                <h4> 1% Prize Pool</h4>
-                <h4> 1% JackPot</h4>
-
+              {
+                fight_winner === p1 ?
+                <>
+                  <h4> 2% BLDG - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
+                  <h4> 2% GANG - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
+                  <h4> 2% Treasury - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
+                  <h4> 2% System - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
+                  <h4> 1% Prize Pool - {parseWBTCBalanceV4(p1_win_pot) * 0.01} </h4>
+                  <h4> 1% JackPot - {parseWBTCBalanceV4(p1_win_pot) * 0.01} </h4>
+                  <DottedDivider />
+                  <h4> 10% PPS - {(parseWBTCBalanceV4(p1_win_pot) * 0.1).toFixed(2)} </h4>
+                </>:
+                <>
+                  <h4> 2% BLDG - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
+                  <h4> 2% GANG - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
+                  <h4> 2% Treasury - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
+                  <h4> 2% System - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
+                  <h4> 1% Prize Pool - {parseWBTCBalanceV4(p2_win_pot) * 0.01} </h4>
+                  <h4> 1% JackPot - {parseWBTCBalanceV4(p2_win_pot) * 0.01} </h4>
+                  <DottedDivider />
+                  <h4> 10% PPS - {(parseWBTCBalanceV4(p2_win_pot) * 0.1).toFixed(2)} </h4>
+                </>
+              }
             </TextInfo>
             <DottedDivider />
 
              <div>
               {
                 fight_winner === p1 ?
-                <h1> Get { parseWBTCBalanceV3(p1_win_pot) } bits </h1>:
-                <h1> Get { parseWBTCBalanceV3(p2_win_pot) } bits </h1>
+                <h1> Get { parseWBTCBalanceV3(0.9 * p1_win_pot) } bits </h1>:
+                <h1> Get { parseWBTCBalanceV3(0.9 * p2_win_pot) } bits </h1>
               }
             </div>
             

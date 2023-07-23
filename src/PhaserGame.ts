@@ -2,11 +2,12 @@ import Phaser from 'phaser'
 import Background from './game/scenes/Background';
 import Bootstrap from './game/scenes/Bootstrap';
 import Game from './game/scenes/Game';
+import MintingGame from './game/scenes/MintingGame';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'phaser-container',
-  backgroundColor: '#93cbee',
+  backgroundColor: '#111b28',
   pixelArt: true,
   roundPixels: false,
   scale: {
@@ -27,7 +28,7 @@ const config: Phaser.Types.Core.GameConfig = {
     forceSetTimeOut: true,
   },
   autoFocus: true,
-  scene: [Bootstrap, Background, Game],
+  scene: [Bootstrap, Background, MintingGame, Game ],
 }
 
 const phaserGame = new Phaser.Game(config)

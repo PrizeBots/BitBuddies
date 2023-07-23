@@ -272,9 +272,9 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    // this.lobbySocketConnection = new WebSocket("ws://0.tcp.in.ngrok.io:12553/")
+    // this.lobbySocketConnection = new WebSocket("ws://localhost:3003/")
 
-    console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
+    // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
     this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;

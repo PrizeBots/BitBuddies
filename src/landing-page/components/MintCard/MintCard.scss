@@ -133,6 +133,44 @@
         font-size: 22px;
         color: $dark;
       }
+      p{
+        font-size: 12px;
+        color: $dark;
+      }
+    }
+    &__btc2 {
+      position: absolute;
+      bottom: 15px;
+      // width: auto;
+      // padding: 10px;
+      height: 40px;
+      background-color: $white;
+      border-radius: 8px;
+      @include flexcenter;
+      gap: 10px;
+      span {
+        font-size: 22px;
+        color: $dark;
+      }
+      p{
+        font-size: 12px;
+        color: $dark;
+      }
+    }
+    &__checkBox {
+      position: absolute;
+      bottom: 15px;
+      width: auto;
+      padding: 10px;
+      height: 40px;
+      background-color: $white;
+      // border-radius: 8px;
+      // @include flexcenter;
+      // gap: 10px;
+      // span {
+      //   font-size: 22px;
+      //   color: $dark;
+      // }
     }
     &__sold {
       font-size: 40px;

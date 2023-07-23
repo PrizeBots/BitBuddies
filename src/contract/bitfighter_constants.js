@@ -506,6 +506,23 @@ export const ABI = [{
 		"type": "function"
 	},
 	{
+		"inputs": [{
+				"internalType": "string[]",
+				"name": "_tokenURIs",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_gen",
+				"type": "uint8"
+			}
+		],
+		"name": "mintBitFighterWithMitCard",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "mintCardContractAddress",
 		"outputs": [{
@@ -514,6 +531,28 @@ export const ABI = [{
 			"type": "address"
 		}],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{
+				"internalType": "string[]",
+				"name": "_tokenURIs",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_tokenIDs",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_gen",
+				"type": "uint8"
+			}
+		],
+		"name": "mintDripBitFighterMitCard",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -982,4 +1021,4 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0x782e52265069eB1C03ecf7026F31FC72cD4C5018"
+export const bitfighter_contract_adress = "0x4eBAfEF1788dfA3f84BBACC79EF1F191D3585264"

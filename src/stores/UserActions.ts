@@ -45,6 +45,7 @@ export interface INFTDataOfConnections {
 interface UserActionData {
   friendButtonClickedInInfoMenu: boolean,
   hitFightMachine: boolean,
+  selectedFightButton: boolean,
   fightPreStart: boolean,
   fightStart: boolean,
   fightContinue: boolean,
@@ -101,6 +102,7 @@ interface UserActionData {
 }
 
 const initialState: UserActionData = {
+  selectedFightButton: false,
   friendButtonClickedInInfoMenu: false,
   hitFightMachine: false,
   fightPreStart: false,
@@ -223,6 +225,11 @@ export const userActionData = createSlice({
     HitFightMachine: (state: { hitFightMachine: boolean; }, action: PayloadAction<boolean>) => {
       state.hitFightMachine = action.payload;
     },
+
+    SelectFightInFightMachineMenu: (state: { selectedFightButton: boolean; }, action: PayloadAction<boolean>) => {
+      state.selectedFightButton = action.payload;
+    },
+
     FightStart: (state: { fightStart: boolean; }, action: PayloadAction<boolean>) => {
       state.fightStart = action.payload;
     },
@@ -258,6 +265,8 @@ export const userActionData = createSlice({
     SetFightersInfo: (state: { fightersInfo: IfightersInfo; }, action: PayloadAction<IfightersInfo>) => {
       state.fightersInfo = action.payload;
     },
+
+    
 
     ClearFighterInfo: (state: { fightersInfo: IfightersInfo; }) => {
       state.fightersInfo = {
@@ -422,7 +431,7 @@ export const {
   FightPreStart, ClearFighterInfo, ShowBrewEjectAnimationFromServer,
   ShowGotBacktHitSprite, ShowDownSprite, ShowStunnedSprite, ShowChatWindow, SetFocussedOnChat,
   ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
-  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew,
+  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew, SelectFightInFightMachineMenu
   // SetFightInfo 
 } = userActionData.actions
 

@@ -44,18 +44,21 @@ export async function updateSingleBetInfOfPlayer(fight_id: string) {
 
 export async function LoopAllFightsAndUpdate() {
   // 
-  console.log("in_LoopAllFightsAndUpdate")
+  
   const tempCombinedQueueData = store.getState().userPathStore.CombinedQueueData;
-  tempCombinedQueueData.forEach(async (_temp) => {
+  console.log("in_LoopAllFightsAndUpdate*****", tempCombinedQueueData.length)
+  tempCombinedQueueData.forEach(async (_temp, index) => {
     const result = await FetchFightEntryInfo(_temp.fight_id);
     if (result === "") {
       console.log("failed in LoopAllFightsAndUpdate--", _temp.fight_id)
     }
-    const tempMap: any = store.getState().queueDetailedInfo.queue_to_fight_info_map;
-    // console.log("LoopAllFightsAndUpdate**", result);
-    const copyData = JSON.parse(JSON.stringify(tempMap));
-    copyData[_temp.fight_id] = result;
-    console.log("LoopAllFightsAndUpdate**", copyData);
-    store.dispatch(SetFightEntryInfo(copyData))
+    if (index === 0) {
+      const tempMap: any = store.getState().queueDetailedInfo.queue_to_fight_info_map;
+      // console.log("LoopAllFightsAndUpdate**", result);
+      const copyData = JSON.parse(JSON.stringify(tempMap));
+      copyData[_temp.fight_id] = result;
+      console.log("LoopAllFightsAndUpdate**", copyData);
+      store.dispatch(SetFightEntryInfo(copyData))
+    }
   })
 }

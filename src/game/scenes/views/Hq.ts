@@ -1,6 +1,6 @@
 import phaserGame from "../../../PhaserGame";
 import store from "../../../stores";
-import { BrewMachinePunched, OpenAtmView, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
+import { BrewMachinePunched, OpenAtmView, SelectFightInFightMachineMenu, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
 import { HitFightMachine } from "../../../stores/UserActions";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../../../stores/UserWebsiteStore";
 import Boundary, { Rect, calculateRect, calculateRectReverse } from "../../Components/Boundary";
@@ -19,6 +19,8 @@ export class HQ {
   atmExt!: Phaser.Tilemaps.TilemapLayer;
   atmRect!: Rect;
 
+  serviceArea!: Phaser.Tilemaps.TilemapLayer;
+
   brewBase!: Phaser.Tilemaps.TilemapLayer;
   brewArea!: Phaser.Tilemaps.TilemapLayer;
   brewExt!: Phaser.Tilemaps.TilemapLayer;
@@ -27,6 +29,12 @@ export class HQ {
   bootstrap: Bootstrap;
 
   brewCanSprite!: Phaser.GameObjects.Image;
+
+  fightMachineBase!: Phaser.Tilemaps.TilemapLayer;
+  fightMachineExt!: Phaser.Tilemaps.TilemapLayer;
+  fightMachineArea!: Phaser.Tilemaps.TilemapLayer;
+  FightMachineRect!: Rect;
+
   constructor(scene: Phaser.Scene) {
     this.game = phaserGame.scene.keys.game as Game;
     this.scene = scene;
@@ -35,83 +43,77 @@ export class HQ {
 
   init () {
     this.game.map = this.scene.make.tilemap({
-      key: "hq_map",
+      key: "new_hq",
       tileHeight: 16,
       tileWidth: 16
     })
+    const margin = 1;
+    const spacing = 2;
 
-    const tileset1: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('hq_design', "hq_base", 16, 16, 0, 0);
-    const wall: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('wall', "wall", 16, 16, 0, 0);
-    const fightMachine: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('fight-machine', "fight-machine", 16, 16, 0, 0);
-    const punchBox: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('fight-machine-ext', "punch-box", 16, 16, 0, 0);
-    const stage: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('stage1', "stage", 16, 16, 0, 0);
-    const radiator: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('radiator', "radiator", 16, 16, 0, 0);
-    const stage3d: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('stage3d', "stage3d", 16, 16, 0, 0);
 
-    const brew_machine_base: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('brew-base', "brew-machine-base", 16, 16, 0, 0);
-    const brew_machine_ext: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('brew-ext', "brew-machine-ext", 16, 16, 0, 0);
+    const allTileSets: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage("HQ Sheet 01", "hq_sheet_01", 16, 16, margin, spacing);
 
-    // const atm_machine: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-machine', "atm-machine", 16, 16, 0, 0);
-    const atm_base: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-base', "atm-base", 16, 16, 0, 0);
-    const atm_ext: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-ext', "atm-ext", 16, 16, 0, 0);
+    // const tileset1: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('hq_design', "hq_base", 16, 16, margin, spacing);
+    // const wall: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('wall', "wall", 16, 16, margin, spacing);
+    // const fightMachine: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('fight-machine', "fight-machine", 16, 16, margin, spacing);
+    // const punchBox: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('fight-machine-ext', "punch-box", 16, 16, margin, spacing);
+    // const stage: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('stage1', "stage", 16, 16, margin, spacing);
+    // const radiator: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('radiator', "radiator", 16, 16, margin, spacing);
+    // const stage3d: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('stage3d', "stage3d", 16, 16, margin, spacing);
 
-    const allTileSets = [tileset1, wall, fightMachine, punchBox, stage, stage3d, atm_base, atm_ext, brew_machine_base, brew_machine_ext]
-    const mapLayer = this.game.map.createLayer(0, allTileSets , 0, 0);
-    const collisionLayer: Phaser.Tilemaps.TilemapLayer = this.game.map.createLayer(1, allTileSets, 0, 0);
-    const fightMachineLayer: Phaser.Tilemaps.TilemapLayer = this.game.map.createLayer(2, allTileSets, 0, 0);
-    this.game.fightMachineOverLapArea = this.game.map.createLayer(3, allTileSets , 0, 0);
-    this.game.punchArea = this.game.map.createLayer(4, allTileSets, 0, 0);
-    this.game.stageArea = this.game.map.createLayer(5, allTileSets, 0, 0);
-    this.game.radiatorLayer = this.game.map.createLayer(6, allTileSets, 0, 0).setInteractive({cursor: 'pointer'});
-    const outerboundaryLayer: Phaser.Tilemaps.TilemapLayer = this.game.map.createLayer(7, allTileSets, 0, 0);
+    // const brew_machine_base: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('brew-base', "brew-machine-base", 16, 16, margin, spacing);
+    // const brew_machine_ext: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('brew-ext', "brew-machine-ext", 16, 16, margin, spacing);
 
-    this.atmBase = this.game.map.createLayer(8, allTileSets, 0, 0);
-    this.atmArea = this.game.map.createLayer(9, allTileSets, 0, 0);
-    this.atmExt = this.game.map.createLayer(10, allTileSets, 0, 0);
+    // // const atm_machine: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-machine', "atm-machine", 16, 16, margin, spacing);
+    // const atm_base: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-base', "atm-base", 16, 16, margin, spacing);
+    // const atm_ext: Phaser.Tilemaps.Tileset = this.game.map.addTilesetImage('atm-ext', "atm-ext", 16, 16, margin, spacing);
+
+    // const allTileSets = [tileset1, wall, fightMachine, punchBox, stage, stage3d, atm_base, atm_ext, brew_machine_base, brew_machine_ext]
+    
+    
+    const floorLayer = this.game.map.createLayer(0, allTileSets , margin, spacing);
+    const walls = this.game.map.createLayer(1, allTileSets , margin, spacing);
+    const wallsDecor = this.game.map.createLayer(2, allTileSets , margin, spacing);
+
+    const serviceSign = this.game.map.createLayer(3, allTileSets , margin, spacing);
+    this.serviceArea = this.game.map.createLayer(4, allTileSets , margin, spacing);
+
+    this.serviceArea.setDepth(-1)
+
+    this.game.stageArea = this.game.map.createLayer(5, allTileSets , margin, spacing);
+    const backArea = this.game.map.createLayer(6, allTileSets , margin, spacing);
+    const door = this.game.map.createLayer(7, allTileSets , margin, spacing);
+    const pipes = this.game.map.createLayer(8, allTileSets , margin, spacing);
+
+    this.game.map.createLayer(9, allTileSets , margin, spacing);
+    this.game.map.createLayer(10, allTileSets , margin, spacing);
+    this.game.map.createLayer(11, allTileSets , margin, spacing);
+    this.game.map.createLayer(12, allTileSets , margin, spacing);
+    this.game.map.createLayer(13, allTileSets , margin, spacing);
+    this.game.map.createLayer(14, allTileSets , margin, spacing);
+
+    this.fightMachineBase = this.game.map.createLayer(15, allTileSets, margin, spacing);
+    this.fightMachineExt = this.game.map.createLayer(16, allTileSets, margin, spacing);
+    this.fightMachineArea = this.game.map.createLayer(17, allTileSets, margin, spacing);
+    this.fightMachineArea.setDepth(-1)
+    this.FightMachineRect = calculateRectReverse(this.game.map, this.fightMachineArea);
+
+    this.brewBase =  this.game.map.createLayer(18, allTileSets, margin, spacing);
+    this.brewExt =  this.game.map.createLayer(19, allTileSets, margin, spacing);
+    this.brewArea =  this.game.map.createLayer(20, allTileSets, margin, spacing);
+    this.brewArea.setDepth(-1)
+    this.brewRect = calculateRectReverse(this.game.map, this.brewArea);
+
+    this.atmBase = this.game.map.createLayer(21, allTileSets, margin, spacing);
+    this.atmExt = this.game.map.createLayer(22, allTileSets, margin, spacing);
+    this.atmArea = this.game.map.createLayer(23, allTileSets, margin, spacing);
     this.atmArea.setDepth(-1)
 
     this.atmRect = calculateRectReverse(this.game.map, this.atmArea);
 
-    this.brewBase =  this.game.map.createLayer(11, allTileSets, 0, 0);
-    this.brewArea =  this.game.map.createLayer(12, allTileSets, 0, 0);
-    this.brewExt =  this.game.map.createLayer(13, allTileSets, 0, 0);
-    this.brewArea.setDepth(-1)
-
-    this.brewRect = calculateRectReverse(this.game.map, this.brewArea);
-
     
 
-    this.game.fightMachineOverLapArea.setDepth(-1000)
-    this.game.punchArea.setDepth(1)
-    // console.log("--***------punchArea ", this.punchArea )
-    // console.log("--***------fightMachineOverLapArea ", this.fightMachineOverLapArea)
-    const fightMachineOverlapRect = calculateRect(this.game.map, this.game.fightMachineOverLapArea);
-    // this.game.radiatorRect = calculateRectReverse(this.game.map, this.game.radiatorLayer);
-    this.game.fightMachineOverlapRectReverse = calculateRectReverse(this.game.map, this.game.fightMachineOverLapArea);
-    // var tempRadiatorRect = this.add.rectangle(radiatorRect.leftX, radiatorRect.leftY, radiatorRect.width, radiatorRect.height, 0x32CD32);
-    console.log("--***------fightMachineOverLapArea ", fightMachineOverlapRect) // 1053.0813520135102 416.28495201354303
-
-    // console.log("--***------radiator rect ", this.game.radiatorRect);
-
-    
-    // console.log("atm rect", this.atmRect);
-    this.game.fightMachineOverlapText = this.scene.add
-      .text(0, 0, '', {font: '128px Courier'})
-      .setOrigin(0.5)
-      .setStyle({ backgroundColor: '#f5eddc', borderRadius: 5 })
-      .setColor("#000")
-      .setPadding(2)
-      .setScale(0.1)
-    const pointX = Math.round(fightMachineOverlapRect.leftY + fightMachineOverlapRect.width / 2)
-    const pointY = Math.round(fightMachineOverlapRect.leftX + fightMachineOverlapRect.height / 2)
-    this.game.fightMachineOverlapText.setX(pointX)
-    this.game.fightMachineOverlapText.setY(pointY- 60)
-    this.game.fightMachineOverlapText.setText([
-      'Punch/Kick to enter the fight.'
-    ]);
-    this.game.fightMachineOverlapText.setVisible(true)
-    this.game.fightMachineOverlapText.setDepth(-1)
-    console.log("--***------fightMachineOverLapArea ", this.game.fightMachineOverlapText)
+    this.fightMachineExt.setDepth(1)
 
     const stageX: number[] = []
     const stageY: number[] = []
@@ -119,7 +121,7 @@ export class HQ {
       if (_tile.index !== -1) {
         // console.log(_tile)
         stageX.push(_tile.x*16)
-        stageY.push(_tile.x*16)
+        stageY.push(_tile.y*16)
       }
     })
 
@@ -131,21 +133,20 @@ export class HQ {
 
     this.game.centerCoordinatesStage = {
       x: Math.round((minXStage + maxXStage)/2),
-      y: minYStage - 200
+      y: Math.round((minYStage + maxYStage)/2)
     }
 
     console.log(" center_of_stage ", this.game.centerCoordinatesStage)
 
+
+
+    const outerboundaryLayer: Phaser.Tilemaps.TilemapLayer = this.game.map.createLayer(24, allTileSets, 0, 0);
+    const innerboundaryLayer: Phaser.Tilemaps.TilemapLayer = this.game.map.createLayer(25, allTileSets, 0, 0);
+
     const temp1 : Array<Boundary> = [];
 
-    collisionLayer.forEachTile(_tile => {
+    innerboundaryLayer.forEachTile(_tile => {
       if (_tile.index !== -1) {
-        // for (var i =0; i< 16; i++) {
-        //   for (var j = 0 ; j < 16; j++) {
-        //     this.basicCollisionCoordinatesX.push(_tile.x*16 + i);
-        //     this.basicCollisionCoordinatesY.push(_tile.y*16 + j);
-        //   }
-        // }
 
         this.game.boundaries.push(
           new Boundary({x: _tile.x* 16, y: _tile.y* 16}, 16, 16)
@@ -163,13 +164,6 @@ export class HQ {
 
     outerboundaryLayer.forEachTile(_tile => {
       if (_tile.index !== -1) {
-        // for (var i =0; i< 16; i++) {
-        //   for (var j = 0 ; j < 16; j++) {
-        //     this.basicCollisionCoordinatesX.push(_tile.x*16 + i);
-        //     this.basicCollisionCoordinatesY.push(_tile.y*16 + j);
-        //   }
-        // }
-
         this.game.boundaries.push(
           new Boundary({x: _tile.x* 16, y: _tile.y* 16}, 16, 16)
         )
@@ -183,12 +177,34 @@ export class HQ {
     console.log("outer boundary -- ", temp2);
 
     outerboundaryLayer.setDepth(-1000);
-    collisionLayer.setDepth(-100000);
+    innerboundaryLayer.setDepth(-1000);
 
+
+    const fightMachineOverlapRect = calculateRect(this.game.map, this.fightMachineArea);
+
+    this.game.fightMachineOverlapText = this.scene.add
+      .text(0, 0, '', {font: '128px Courier'})
+      .setOrigin(0.5)
+      .setStyle({ backgroundColor: '#f5eddc', borderRadius: 5 })
+      .setColor("#000")
+      .setPadding(2)
+      .setScale(0.1)
+    const pointX = Math.round(fightMachineOverlapRect.leftY + fightMachineOverlapRect.width / 2)
+    const pointY = Math.round(fightMachineOverlapRect.leftX + fightMachineOverlapRect.height / 2)
+    this.game.fightMachineOverlapText.setX(pointX)
+    this.game.fightMachineOverlapText.setY(pointY- 60)
+    this.game.fightMachineOverlapText.setText([
+      'Punch/Kick to enter the fight.'
+    ]);
+    this.game.fightMachineOverlapText.setVisible(true)
+    this.game.fightMachineOverlapText.setDepth(-1)
+    console.log("--***------fightMachineOverLapArea ", this.game.fightMachineOverlapText)
   }
 
   update(keysInfo: IKeysInfo) {
+    // /*
     const tempMyPlayer = this.game.otherPlayers.get(store.getState().web3store.player_id)
+    // console.log("debug-pos ... ", stempMyPlayer?.sprite?.x, tempMyPlayer?.sprite?.y)
     // console.log("overlap atm and kick", store.getState().userActionsDataStore.openAtmView);
     if (tempMyPlayer?.gameObject) {
       // console.log("payer atm pos-- ", tempMyPlayer.gameObject.sprite.x, tempMyPlayer.gameObject.sprite.y)
@@ -222,7 +238,7 @@ export class HQ {
           && tempMyPlayer.gameObject.sprite.y < this.brewRect.leftY + this.brewRect.height ) )
         // && (keysInfo.keyK.pressed || keysInfo.keyP.pressed)
       ) {
-        if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "right")) {
+        if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "left")) {
           // overlap with atm
           console.log("overlap brew and kick", store.getState().userActionsDataStore.brewMachinePunched);
           this.brewExt.setDepth(-1)
@@ -244,17 +260,22 @@ export class HQ {
       // console.log("-collision_with--",((tempMyPlayer.gameObject.sprite.x > this.game.fightMachineOverlapRectReverse.leftX &&tempMyPlayer.gameObject.sprite.x < this.game.fightMachineOverlapRectReverse.leftX + this.game.fightMachineOverlapRectReverse.width )
       //   && (tempMyPlayer.gameObject.sprite.y > this.game.fightMachineOverlapRectReverse.leftY && tempMyPlayer.gameObject.sprite.y < this.game.fightMachineOverlapRectReverse.leftY + this.game.fightMachineOverlapRectReverse.height ) 
       // ), tempMyPlayer.orientation, keysInfo.keyK.pressed || keysInfo.keyP.pressed)
-      if ((tempMyPlayer.gameObject.sprite.x > this.game.fightMachineOverlapRectReverse.leftX &&tempMyPlayer.gameObject.sprite.x < this.game.fightMachineOverlapRectReverse.leftX + this.game.fightMachineOverlapRectReverse.width )
-        && (tempMyPlayer.gameObject.sprite.y > this.game.fightMachineOverlapRectReverse.leftY && tempMyPlayer.gameObject.sprite.y < this.game.fightMachineOverlapRectReverse.leftY + this.game.fightMachineOverlapRectReverse.height ) 
+      if ((tempMyPlayer.gameObject.sprite.x > this.FightMachineRect.leftX &&tempMyPlayer.gameObject.sprite.x < this.FightMachineRect.leftX + this.FightMachineRect.width )
+        && (tempMyPlayer.gameObject.sprite.y > this.FightMachineRect.leftY && tempMyPlayer.gameObject.sprite.y < this.FightMachineRect.leftY + this.FightMachineRect.height ) 
       ) {
-        if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "right")) {
-        let check = false;
+        if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "left")) {
+          let check = false;
           
           store.getState().userPathStore.CombinedQueueData.map(_data => {
             if (_data.p1_wallet === store.getState().web3store.userAddress || _data.p2_wallet === store.getState().web3store.userAddress) {
               check = true
             }
           })
+          // add more checks here.
+          if (store.getState().queueDetailedInfo.added_to_queue_pool) {
+            check = true
+          }
+          
           // console.log("collision_with checking if in queue ", check)
           if (!check) {
             if (!store.getState().userActionsDataStore.hitFightMachine) {
@@ -262,28 +283,31 @@ export class HQ {
                 event: "fight_machine_button_press",
                 walletAddress: store.getState().web3store.userAddress,
               }))
-              this.game.punchArea.setDepth(-1)
+              this.fightMachineExt.setDepth(-1)
               setTimeout(() => {
-                this.game.punchArea.setDepth(1)
+                this.fightMachineExt.setDepth(1)
                 store.dispatch(HitFightMachine(!store.getState().userActionsDataStore.hitFightMachine))
+                store.dispatch(SelectFightInFightMachineMenu(false))
                 this.bootstrap.play_button_press_sound()
               }, 500)
             } else {
               store.dispatch(HitFightMachine(!store.getState().userActionsDataStore.hitFightMachine))
+              store.dispatch(SelectFightInFightMachineMenu(false))
+              store.dispatch(ChangeShowQueueBox(false))
+              store.dispatch(ChangeShowMenuBox(false))
             }
-            
             
           } else {
             store.dispatch(ChangeShowQueueBox(!store.getState().userPathStore.ShowQueueBox))
             store.dispatch(ChangeShowMenuBox(!store.getState().userPathStore.ShowMenuBox))
+
+            store.dispatch(SelectFightInFightMachineMenu(false))
           }
         }
-        // this.game.fightMachineOverlapText.setDepth(1000000);
       } else {
         this.game.fightMachineOverlapText.setDepth(-1);
           store.dispatch(HitFightMachine(false));
         }
-        // store.dispatch(TurnMouseClickOff(false))
     }
 
     if (store.getState().userActionsDataStore.showBrewEjectAnimation) {
@@ -332,5 +356,6 @@ export class HQ {
       //   this.brewCanSprite.destroy()
       // })
     }
+    // */
   }
 }

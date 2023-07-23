@@ -1,10 +1,10 @@
 import { BigNumber as BigNumberEthers } from "ethers";
-import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, getAssetCountOfPlayer, getBitfightersMintedCount, getBitfightersTotalCountForGen, getDripMintCardsMintedCouponsCount, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
+import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, FetchInfoOfDripCardMintedByUser, getAssetCountOfPlayer, getBitfightersMintedCount, getBitfightersTotalCountForGen, getDripMintCardsMintedCouponsCount, getMintedDripPresaleCardsByUser, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
 import store from "../stores";
 import { SetBetBalance, SetWalletBalance, SetWbtcBalance } from "../stores/Web3StoreBalances";
 import BigNumber from "bignumber.js";
 import { isNullOrUndefined } from "util";
-import { SetBitfightersNftMintedCount, SetCurrentPriceOfOnekCard, SetTotalBitfightersNftCount, SetTotalDripPreSaleNFT, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
+import { DripFighterInfo, SetBitfightersNftMintedCount, SetCurrentPriceOfOnekCard, SetTotalBitfightersNftCount, SetTotalDripPreSaleNFT, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
 
 export async function getBalances(currentUser: string) {
   console.log("in_get_balance---", currentUser)
@@ -68,6 +68,15 @@ export function parseWBTCBalanceV3(balance: number| undefined) {
   // console.log("-----parseWBTCBalanceV3 2 ", z.toString())
   return Math.floor(bn.dividedBy(10**2).toNumber()).toLocaleString();
   // return Math.floor(bn.dividedBy(z).multipliedBy(x).toNumber()).toLocaleString();
+}
+
+export function parseWBTCBalanceV4(balance: number) {
+  // console.log("-----parseWBTCBalanceV4 ", balance)
+  if (isNullOrUndefined(balance)) {
+    return 0
+  }
+  const bn = new BigNumber(balance);
+  return Math.floor(bn.dividedBy(10**2).toNumber());
 }
 
 // export function parseWBTCBalanceV4(balance: number) {
@@ -150,5 +159,28 @@ export async function updateBitfightersMintedCountAndTotal() {
     console.log("error in updateBitfightersMintedCountAndTotal count total ", err);
     store.dispatch(SetTotalBitfightersNftCount(0))
     store.dispatch(SetBitfightersNftMintedCount(0));
+  }
+}
+
+
+export async function FetchDripPresaleInfoMintedByUser() {
+  try {
+    const dripPresaleMintedCouponsArr = await getMintedDripPresaleCardsByUser(store.getState().web3store.userAddress)
+    console.log("debug FetchDripPresaleInfoMintedByUser minted ... ", dripPresaleMintedCouponsArr);
+    const dripPresaleMintedCouponsRes = []
+    for (let i =0 ; i < dripPresaleMintedCouponsArr.length; i++) {
+      const val = parseInt(dripPresaleMintedCouponsArr[i])
+      console.log("debug FetchDripPresaleInfoMintedByUser minted ... ", val);
+      const data = await FetchInfoOfDripCardMintedByUser(val)
+      const ndata: DripFighterInfo = Object.assign({}, data);
+      ndata['id'] = val;
+      dripPresaleMintedCouponsRes.push(ndata);
+    }
+    console.log("debug .,. all info of drip presale cards. ", dripPresaleMintedCouponsRes)
+    store.dispatch(SetTotalInfoOfUserDripPresaleCards(dripPresaleMintedCouponsRes))
+    store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
+  } catch (err) {
+    console.log("error in FetchDripPresaleInfoMintedByUser ", err);
+    store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
   }
 }

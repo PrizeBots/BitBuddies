@@ -13,15 +13,15 @@ export default class Background extends Phaser.Scene {
 
   constructor() {
     super('background')
-    // console.log("running constructor background.. ")
+    console.log("running constructor background.. ")
   }
 
   preload() {
-    // console.log("running preload of background.. ")
+    console.log("running preload of background.. ")
   }
 
   create(data: { backgroundMode: BackgroundMode }) {
-    // this.cameras.main.setBackgroundColor('#111B28')
+    this.cameras.main.setBackgroundColor('#111b28')
     // const sceneHeight = this.cameras.main.height * 2
     // const sceneWidth = this.cameras.main.width
 

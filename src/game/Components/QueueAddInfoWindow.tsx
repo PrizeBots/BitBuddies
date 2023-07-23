@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks"
 import styled from 'styled-components'
 import { LinearProgress } from "@mui/material"
 import Utils from "../../landing-page/Utils";
-import { HitFightMachine } from "../../stores/UserActions";
+import { HitFightMachine, SelectFightInFightMachineMenu } from "../../stores/UserActions";
 import { useState } from "react";
 import store from "../../stores";
 import AddToQueueBox from "./MenuComponents/AddToQueueBox";
@@ -14,6 +14,7 @@ import { EnterFightQueueApi, fetchPlayerWalletInfo } from "../../hooks/ApiCaller
 import { updateBetInfOfPlayer } from "../../utils/fight_utils";
 import { SetFailureNotificationBool, SetFailureNotificationMessage } from "../../stores/NotificationStore";
 import { isNullOrUndefined } from "util";
+import FightMenuSelectionBox from "./MenuComponents/FightMenuSelectionBox";
 
 
 const ProgressBarWrapper = styled.div`
@@ -36,17 +37,29 @@ const ProgressBar = styled(LinearProgress)`
 const Backdrop = styled.div`
   position: fixed;
   top: 15%;
-  left: 25%;
+  left: 30%;
   max-height: 25%;
-  max-width: 50%;
+  max-width: 30%;
+`
+
+const Backdrop2 = styled.div`
+  position: fixed;
+  top: 25%;
+  left: 40%;
+  max-height: 25%;
+  max-width: 30%;
 `
 
 export function QueueAddInfoWindow() {
   const [amount, setAmount] = useState(0);
   const [amountInString, setAmountInString] = useState("")
-  const ANTE = 1000;
+  const ANTE = 10;
   
   const hitFightMachine = useAppSelector((state) => state.userActionsDataStore.hitFightMachine)
+  const selectFightMenu = useAppSelector((state) => state.userActionsDataStore.selectedFightButton)
+
+  // console.log("**********debug.. ", hitFightMachine, selectFightMenu)
+
   const [addToQueueBool, setaddToQueueBool] = useState(false)
   const [addToQueueState, setaddToQueueState] = useState("")
   const dispatch = useAppDispatch();
@@ -64,7 +77,7 @@ export function QueueAddInfoWindow() {
       store.dispatch(SetFailureNotificationBool(true))
       store.dispatch(SetFailureNotificationMessage("Please enter valid amount"))
     }
-    console.log("enterFight button pressed", store.getState().playerDataStore.current_game_player_info, ANTE + amount, convertWBTCToBigIntWithDecimlas(ANTE + amount) )
+    // console.log("debug ...enterFight button pressed", store.getState().playerDataStore.current_game_player_info, ANTE + amount, convertWBTCToBigIntWithDecimlas(ANTE + amount) )
     setaddToQueueBool(true);
     setaddToQueueState("Processing");
 
@@ -72,13 +85,15 @@ export function QueueAddInfoWindow() {
     if (success) {
       game.lobbySocketConnection.send(
         JSON.stringify({
-        event: "add_queue",
+        event: "add_queue_new",
         data: {
           minted_id: store.getState().playerDataStore.current_game_player_info.minted_id,
           nick_name: store.getState().playerDataStore.current_game_player_info.nick_name,
-          profile_image: store.getState().playerDataStore.current_game_player_info.profile_image,
+          profile_image: store.getState().playerDataStore.current_game_player_info.data.profile_image,
           user_wallet_address: store.getState().web3store.userAddress,
-          betAmount: amount * 100
+          betAmount: amount * 100,
+          ante: ANTE * 100,
+          // total_bet: (ANTE + amount) * 100
         }
       }))
       setaddToQueueState("Successfully Added to Queue");
@@ -91,6 +106,9 @@ export function QueueAddInfoWindow() {
 
         setaddToQueueState("");
         setaddToQueueBool(false);
+
+        store.dispatch(HitFightMachine(false))
+        store.dispatch(SelectFightInFightMachineMenu(false))
         setAmount(0)
       }, 1000)
     } else {
@@ -157,18 +175,18 @@ export function QueueAddInfoWindow() {
 
   const closeDialogMenu = () => {
     console.log("click happened .. ")
-    // dispatch(HitFightMachine(false))
   }
 
   return(
-    <div className="queue-box" >
-      {
-        hitFightMachine && 
-        <div>
-          <Backdrop style={{
-            height: `${height - 100}px`,
-            // width: `${400}px`
-          }}>
+    <>
+    {
+      selectFightMenu ?
+          <Backdrop 
+            className="queue-menu"
+            style={{
+              height: `${height - 100}px`,
+            }}
+          >
             <AddToQueueBox 
               closeFunction={closeDialogMenu} 
               enterQueue={enterFightButton}
@@ -177,14 +195,20 @@ export function QueueAddInfoWindow() {
               amountInString = {amountInString}
               ANTE = {ANTE}
             />
-            {addToQueueBool && <ProgressBarWrapper>
-            <h3> {addToQueueState} </h3>
-            <ProgressBar color="secondary" />
-          </ProgressBarWrapper>}
+            {
+            addToQueueBool && 
+              <ProgressBarWrapper>
+                <h3> {addToQueueState} </h3>
+                <ProgressBar color="secondary" />
+              </ProgressBarWrapper>
+            }
           </Backdrop>
-
-        </div>
-      }
-    </div>
+        : hitFightMachine? 
+        <Backdrop2 className="selection-menu">
+          <FightMenuSelectionBox />
+        </Backdrop2>
+        : <></>
+    }
+    </>
   )
 }

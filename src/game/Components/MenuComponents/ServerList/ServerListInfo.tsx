@@ -12,6 +12,7 @@ import Bootstrap from '../../../scenes/Bootstrap';
 import phaserGame from '../../../../PhaserGame';
 import { WaveLoader } from '../../../../landing-page/components/WaveLoader/WaveLoader';
 import { useState } from 'react';
+import { isNullOrUndefined } from 'util';
 
 const ButtonView = styled(Button)`
   span {
@@ -49,6 +50,21 @@ const MyDivider = styled.div`
   margin-bottom: 10px;
 `;
 
+const CenterText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    color: aliceblue;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
 export function ServerListInfo() {
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
   const gameServersInfo = useAppSelector((state) => state.websiteStateStore.serversInfo)
@@ -57,6 +73,7 @@ export function ServerListInfo() {
     (state) => state.playerDataStore.current_game_player_info
   );
 
+  console.log("-=-- selected_player---", selectedPlayer)
   const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
 
@@ -110,7 +127,7 @@ export function ServerListInfo() {
                 </Select>
               </FormControl>
               {
-                gameServersInfo && gameServersInfo.length ? 
+                gameServersInfo && gameServersInfo.length > 0 ? 
                   gameServersInfo.map((serverinfo, index) => {
                     return(
                       <>
@@ -123,7 +140,7 @@ export function ServerListInfo() {
                               }}>
                                 <h3 style={{color: 'aliceblue', fontSize: '20px' }} className="cooper-black-tab" > {index + 1} </h3>
                             </Grid>
-                            <Grid item xs={8} style={{
+                            <Grid item xs={7} style={{
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center'
@@ -133,14 +150,14 @@ export function ServerListInfo() {
                                   <span style={{
                                     color: "aliceblue",
                                   }}>
-                                    {`${serverinfo.region} - ${serverinfo.active_users}/ 100`}
+                                    {`${getServerNameForDisplay(serverinfo.region)} - ${serverinfo.active_users}/ 100`}
                                   </span>
                                 } 
                                 secondary={getEllipsisTxt(serverinfo.room_id)}
                               />
                     
                             </Grid>
-                            <Grid item xs={3} style={{
+                            <Grid item xs={4} style={{
                               alignItems: 'center',
                               display: 'flex'
                             }}>
@@ -169,11 +186,17 @@ export function ServerListInfo() {
                         <MyDivider></MyDivider>
                       </>
                     )
-                  }):<div>
-
-                  <WaveLoader />
-                </div>
-              }
+                  }):
+                (Object.keys(selectedPlayer).length > 0)?
+                  <div>
+                    <WaveLoader />
+                  </div>:
+                <CenterText>
+                  <span>
+                    Choose a Player to load servers
+                  </span>
+                </CenterText>
+              } 
               
             </BoxWrapper>
           
@@ -181,4 +204,13 @@ export function ServerListInfo() {
       </List>
     </div>
   )
+}
+
+function getServerNameForDisplay(region: string) {
+  if (region === "Washington_DC" ) {
+    return "US_East"
+  }
+  if (region === "Mumbai" ) {
+    return "India"
+  }
 }

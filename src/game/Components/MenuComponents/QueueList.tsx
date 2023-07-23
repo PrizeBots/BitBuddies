@@ -33,13 +33,15 @@ function lotsOfStringGenrator() {
 }
 
 const ListItemViews = styled.div`
-  // display: flex;
-  // flex-direction: row;
-  // align-items: center;
   img {
     height: 60px;
-    // width: 40%;
-    // margin-left: -5px;
+  }
+
+  h1 {
+    color: aliceblue;
+    font-style: bold;
+    font-size: 28px;
+    font-family:'Cooper Black', sans-serif;
   }
 `
 
@@ -85,20 +87,19 @@ const BetInfoView = styled.div`
   }
 `
 
-interface TempBets {
-  fight_id: string;
-
-}
 
 const ImageAndTextView = styled.div`
   border: 4px solid #000000;
   border-radius: 6px;
+  // border-color: red;
 `
 
 const ImageView = styled.div`
   margin: 4px;
+  margin-top: 20px;
   border: 5px solid #000000;
   background-color: #232323;
+  // border-color: red;
 `
 
 const BackDrop = styled.div`
@@ -114,14 +115,24 @@ const InputTextField = styled(InputBase)`
   }
 `
 
+interface QueueWindowInfo {
+  profile_image: string,
+  nick_name: string,
+  wallet: string, 
+  fight_id: string,
+  total_bet: number,
+}
+
 export default function QueueList() {
   const [betWindowOpen, setBetWindowOpen] = useState(false);
+  const fightersInfo = useAppSelector((state) => state.userActionsDataStore.fightersInfo)
   // delete User from queue
   // const queueData = useAppSelector((state) => state.userPathStore.QueueData)
   const combinedQueueData = useAppSelector((state) => state.userPathStore.CombinedQueueData)
   const playersBetInfo = useAppSelector((state) => state.userPathStore.playersBetInfo)
   const queueDetailsInfo = useAppSelector((state) => state.queueDetailedInfo.queue_to_fight_info_map)
   // console.log("LoopAllFightsAndUpdate--1-", queueDetailsInfo)
+  // console.log("debug combinedQueueData --- ", combinedQueueData)
   
   const [playerChosen, setPlayerChosen] = useState<string>();
   const [fightIdChosen, setFightIdChosen] = useState<string>();
@@ -222,26 +233,42 @@ export default function QueueList() {
   const Non_selected_player1_view = (data: IQueueCombined) => {
     return (
           <ImageAndTextView>
-          <ImageView>
-            <ListItemButton>
-              <img
-                className='hexagon-icon'
-                src={data.p1_profile_image}
-                alt="Hero"
-              />
-              <ListItemText
-                primary={
-                  <span style={{
-                    color: "aliceblue",
-                  }}>
-                    {data.p1_nick_name}
-                  </span>
-                } 
-                secondary={getEllipsisTxt(data.p1_wallet)} 
-              />
-            </ListItemButton>
-          </ImageView>
-          {/* <ListItemButton> */}
+            <ImageView >
+              {/* {(data.p1_wallet === store.getState().web3store.userAddress || data.p2_wallet === store.getState().web3store.userAddress) ?
+                <div style={{
+                  float: 'right'
+                }}>
+                  <CloseIcon
+                      style={{color: 'red'}} 
+                      onClick={() => {
+                        console.log("pressed close icon")
+                        deleteUserFromQueue()
+                      }}
+                    />
+                </div>:<></>} */}
+
+
+              <ListItemButton disableRipple>
+                <img
+                  className='hexagon-icon'
+                  src={data.p1_profile_image}
+                  alt="Hero"
+                />
+                <ListItemText
+                  primary={
+                    <span style={{
+                      color: "aliceblue",
+                    }}>
+                      {data.p1_nick_name}
+                    </span>
+                  } 
+                  // secondary={getEllipsisTxt(data.p1_wallet)} 
+                />
+              </ListItemButton>
+
+              
+
+            </ImageView>
             <BetInfoView>
               <h3>
                 Total Bet: <span> { parseWBTCBalanceV3(data.p1_total_bet) } </span>
@@ -263,8 +290,6 @@ export default function QueueList() {
                 Bet
               </Button>
             </BetInfoView>
-          {/* </ListItemButton> */}
-
           </ImageAndTextView>
     )
   }
@@ -457,26 +482,25 @@ export default function QueueList() {
   const Non_selected_player2_view = (data: IQueueCombined) => {
     return (
           <ImageAndTextView>
-          <ImageView>
-            <ListItemButton>
-              <img
-                className='hexagon-icon'
-                src={data.p2_profile_image}
-                alt="Hero"
-              />
-              <ListItemText
-                primary={
-                  <span style={{
-                    color: "aliceblue",
-                  }}>
-                    {data.p2_nick_name}
-                  </span>
-                } 
-                secondary={getEllipsisTxt(data.p2_wallet)} 
-              />
-            </ListItemButton>
-          </ImageView>
-          {/* <ListItemButton> */}
+            <ImageView>
+              <ListItemButton>
+                <img
+                  className='hexagon-icon'
+                  src={data.p2_profile_image}
+                  alt="Hero"
+                />
+                <ListItemText
+                  primary={
+                    <span style={{
+                      color: "aliceblue",
+                    }}>
+                      {data.p2_nick_name}
+                    </span>
+                  } 
+                  secondary={getEllipsisTxt(data.p2_wallet)} 
+                />
+              </ListItemButton>
+            </ImageView>
             <BetInfoView>
               <h3>
                 Total Bet: <span> { parseWBTCBalanceV3(data.p2_total_bet) } </span>
@@ -498,8 +522,179 @@ export default function QueueList() {
                 Bet
               </Button>
             </BetInfoView>
-          {/* </ListItemButton> */}
+          </ImageAndTextView>
+    )
+  }
 
+
+  const Non_selected_player_view = (data: QueueWindowInfo) => {
+    return (
+          <ImageAndTextView>
+            <ImageView >
+
+              {
+              (data.wallet === store.getState().web3store.userAddress) ?
+                <div style={{
+                  float: 'right'
+                }}>
+                  <CloseIcon
+                      style={{color: 'red'}} 
+                      onClick={() => {
+                        console.log("pressed close icon")
+                        deleteUserFromQueue()
+                      }}
+                    />
+                </div>:<></>
+              }
+
+              <ListItemButton disableRipple>
+                <img
+                  // className='hexagon-icon'
+                  src={data.profile_image!== ""?data.profile_image: "/new_assets/questionGIF.gif"}
+                  alt="Hero"
+                />
+                <ListItemText
+                  primary={
+                    <span style={{
+                      color: "aliceblue",
+                    }}>
+                      {data.nick_name}
+                    </span>
+                  } 
+                  // secondary={getEllipsisTxt(data.p1_wallet)} 
+                />
+              </ListItemButton>
+
+              
+
+            </ImageView>
+            <BetInfoView>
+              <h3>
+                Total Bet: <span> { parseWBTCBalanceV3(data.total_bet) } </span>
+              </h3>
+              <Button 
+                variant="contained" 
+                color="secondary"
+                style={{
+                  width: '20px',
+                  borderRadius: '10px',
+                  justifyContent: 'center',
+                  height: '25px'
+                }}
+                onClick={() => {
+                  setFightIdChosen(data.fight_id)
+                  setPlayerChosen(data.wallet)
+                }}
+              >
+                Bet
+              </Button>
+            </BetInfoView>
+          </ImageAndTextView>
+    )
+  }
+
+  const Selected_player_view = (data: QueueWindowInfo) => {
+    return (
+          <ImageAndTextView>
+          <ImageView>
+
+            {
+              (data.wallet === store.getState().web3store.userAddress) ?
+                <div style={{
+                  float: 'right'
+                }}>
+                  <CloseIcon
+                      style={{color: 'red'}} 
+                      onClick={() => {
+                        console.log("pressed close icon")
+                        deleteUserFromQueue()
+                      }}
+                    />
+                </div>:<></>
+              }
+
+            <ListItemButton>
+              <img
+                // className='hexagon-icon'
+                src={data.profile_image}
+                alt="Hero"
+              />
+              <ListItemText
+                primary={
+                  <span style={{
+                    color: "aliceblue",
+                  }}>
+                    {data.nick_name}
+                  </span>
+                } 
+                secondary={getEllipsisTxt(data.wallet)} 
+              />
+            </ListItemButton>
+          </ImageView>
+            <BetInfoView>
+              <h3>
+                Your Bet: 
+                <InputTextField
+                  type='number'
+                  fullWidth
+                  autoFocus={betLastEdit}
+                  value={betOnPlayer}
+                  onFocus={() => {
+                    setBetLastEdit(true)
+                  }}
+                  onChange={(e) => {
+                    console.log("writing ", e.target.value)
+                    if (e.target.value === "") {
+                      setBetOnPlayer(0)
+                    } else {
+                      setBetOnPlayer(parseInt(e.target.value))
+                    }
+                    setBetLastEdit(true)
+                  }}
+                />
+              </h3>
+
+              <h3>
+                Tip: 
+                <InputTextField
+                  type='number'
+                  fullWidth
+                  autoFocus={tipLastEdit}
+                  value={tipOnPlayer}
+                  onFocus={() => {
+                    setTipLastEdit(true)
+                  }}
+                  onChange={(e) => {
+                    console.log("writing ", e.target.value)
+                    if (e.target.value === "") {
+                      setTipOnPlayer(0)
+                    } else {
+                      setTipOnPlayer(parseInt(e.target.value))
+                    }
+                    setTipLastEdit(true)
+                  }}
+                />
+              </h3>
+              <h3>
+                Total Bet: <span> { parseWBTCBalanceV3(data.total_bet) } </span>
+              </h3>
+              <div>
+                  {<Button 
+                    variant="contained" 
+                    color="secondary"
+                    style={{
+                      width: '20px',
+                      borderRadius: '10px',
+                      justifyContent: 'center',
+                      height: '25px'
+                    }}
+                    onClick={addBetToFightPlayer}
+                  >
+                    {betState}
+                  </Button>}
+              </div>
+             
+            </BetInfoView>
           </ImageAndTextView>
     )
   }
@@ -543,58 +738,38 @@ export default function QueueList() {
     if (data.fight_id === fightIdChosen) {
       if (data.p1_wallet === playerChosen) {
         // change the html
-        TempP1HTML = <Selected_player1_view 
+        TempP1HTML = <Selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
+          wallet={data.p1_wallet} 
+          nick_name={data.p1_nick_name} 
+          profile_image={data.p1_profile_image} 
           total_bet={data.total_bet} 
         />
       } else {
         TempP1HTML = 
-        <Non_selected_player1_view 
+        <Non_selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
-          total_bet={data.total_bet} 
+          wallet={data.p1_wallet} 
+          nick_name={data.p1_nick_name} 
+          profile_image={data.p1_profile_image} 
+          total_bet={data.total_bet}  
         />
       }
       if (data.p2_wallet === playerChosen) {
         // change the html
-        TempP2HTML = <Selected_player2_view 
+        TempP2HTML = <Selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
+          wallet={data.p2_wallet} 
+          nick_name={data.p2_nick_name} 
+          profile_image={data.p2_profile_image} 
           total_bet={data.total_bet} 
         />
       } else {
-        TempP2HTML = <Non_selected_player2_view 
+        TempP2HTML = <Non_selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
+          wallet={data.p2_wallet} 
+          nick_name={data.p2_nick_name} 
+          profile_image={data.p2_profile_image} 
           total_bet={data.total_bet} 
         />
       }
@@ -602,28 +777,19 @@ export default function QueueList() {
     else {
       // if none is chosen
       TempP1HTML = 
-        <Non_selected_player1_view 
+        <Non_selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
+          wallet={data.p1_wallet} 
+          nick_name={data.p1_nick_name} 
+          profile_image={data.p1_profile_image} 
           total_bet={data.total_bet} 
         />
-      TempP2HTML = <Non_selected_player2_view 
+      TempP2HTML = 
+      <Non_selected_player_view 
           fight_id={data.fight_id} 
-          p1_wallet={data.p1_wallet} 
-          p2_wallet={data.p2_wallet} 
-          p1_nick_name={data.p1_nick_name} 
-          p2_nick_name={data.p2_nick_name} 
-          p1_profile_image={data.p1_profile_image} 
-          p2_profile_image={data.p2_profile_image} 
-          p1_total_bet={p1_total_bet} 
-          p2_total_bet={p2_total_bet} 
+          wallet={data.p2_wallet} 
+          nick_name={data.p2_nick_name} 
+          profile_image={data.p2_profile_image} 
           total_bet={data.total_bet} 
         />
     }
@@ -674,21 +840,6 @@ export default function QueueList() {
                       </Grid>
                     </Box>
                   </ListItemViews>
-
-                  {
-                    (data.p1_wallet === store.getState().web3store.userAddress || data.p2_wallet === store.getState().web3store.userAddress) ?
-                    <CloseIcon
-                      style={{
-                        color: 'red'
-                      }} 
-                      onClick={() => {
-                        // remove your self from queue
-                        console.log("pressed close icon")
-                        deleteUserFromQueue()
-                      }}
-                    />
-                    :<></>
-                  }
 
                   <Divider />
                 </ListItem>

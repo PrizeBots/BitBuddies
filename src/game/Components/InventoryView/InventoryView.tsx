@@ -33,6 +33,14 @@ const Wrapper = styled.div`
   border-width: 2px;
   border-radius: 10px;
   gap: 20px;
+
+  // background: #222639;
+  // box-shadow: 0px 0px 5px #0000006f;
+  // border-radius: 16px;
+  // padding: 15px 35px 15px 15px;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
 `
 
 

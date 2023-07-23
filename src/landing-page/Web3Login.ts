@@ -8,7 +8,7 @@ import store from '../stores';
 import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import detectEthereumProvider from '@metamask/detect-provider'
-import { getBalances, updateBitfightersMintedCountAndTotal, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
+import { FetchDripPresaleInfoMintedByUser, getBalances, updateBitfightersMintedCountAndTotal, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
 import { setCardState } from '../stores/MintCardStateStore';
 import { PageStates } from './components/SidePanel/SidePanel';
 // import { SetWbtcBalance } from '../stores/Web3StoreBalances';
@@ -126,6 +126,7 @@ export async function Web3Login() {
 
   const result = await fetchNFTsFromDB(accounts[0]);
   // console.log(accounts[0]);
+  console.log("in web3login fetchNFTsFromDB ", result)
   const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
   store.dispatch(setTotalNFTData(result.message))
   store.dispatch(setNFTDetails(dataOfNFTS))
@@ -148,6 +149,7 @@ export async function Web3Login() {
   await updateOneKClubMintedCount()
 
   await updateDripPresaleMintedCount()
+  await FetchDripPresaleInfoMintedByUser()
 
 
 

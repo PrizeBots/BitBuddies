@@ -23,6 +23,7 @@ const FriendRequestBox = styled(Box)`
   padding: 20px;
 
   span {
+    // font-family:'Cooper Black', sans-serif;
     font-family: Monospace;
     font-style: bold;
     font-size: 20px;
@@ -30,6 +31,7 @@ const FriendRequestBox = styled(Box)`
 
   h2, h3 {
     font-family: Monospace;
+    // font-family:'Cooper Black', sans-serif;
     font-style: bold;
     font-size: 22px;
     color: white;

@@ -58,7 +58,7 @@ export function calculateRect(map: Phaser.Tilemaps.Tilemap, arena1_area: Phaser.
 }
 
 export function calculateRectReverse(map: Phaser.Tilemaps.Tilemap, arena1_area: Phaser.Tilemaps.TilemapLayer) {
-  console.log("--***------radiator rect " )
+  // console.log("--***------radiator rect " )
   let minX = 99999;
   let minY = 99999;
   let maxX = -99999;
@@ -75,6 +75,6 @@ export function calculateRectReverse(map: Phaser.Tilemaps.Tilemap, arena1_area: 
   }
   // console.log(minX, maxX, minY, maxY)
   const rect = new Rect(minX, minY, maxX - minX, maxY - minY)
-  console.log("--***------radiator rect ",rect)
+  // console.log("--***------radiator rect ",rect)
   return rect
 }

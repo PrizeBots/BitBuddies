@@ -13,7 +13,7 @@ import { ChangePath } from "../stores/UserWebsiteStore";
 import { FightConfirmationBox } from "../game/Components/FightConfirmationBox";
 import { Web2LoginPage } from "./Web2LoginPage";
 import styled from "styled-components";
-import { SetGameStarted } from "../stores/PlayerData";
+import { SetGameStarted, SetMintGameStarted } from "../stores/PlayerData";
 import MintCardsPage from "./MintCardsPage/MintCardsPage";
 import { SetGlobalRefCode } from "../stores/MintCardStateStore";
 import { isNullOrUndefined } from "util";
@@ -25,7 +25,7 @@ const Backdrop = styled.div`
   height: 100%;
   width: 100%;
   // background-color: #262626;
-  background-color: #111b28;
+  // background-color: #111b28;
 `;
 
 const Backdrop2 = styled.div`
@@ -39,13 +39,10 @@ const Landing = (props: any) => {
   const HistoryPath = useAppSelector((state) => state.userPathStore.path);
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   const location = useLocation();
-  const loading = () => (
-    <div className="animated fadeIn pt-3 text-center">Loading...</div>
-  );
-  console.log("in Landing ..", props, location);
+  // console.log("in Landing ..", props, location);
   const game = phaserGame.scene.keys.game as Game;
   let View;
-  console.log("current path 1", HistoryPath, location.pathname);
+  console.log("current path 1", HistoryPath, location.pathname, HistoryPath === "minting-game" && location.pathname !== "/mint");
 
   if (
     HistoryPath === "gamePlay" &&
@@ -77,6 +74,13 @@ const Landing = (props: any) => {
       store.dispatch(SetGameStarted(true));
     }
   }
+  else if (
+    HistoryPath === "minting-game" && location.pathname !== "/mint"
+  ) {
+    bootstrap.pauseMintingGame()
+    store.dispatch(ChangePath(location.pathname));
+    store.dispatch(SetMintGameStarted(false));
+  }
   // else if (HistoryPath === "gamePlay"  && location.pathname === "/game") {
   //   View = <GameView />
   // }
@@ -95,11 +99,11 @@ const Landing = (props: any) => {
     //   dispatch(SetGameStarted(false));
     // } 
     else if (location.pathname.includes("/login")) {
-      console.log("debug.. -", location.pathname);
+      // console.log("debug.. -", location.pathname);
       View = <Web2LoginPage />;
       dispatch(SetGameStarted(false));
     } else if (location.pathname.includes("/game")) {
-      console.log("debug.. -", location.pathname);
+      // console.log("debug.. -", location.pathname);
       // View = <Fighters />;
       View = <NewFighters />
       // dispatch(setGameStarted(false));
@@ -145,7 +149,7 @@ const Landing = (props: any) => {
   console.log("current path 2 path___", HistoryPath, location.pathname);
 
   return (
-    <div>
+    <div className="main-landing">
       {HistoryPath === "gamePlay" ? (
         <Backdrop2>
           <Header />

@@ -89,7 +89,7 @@ const Backdrop = styled.div`
   position: fixed;
   right: 0%;
   height: 100%;
-  width: 32%;
+  width: 28%;
   z-index: 100;
 `
 
@@ -142,6 +142,7 @@ const TextWrapper = styled.div`
 
 export default function NewMenuSideBar() {
   // const userAddress = useAppSelector((state) => state.web3store.userAddress)
+  const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
   const showQueueBoxRedux = useAppSelector((state) => state.userPathStore.ShowQueueBox)
   const ShowMenuBoxRedux = useAppSelector((state) => state.userPathStore.ShowMenuBox)
   const userAddress = useAppSelector((state) => state.web3store.userAddress)
@@ -150,7 +151,7 @@ export default function NewMenuSideBar() {
   const [value2, setValue2] = React.useState(0);
   const dispatch = useAppDispatch();
   // const game = phaserGame.scene.keys.game as Game
-  console.log("-- showmenubox ", ShowMenuBoxRedux )
+  console.log("-- debug showmenubox ", ShowMenuBoxRedux, showQueueBoxRedux, ProfilemenuClicked )
 
   const web3LogOut = async () => {
     console.log("button pressed");
@@ -328,7 +329,7 @@ export default function NewMenuSideBar() {
                         </TabPanel2>
                       </MenuBox>
 
-                    <LogoutButtonView />
+                    {/* <LogoutButtonView /> */}
 
                     </TabsSection>
                   }

@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+export interface DripFighterInfo {
+  tag: boolean,
+  tattoo: boolean,
+  id: number,
+}
 
 interface BitFightersCollection {
   value: Array<string>
@@ -16,6 +21,9 @@ interface BitFightersCollection {
   totalBitfightersToMint: number;
   dripfightersNFTsMintedCount: number;
   totalDripFightersToMint: number;
+
+  totalInfoOfUsersDripPresaleCards: Array<DripFighterInfo>
+  totalInfoOfUsersDripPresaleCardsLoaded: boolean;
 }
 
 const initialState: BitFightersCollection = {
@@ -31,7 +39,9 @@ const initialState: BitFightersCollection = {
   bitfightersNFTsMintedCount: 0,
   dripfightersNFTsMintedCount: 0,
   totalBitfightersToMint: 0,
-  totalDripFightersToMint: 0
+  totalDripFightersToMint: 0,
+  totalInfoOfUsersDripPresaleCards: [],
+  totalInfoOfUsersDripPresaleCardsLoaded: false
 }
 
 export const bitFightersCollection = createSlice({
@@ -98,6 +108,15 @@ export const bitFightersCollection = createSlice({
       state.totalDripFightersToMint = action.payload;
     },
 
+
+    SetTotalInfoOfUserDripPresaleCards: (state: { totalInfoOfUsersDripPresaleCards: Array<DripFighterInfo>; }, action: PayloadAction<Array<DripFighterInfo>>) => {
+      state.totalInfoOfUsersDripPresaleCards = action.payload;
+    },
+
+    SetTotalInfoOfUserDripPresaleCardsLoaded: (state: { totalInfoOfUsersDripPresaleCardsLoaded: boolean; }, action: PayloadAction<boolean>) => {
+      state.totalInfoOfUsersDripPresaleCardsLoaded = action.payload;
+    },
+
   },
 })
 
@@ -106,7 +125,7 @@ export const { addIntoArray, clearArray, setArray,
   SetTotalOneKClubNF, SetTotalMintedOneKClubNF, 
   SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT,
   SetBitfightersNftMintedCount, SetDripfightersNftMintedCount, 
-  SetTotalBitfightersNftCount, SetTotalDripfightersNftCount
+  SetTotalBitfightersNftCount, SetTotalDripfightersNftCount, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded
  } =
   bitFightersCollection.actions
 

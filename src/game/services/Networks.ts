@@ -14,6 +14,7 @@ import { getBalances } from "../../utils/web3_utils";
 import { createOtherCharacterAnimsV2 } from "../anims/CharacterAnims";
 import { BrewManager } from "../characters/BrewMananger";
 import { OtherPlayer } from "../characters/OtherPlayer";
+import { SetQueuePoolState } from "../../stores/QueueDetailedInfo";
 
 export default class Network {
   game: Game
@@ -267,7 +268,7 @@ export default class Network {
         }
 
         if (obj.event === "fight_update") {
-          // console.log(obj);
+          console.log("debug.. fight_update", obj);
           // store.dispatch(SetFightersInfo(obj))
           const newObj: IfightersInfo = {...obj}
           
@@ -281,10 +282,10 @@ export default class Network {
             if (_player.wallet_address === newObj.player1.walletAddress && _player.gameObject) {
               newObj.player1.max_health = _player.gameObject.max_health;
               newObj.player1.max_stamina = _player.gameObject.max_stamina;
-              newObj.player1.defense = _player.gameObject.defense;
-              newObj.player1.kickpower = _player.gameObject.kickPower;
-              newObj.player1.punchpower = _player.gameObject.punchPower;
-              newObj.player1.speed = _player.gameObject.speed;
+              // newObj.player1.defense = _player.gameObject.defense;
+              // newObj.player1.kickpower = _player.gameObject.kickPower;
+              // newObj.player1.punchpower = _player.gameObject.punchPower;
+              // newObj.player1.speed = _player.gameObject.speed;
               newObj.player1.profile_image = _player.profile_image;
               // newObj.player1.last_position_x = _player
               _player.gameObject?.EnableHealthBars()
@@ -296,10 +297,10 @@ export default class Network {
             if (_player.wallet_address === newObj.player2.walletAddress && _player.gameObject) {
               newObj.player2.max_health = _player.gameObject.max_health;
               newObj.player2.max_stamina = _player.gameObject.max_stamina;
-              newObj.player2.defense = _player.gameObject.defense;
-              newObj.player2.kickpower = _player.gameObject.kickPower;
-              newObj.player2.punchpower = _player.gameObject.punchPower;
-              newObj.player2.speed = _player.gameObject.speed;
+              // newObj.player2.defense = _player.gameObject.defense;
+              // newObj.player2.kickpower = _player.gameObject.kickPower;
+              // newObj.player2.punchpower = _player.gameObject.punchPower;
+              // newObj.player2.speed = _player.gameObject.speed;
               newObj.player2.profile_image = _player.profile_image;
               _player.gameObject?.EnableHealthBars()
               if (_player.gameObject) {
@@ -381,7 +382,7 @@ export default class Network {
         }
 
         if (obj.event === "queue_info") {
-          console.log("queue_info--> ", obj.data)
+          // console.log("debug queue_info--> ", obj.data)
           // store.dispatch(ChangeQueueData(obj.data))
           store.dispatch(ChangeCombinedQueueData(obj.data))
           const queueData: Array<IQueueCombined> = obj.data;
@@ -402,6 +403,17 @@ export default class Network {
           })
         }
 
+        if (obj.event === "notification") {
+          console.log("debug_notification--> ", obj.data)
+          if (obj.walletAddress === store.getState().web3store.userAddress) {
+            if (obj.state === "join") {
+              store.dispatch(SetQueuePoolState(true))
+            } else {
+              store.dispatch(SetQueuePoolState(false))
+            }
+          }
+        }
+
         if (obj.event === "fight_confirmation" ) {
           console.log(" in fight_confirmation msg,,, ", obj)
           if (obj.walletAddress === store.getState().web3store.userAddress) {
@@ -415,7 +427,7 @@ export default class Network {
         }
 
         if (obj.event === "fight_start_pre_announcement") {
-          console.log(obj)
+          // console.log("debug_fight_start_pre_announcement  ",obj)
           store.dispatch(SetCurrentFightId(obj.fight_id))
           if (obj.message === "Fight!") {
             // this.game.myPlayer.movementAbility = true;
@@ -446,7 +458,8 @@ export default class Network {
           }
           if (you_are_player_state != "") {
             this.game.cameras.main.stopFollow();
-            this.game.cameras.main.centerOn(this.game.centerCoordinatesStage.x, this.game.centerCoordinatesStage.y);
+            this.game.cameras.main.centerOn(obj.centerX, obj.centerY);
+            // this.game.cameras.main.centerOn(this.game.centerCoordinatesStage.x, this.game.centerCoordinatesStage.y);
           }
           // console.log("fight_start_announcement", "you are ", you_are_player_state, obj)
           this.game.otherPlayers.forEach(_player => {

@@ -20,7 +20,7 @@ export async function fetchAllNFTs(array: Array<string>) {
 
 
 export async function fetchAllNFTsFromDbEntries(array: Array<any>) {
-  // console.log("in here .. fetching ", array)
+  console.log("in here .. fetching ", array)
   const result = await Promise.all(array.map(async (element) => {
     const data = await resolveURL(element.nftURL);
     element["data"] = data;

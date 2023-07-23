@@ -306,7 +306,7 @@ export const PRESALE_DRIP_ABI = [{
       "name": "tokenId",
       "type": "uint256"
     }],
-    "name": "fetchTatooInfoOfCard",
+    "name": "fetchTattooInfoOfCard",
     "outputs": [{
       "internalType": "bool",
       "name": "",
@@ -375,7 +375,7 @@ export const PRESALE_DRIP_ABI = [{
       },
       {
         "internalType": "bool",
-        "name": "tatoo",
+        "name": "tattoo",
         "type": "bool"
       },
       {
@@ -429,7 +429,7 @@ export const PRESALE_DRIP_ABI = [{
       },
       {
         "internalType": "bool",
-        "name": "tatoo",
+        "name": "tattoo",
         "type": "bool"
       }
     ],
@@ -501,7 +501,7 @@ export const PRESALE_DRIP_ABI = [{
   },
   {
     "inputs": [],
-    "name": "priceOfTatooAddon",
+    "name": "priceOfTattooAddon",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -512,7 +512,7 @@ export const PRESALE_DRIP_ABI = [{
   },
   {
     "inputs": [],
-    "name": "priceOfTatooAndTagAddon",
+    "name": "priceOfTattooAndTagAddon",
     "outputs": [{
       "internalType": "uint256",
       "name": "",

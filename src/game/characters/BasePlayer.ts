@@ -51,7 +51,7 @@ export const WalkSpeedMap = {
 
 export const KickPowerMap = {
   0: 2,
-  1:3,
+  1: 3,
   2: 4,
   3: 5,
   4: 7,
@@ -331,7 +331,7 @@ export class BasePlayer  {
     this.speed = tempDict['speed'];
 
     this.kickPower = convertAttrToKick(tempDict['kickpower']);
-    this.punchPower =  convertAttrToKick(tempDict['punchpower']/2);
+    this.punchPower =  convertAttrToKick(tempDict['punchpower'])/2;
 
 
     // console.log("in baseplayer... ", this.totalActualHealthValue, this.totalHealthValue)

@@ -17,7 +17,7 @@ if (process.env.REACT_APP_DEV_ENV === "production") {
 // var REACT_APP_BASE_API_ANAKIN_URL = (process.env.REACT_APP_DEV_ENV === "production") ? process.env.REACT_APP_REACT_APP_BASE_API_ANAKIN_URL : "http://localhost:3000"
 
 export const fetchNFTsFromDB = async (userAddress: string) => {
-  // console.log("fetchNFTsFromDB clicked..", userAddress)
+  console.log("fetchNFTsFromDB clicked..", userAddress)
   console.log("----", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
   if (userAddress === "") {
     console.log("nill user address in fetchNFTsFromDB");
@@ -771,4 +771,36 @@ export const randomGenarateBitfightersV2 = async (userAddress: string, referer: 
   const output = await result.json();
   console.log("output in randm generate --", output)
   return output;
+}
+
+
+export const randomGenarateDripBitfightersV2 = async (userAddress: string, referer: string, quantity: number, is_drip_tattoo: boolean,  user_type='web3') => {
+  console.log("mint clicked..", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v2/generator/create/bitfighter/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "user_wallet_address" : userAddress,
+      "referer_address" : referer,
+      'user_type': user_type,
+      "quantity": quantity,
+      "partner_name": "Drip Fighter",
+      "is_drip_tattoo": is_drip_tattoo
+    })
+  })
+  if (result.status === 200) {
+    const output = await result.json();
+    console.log("output in randm generate --", output)
+    return output;
+  } else {
+    console.log("output in randm generate --", [])
+    throw "Error in Creating DripFighter"
+  }
+  
 }

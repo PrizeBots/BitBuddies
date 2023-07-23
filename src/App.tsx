@@ -88,6 +88,12 @@ function App() {
   };
 
   useEffect(() => {
+    const canvas = document.querySelector('canvas')
+    console.log("canvas -- ", canvas)
+    if (canvas)
+      canvas.style.zIndex = "100000"
+      // canvas?.onmousemove
+    
     console.log("metamask installed --> ", isMetaMaskInstalled());
     dispatch(ChangeMetaMaskInstalled(isMetaMaskInstalled()));
 

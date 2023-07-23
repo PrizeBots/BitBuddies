@@ -73,11 +73,17 @@ export function PlayersPrizeMoney() {
       }
       const tempQueueDetailInfo = queueDetailsInfo[data.fight_id];
       if (!isNullOrUndefined(tempQueueDetailInfo)) {
-        p1_self_bet = tempQueueDetailInfo.self_bet_p1? tempQueueDetailInfo.win_pot_p1: 0;
-        p2_self_bet = tempQueueDetailInfo.self_bet_p2? tempQueueDetailInfo.win_pot_p2: 0;
+        p1_self_bet = tempQueueDetailInfo.win_pot_p1? tempQueueDetailInfo.win_pot_p1: 0;
+        p2_self_bet = tempQueueDetailInfo.win_pot_p1? tempQueueDetailInfo.win_pot_p2: 0;
       }
+
+      // if (!isNullOrUndefined(tempQueueDetailInfo)) {
+      //   p1_self_bet = tempQueueDetailInfo.self_bet_p1? Math.min(tempQueueDetailInfo.self_bet_p1, tempQueueDetailInfo.self_bet_p2) + tempQueueDetailInfo.total_tip_p1 : 0;
+      //   p2_self_bet = tempQueueDetailInfo.self_bet_p2? Math.min(tempQueueDetailInfo.self_bet_p1, tempQueueDetailInfo.self_bet_p2) + tempQueueDetailInfo.total_tip_p2: 0;
+      // }
     })
   }
+  
   return (
     <BackDrop>
       <Grid container spacing={0}>

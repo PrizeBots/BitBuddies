@@ -36,29 +36,29 @@ export default class Bootstrap extends Phaser.Scene {
     // this.load.image('sun_moon', 'assets/background/sun_moon.png')
 
     // load town map
-    this.load.tilemapTiledJSON("map", 'bitfgihter_assets/new2.json')
-    this.load.image("tiles", 'bitfgihter_assets/LobbyTown.png')
-    this.load.image("club1", 'bitfgihter_assets/LobbyTown/Buildings/CLUB.png')
-    this.load.image("wall", 'bitfgihter_assets/LobbyTown/wall.png')
+    // this.load.tilemapTiledJSON("map", 'bitfgihter_assets/new2.json')
+    // this.load.image("tiles", 'bitfgihter_assets/LobbyTown.png')
+    // this.load.image("club1", 'bitfgihter_assets/LobbyTown/Buildings/CLUB.png')
+    // this.load.image("wall", 'bitfgihter_assets/LobbyTown/wall.png')
     this.load.image("chat_bubble", 'bitfgihter_assets/chat_bubble.png')
     this.load.image("cloud_chat_bubble", 'bitfgihter_assets/cloud_chat_bubble.png')
     this.load.image("info_icon", 'bitfgihter_assets/info_icon.png')
 
     // load hq assets
-    this.load.tilemapTiledJSON("hq_map", 'bitfgihter_assets/hq_assets/tiled_design_hq.json')
-    this.load.image("hq_base", 'bitfgihter_assets/hq_assets/HQ_base3.png')
-    this.load.image("stage", 'bitfgihter_assets/hq_assets/stage.png')
+    // this.load.tilemapTiledJSON("hq_map", 'bitfgihter_assets/hq_assets/tiled_design_hq.json')
+    // this.load.image("hq_base", 'bitfgihter_assets/hq_assets/HQ_base3.png')
+    // this.load.image("stage", 'bitfgihter_assets/hq_assets/stage.png')
     // this.load.image("atm-machine", 'bitfgihter_assets/hq_assets/atm.png')
-    this.load.image("stage3d", 'bitfgihter_assets/hq_assets/stage3d.png')
-    this.load.image("fight-machine", 'bitfgihter_assets/hq_assets/basic-fight-machine.png')
-    this.load.image("punch-box", 'bitfgihter_assets/hq_assets/fight-machine-ext.png')
-    this.load.image("radiator", 'bitfgihter_assets/hq_assets/radiator.png')
+    // this.load.image("stage3d", 'bitfgihter_assets/hq_assets/stage3d.png')
+    // this.load.image("fight-machine", 'bitfgihter_assets/hq_assets/basic-fight-machine.png')
+    // this.load.image("punch-box", 'bitfgihter_assets/hq_assets/fight-machine-ext.png')
+    // this.load.image("radiator", 'bitfgihter_assets/hq_assets/radiator.png')
 
-    this.load.image("atm-base", 'bitfgihter_assets/atm/atm-base.png')
-    this.load.image("atm-ext", 'bitfgihter_assets/atm/atm-ext.png')
+    // this.load.image("atm-base", 'bitfgihter_assets/atm/atm-base.png')
+    // this.load.image("atm-ext", 'bitfgihter_assets/atm/atm-ext.png')
 
-    this.load.image("brew-machine-base", 'bitfgihter_assets/brew/brew-base.png')
-    this.load.image("brew-machine-ext", 'bitfgihter_assets/brew/brew-ext.png')
+    // this.load.image("brew-machine-base", 'bitfgihter_assets/brew/brew-base.png')
+    // this.load.image("brew-machine-ext", 'bitfgihter_assets/brew/brew-ext.png')
 
     this.load.image("brew-can", "bitfgihter_assets/brew/BREW.png" )
 
@@ -87,7 +87,10 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.audio('button_down', "bitfgihter_assets/sounds/buttonDown.mp3")
 
     // load css
-    this.load.css('80s', 'bitfgihter_assets/80stypography.css');
+    // this.load.css('80s', 'bitfgihter_assets/80stypography.css');
+
+    this.load.tilemapTiledJSON("new_hq", 'new_assets/map/HQ_3.json')
+    this.load.image("hq_sheet_01", 'new_assets/map/HQ_Sheet_02.png')
 
     // coins 
     this.load.atlas(
@@ -154,29 +157,12 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   play_button_hover_sound() {
-    // console.log("in play button hover sound ", this.button_hover_sound.isPlaying, this.sound.locked)
-
-    // if(this.sound.locked) {
-    //   const element = document.getElementById('root');
-    //   const event = new Event('change');
-    //   if (element) {
-    //     console.log("-----")
-    //     element.dispatchEvent(event);
-    //   }
-    // }
     if (this.button_hover_sound.isPlaying) return;
-    // this.select_music.play({loop: false})
     this.button_hover_sound.play({loop: false})
   }
 
   play_button_down_sound() {
     console.log("in play button down sound ")
-    // if(!window.AudioContext) {
-    //   this.sound.resumeAll()
-    // }
-    // if (this.sound.sta === 'suspended') {
-    //   this.sound.context.resume();
-    // }
     if (this.button_down_sound.isPlaying) return;
     this.button_down_sound.play({loop: false})
   }
@@ -192,6 +178,19 @@ export default class Bootstrap extends Phaser.Scene {
         data, "key": "hq_map"
       })
     }, 100)
+  }
+
+  async launchMintingGame(data:any) {
+    console.log("minting launchMintingGame --- ", data)
+    setTimeout(() => {
+      this.pauseBackground()
+      this.pauseGame()
+      this.scene.launch('minting')
+    , data}, 100)
+  }
+
+  async pauseMintingGame() {
+    this.scene.stop('minting')
   }
 
   pauseBackground() {
