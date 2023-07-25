@@ -8,6 +8,7 @@ import Game from "../scenes/Game";
 export default class KeyControls {
   game: Game;
   keys: IKeysInfo;
+  onKeysChange = false
 
   constructor() {
     this.game = phaserGame.scene.keys.game as Game;
@@ -55,6 +56,7 @@ export default class KeyControls {
           break
         case 'KeyD':
           this.keys.keyD.pressed = true
+          this.onKeysChange = true
           if (
             this.keys.keyD.time_last_pressed 
             && this.keys.keyD.time_last_lifted 
@@ -76,6 +78,7 @@ export default class KeyControls {
           break
         case 'KeyA':
           this.keys.keyA.pressed = true
+          this.onKeysChange = true
           if (
             this.keys.keyA.time_last_pressed 
             && this.keys.keyA.time_last_lifted 
@@ -96,6 +99,7 @@ export default class KeyControls {
           this.keys.keyD.double_pressed = false
           break
         case 'KeyW':
+          this.onKeysChange = true
           if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
             break
           }
@@ -105,6 +109,7 @@ export default class KeyControls {
           this.keys.keyA.double_pressed = false
           break
         case 'KeyS':
+          this.onKeysChange = true
           if (this.keys.keyD.double_pressed || this.keys.keyA.double_pressed) {
             break
           }
@@ -158,14 +163,14 @@ export default class KeyControls {
           break
         case 'KeyT':
           console.log("T_pressed.. testing")
-          this.game.otherPlayers.forEach(_player => {
-            if (_player.gameObject) {
-              if (_player.wallet_address === store.getState().web3store.userAddress) {
-                _player.gameObject.dead = true;
-                _player.gameObject.dead_last_time = new Date().getTime();
-              }
-            }
-          })
+          // this.game.otherPlayers.forEach(_player => {
+          //   if (_player.gameObject) {
+          //     if (_player.wallet_address === store.getState().web3store.userAddress) {
+          //       _player.gameObject.dead = true;
+          //       _player.gameObject.dead_last_time = new Date().getTime();
+          //     }
+          //   }
+          // })
             // this.game.lobbySocketConnection.send(JSON.stringify({
             //   event: "equip_brew",
             //   walletAddress: store.getState().web3store.userAddress,
@@ -218,6 +223,7 @@ export default class KeyControls {
           this.keys.leftShift.pressed = false
           break
         case 'KeyD':
+          this.onKeysChange = true
           this.keys.keyD.pressed = false
           this.keys.keyD.time_last_lifted = new Date().getTime()  
           this.keys.keyD.double_pressed = false 
@@ -225,6 +231,7 @@ export default class KeyControls {
           this.keys.lastKey = ""   
           break
         case 'KeyA':
+          this.onKeysChange = true
           this.keys.keyA.pressed = false
           this.keys.keyD.double_pressed = false
           this.keys.keyA.double_pressed = false
@@ -232,12 +239,14 @@ export default class KeyControls {
           this.keys.lastKey = ""   
           break
         case 'KeyW':
+          this.onKeysChange = true
           this.keys.keyW.pressed = false;
           // this.keys.keyD.double_pressed = false
           // this.keys.keyA.double_pressed = false     
           this.keys.lastKey = ""   
           break
         case 'KeyS':
+          this.onKeysChange = true
           this.keys.keyS.pressed = false;
           // this.keys.keyD.double_pressed = false
           // this.keys.keyA.double_pressed = false  

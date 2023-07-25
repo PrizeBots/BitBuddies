@@ -265,6 +265,7 @@ export class BasePlayer  {
   wallet_address: string | undefined;
   minted_id: number | undefined;
   deadTweenRunning = false;
+  nick_name = ''
 
   constructor(
     scene: Phaser.Scene,
@@ -272,15 +273,21 @@ export class BasePlayer  {
     y: number,
     texture: string,
     nameOfKey: string,
-    all_data_fighter: IPlayerData,
+    // all_data_fighter: IPlayerData,
     otherPlayer: boolean,
     socketConnection: WebSocket,
+    nick_name: string,
     wallet_address?: string,
     minted_id?: number,
+    max_health?: number,
+    max_stamina?: number,
+    
     // extra_data: INFTDataOfConnections,
   ) {
     this.wallet_address = wallet_address
     this.minted_id = minted_id
+
+    this.nick_name = nick_name
     // health
     this.totalHealthValue = 50;
     this.totalStaminaValue = 50;
@@ -298,17 +305,17 @@ export class BasePlayer  {
     this.sprite = this.scene.physics.add.sprite(x, y, texture)
     // console.log("in createOtherCharacterAnims baseplayer 1", texture, nameOfKey, this.sprite.anims)
     // console.log("in baseplayer... ", all_data_fighter.data.attributes)
-    all_data_fighter.data.attributes.map((_val: {trait_type: string, value: number}) => {
-      // console.log("in baseplayer...", _val)
-      if (_val.trait_type === "health") {
-        this.totalActualHealthValue = convertHealthApToTotalHealth(_val.value)* 100 + 100
-        this.actualLastHealth = convertHealthApToTotalHealth(_val.value)* 100 + 100
-      }
-      if (_val.trait_type === 'speed'){ 
-        this.walk_speed = convertWalkSpeedMapToSPeed(_val.value);
-        this.run_speed = convertRunSpeedMapToSPeed(_val.value);
-      }
-    })
+    // all_data_fighter.data.attributes.map((_val: {trait_type: string, value: number}) => {
+    //   // console.log("in baseplayer...", _val)
+    //   if (_val.trait_type === "health") {
+    //     this.totalActualHealthValue = convertHealthApToTotalHealth(_val.value)* 100 + 100
+    //     this.actualLastHealth = convertHealthApToTotalHealth(_val.value)* 100 + 100
+    //   }
+    //   if (_val.trait_type === 'speed'){ 
+    //     this.walk_speed = convertWalkSpeedMapToSPeed(_val.value);
+    //     this.run_speed = convertRunSpeedMapToSPeed(_val.value);
+    //   }
+    // })
     const tempDict = {
       defense: 0,
       kickpower: 0,
@@ -317,16 +324,20 @@ export class BasePlayer  {
       speed: 0,
       punchpower: 0,
     }
-    all_data_fighter.data.attributes.map((dd: {trait_type: string, value: number})=> {
-      if (dd.trait_type === 'defense') tempDict.defense = dd['value']
-      if (dd.trait_type === 'kick') tempDict['kickpower'] = dd['value']
-      if (dd.trait_type === 'punch') tempDict['punchpower'] = dd['value']
-      if (dd.trait_type === 'health') tempDict['health'] = dd['value']
-      if (dd.trait_type === 'stamina') tempDict['stamina'] = dd['value']
-      if (dd.trait_type === 'speed') tempDict['speed'] = dd['value']
-    })
-    this.max_stamina = convertStaminaMapTo(tempDict.stamina) *100 + 100;
-    this.max_health = convertStaminaMapTo(tempDict.health) *100 + 100;
+    // all_data_fighter.data.attributes.map((dd: {trait_type: string, value: number})=> {
+    //   if (dd.trait_type === 'defense') tempDict.defense = dd['value']
+    //   if (dd.trait_type === 'kick') tempDict['kickpower'] = dd['value']
+    //   if (dd.trait_type === 'punch') tempDict['punchpower'] = dd['value']
+    //   if (dd.trait_type === 'health') tempDict['health'] = dd['value']
+    //   if (dd.trait_type === 'stamina') tempDict['stamina'] = dd['value']
+    //   if (dd.trait_type === 'speed') tempDict['speed'] = dd['value']
+    // })
+    // this.max_stamina = convertStaminaMapTo(tempDict.stamina) *100 + 100;
+    // this.max_health = convertStaminaMapTo(tempDict.health) *100 + 100;
+
+    this.max_stamina = max_stamina? max_stamina: 0;
+    this.max_health = max_health? max_health: 0;
+
     this.defense = tempDict['defense'];
     this.speed = tempDict['speed'];
 
@@ -347,7 +358,7 @@ export class BasePlayer  {
     this.staminaBar = this.scene.add.graphics();
     this.scene.physics.world.enable(this.playerContainer)
     // console.log("fighter all data ", all_data_fighter)
-    this.playerAllData = all_data_fighter;
+    // this.playerAllData = all_data_fighter;
     console.log("playerAllData ", this.playerAllData)
     // this.AllInfoButtonCOntainer = this.scene.add.container(x ,y - DEFAULT_SPRITE_DISPLAY_HEIGHT/2 - 20).setDepth(900000)
     // this.EnableHealthBars()
@@ -375,7 +386,7 @@ export class BasePlayer  {
     }
 
     this.playerName = this.scene.add
-      .text(0, 15, all_data_fighter.nick_name)
+      .text(0, 15, this.nick_name)
       .setFontFamily('monospace')
       .setFontSize(56)
       .setScale(0.17)

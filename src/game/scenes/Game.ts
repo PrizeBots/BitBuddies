@@ -6,7 +6,7 @@ import store from '../../stores'
 import { IOtherPlayer } from "../characters/OtherPlayer";
 import { ChangeCombinedQueueData, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ChangeNotificationMessageFromServer, ChangeNotificationStateFromServer, ChangePath, ChangeShowControls, ChangeShowMenuBox, ChangeShowQueueBox, IQueueCombined, ShowWinnerCardAtFightEnd } from "../../stores/UserWebsiteStore";
 // import { MyPlayer } from "../characters/MyPlayer";
-import { OtherPlayer } from "../characters/OtherPlayer";
+// import { OtherPlayer } from "../characters/OtherPlayer";
 import { ClearFighterInfo, FightContinue, FightEnd, FightPreStart, FightStart, IfightersInfo, SetCurrentOtherPlayerFighting, SetCurrentPlayerFighting, SetFightersInfo, SetFocussedOnChat, ShowBrewEjectAnimationFromServer, ShowChatWindow, ShowFightConfirmationBox, ShowFightConfirmationStartTime, ShowFightConfirmationTime, ShowMagnetMoveBrew } from "../../stores/UserActions";
 import { IKeysInfo, INFTDataOfConnections, IPlayerData } from "../characters/IPlayer";
 import { SetCurrentGamePlayer } from "../../stores/PlayerData";
@@ -34,7 +34,6 @@ import { SetGameLoadingState, SetShowGameServersList } from "../../stores/Websit
 import { BrewManager, IBrew } from "../characters/BrewMananger";
 import KeyControls from "../services/KeyControls";
 import Network from "../services/Networks";
-
 
 const textAreaVisible = false;
 
@@ -272,20 +271,27 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    // this.lobbySocketConnection = new WebSocket("ws://localhost:3003/")
+    this.lobbySocketConnection = new WebSocket("ws://localhost:3003/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
+      console.log("debug__nft__data ", this.nftData)
+      // let joining_data = {
+
+      // }
       this.lobbySocketConnection.send(JSON.stringify({
         event: "joined",
         walletAddress: store.getState().web3store.userAddress,
-        room_id:"lobby",
+        // room_id:"lobby",
         sprite_url: this.nftData.data.sprite_image,
         minted_id: this.nftData.minted_id,
-        all_nft_data: this.nftData,
+        nick_name: this.nftData.nick_name,
+        attributes: this.nftData.data.attributes,
+        profile_image: this.nftData.data.profile_image, 
+        // all_nft_data: this.nftData,
         last_position_x: random_spawn_points[this.random_pos_selected].x,
         last_position_y: random_spawn_points[this.random_pos_selected].y,
         orientation: "right",
@@ -411,22 +417,14 @@ export default class Game extends Phaser.Scene {
 
   update(time: any, delta: any) {
 
-    // this.controls.update(delta);
-    // console.log("update -- ", delta, this.game.loop.actualFps)
     this.frameTime += delta
-
     if (this.frameTime > 30) {  
-      // console.log("updating ", this.frameTime)
       this.frameTime = 0;
-        // g.gameTick++;
-        // Code that relies on a consistent 60hz update
     } else {
       console.log("not updating ", this.frameTime)
-      // this.frameTime = 0;
       return;
     }
-    // console.log('update -- ', this.frameTime)
-    // console.log("state -- > ", store.getState().userActionsDataStore.fightersInfo.fightStarted)
+
     const pointer: Phaser.Input.Pointer = this.input.activePointer;
     const worldPoint: Phaser.Math.Vector2 = this.input.activePointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
     
@@ -502,7 +500,9 @@ export default class Game extends Phaser.Scene {
       //     client_time: new Date().getTime()
       //   }))
       // }
+
       if (
+        // this.keyControls.onKeysChange
         this.keyControls.keys.keyA.pressed 
       || this.keyControls.keys.keyD.pressed 
       || this.keyControls.keys.keyS.pressed 
@@ -535,14 +535,38 @@ export default class Game extends Phaser.Scene {
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 ) {
                   // console.log("sending move signal")
-                  this.lobbySocketConnection.send(JSON.stringify({
-                    event: "move",
-                    delta: delta,
-                    walletAddress: store.getState().web3store.userAddress,
-                    keys: this.keyControls.keys,
-                    action_id,
-                    orientation_switch: true,
-                  }));
+                  const direction = []
+                  let running = false;
+                  if (this.keyControls.keys.keyA.pressed) {
+                    direction.push("left")
+                  } if (this.keyControls.keys.keyW.pressed) {
+                    direction.push("up")
+                  } if (this.keyControls.keys.keyS.pressed) {
+                    direction.push("down")
+                  } if (this.keyControls.keys.keyD.pressed) {
+                    direction.push("right")
+                  }
+                  if (this.keyControls.keys.keyA.double_pressed || this.keyControls.keys.keyD.double_pressed) {
+                    running = true
+                  }
+                  if (this.network.movementUpdateCounter%2 === 0) {
+                    // console.log("debug_movement ----- ", this.network.movementUpdateCounter)
+                    this.network.movementUpdateCounter = 1;
+                    this.lobbySocketConnection.send(JSON.stringify({
+                      event: "move",
+                      delta: delta,
+                      walletAddress: store.getState().web3store.userAddress,
+                      direction: direction,
+                      running,
+                      // keys: this.keyControls.keys,
+                      action_id,
+                      orientation_switch: true,
+                    }));
+                  } else {
+                    this.network.movementUpdateCounter += 1;
+                    // this.network.movementUpdateCounter = 0;
+                  }
+                  
                   // console.log("important--- move--", {
                   //   event: "move",
                   //   delta: delta,
@@ -1055,5 +1079,6 @@ export default class Game extends Phaser.Scene {
     // reset
     this.keyControls.keys.keyP.pressed = false;
     this.keyControls.keys.keyK.pressed = false;
+    this.keyControls.onKeysChange = false
   }
 }

@@ -39,7 +39,7 @@ export interface IOtherPlayer {
   gameObject?: OtherPlayer,
   nick_name: string,
   setupDone: boolean,
-  all_data: any,
+  // all_data: any,
   x: number,
   y: number,
   gotHit?: boolean,
@@ -47,6 +47,8 @@ export interface IOtherPlayer {
   minted_id: string,
   stunned?: boolean,
   stunnedStarted?: boolean,
+  max_stamina?: number;
+  max_health?: number,
 
   winningStarted?: boolean,
   losingStarted?: boolean,
@@ -76,15 +78,17 @@ export class OtherPlayer extends BasePlayer {
     texture: string,
     id: string,
     nick_name: string,
-    all_data_fighter: IPlayerData,
+    // all_data_fighter: IPlayerData,
     socketConnection: WebSocket,
     otherPlayer: boolean,
     wallet_address?: string,
     minted_id?: number,
+    max_health?: number,
+    max_stamina?: number,
     // extra_data: INFTDataOfConnections,
   ) {
-    console.log("otherplayer_create ", otherPlayer )
-    super(scene, x, y, texture, id, all_data_fighter, otherPlayer, socketConnection, wallet_address, minted_id)
+    console.log("otherplayer_create ", otherPlayer, max_health, max_stamina )
+    super(scene, x, y, texture, id, otherPlayer, socketConnection,nick_name, wallet_address, minted_id, max_health, max_stamina)
     this.playContainerBody = this.playerContainer.body as Phaser.Physics.Arcade.Body
   }
 

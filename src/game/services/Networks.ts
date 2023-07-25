@@ -18,6 +18,7 @@ import { SetQueuePoolState } from "../../stores/QueueDetailedInfo";
 
 export default class Network {
   game: Game
+  movementUpdateCounter = 0
 
   constructor() {
     this.game = phaserGame.scene.keys.game as Game;
@@ -91,9 +92,9 @@ export default class Network {
             //   true
             // ) {
               if (!this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)) {
-                console.log("live_players_init player exists ", this.game.otherPlayers.size, _details)
+                console.log("live_players_init player exists ", this.game.otherPlayers.size)
                 if (this.game.textures.exists(_details.walletAddress+ "_"+_details.minted_id)) {
-                  console.log("live_players_init texture exists ", this.game.otherPlayers.size, _details)
+                  console.log("live_players_init texture exists ", this.game.otherPlayers.size)
                   // if (!isNullOrUndefined(this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id))) {
                     
                     const _otherplayer = this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
@@ -108,7 +109,6 @@ export default class Network {
                       wallet_address: _details.walletAddress,
                       nick_name: _details.nick_name,
                       setupDone: false,
-                      all_data: _details.all_nft_data,
                       sprite_url: _details.sprite_url,
                       profile_image: _details.profile_image,
                       x: _details.last_position_x,
@@ -116,14 +116,13 @@ export default class Network {
                       minted_id: _details.minted_id.toString(),
                       lastKickTime: 0,
                       lastPunchTime: 0,
+                      max_health: _details.max_health,
+                      max_stamina: _details.max_stamina
                     })
                     const otherPlayer = this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
 
                     if (otherPlayer) {
                       otherPlayer.setupDone = true;
-                      // otherPlayer.gameObject = new OtherPlayer(
-                      //   this, otherPlayer.x, otherPlayer.y, _details.walletAddress, 'idle-'+ otherPlayer.wallet_address + "_" + otherPlayer.minted_id, otherPlayer.nick_name, otherPlayer.all_data,
-                      // );
                       const otherP = otherPlayer.wallet_address !== store.getState().web3store.userAddress
                       otherPlayer.gameObject = new OtherPlayer(
                         this.game, 
@@ -132,11 +131,12 @@ export default class Network {
                         `${otherPlayer.wallet_address}_${otherPlayer.minted_id.toString()}`,
                         `idle-${otherPlayer.wallet_address}_${otherPlayer.minted_id.toString()}`,
                         otherPlayer.nick_name, 
-                        otherPlayer.all_data,
                         this.game.lobbySocketConnection,
                         otherP,
                         otherPlayer.wallet_address,
-                        parseInt(otherPlayer.minted_id.toString())
+                        parseInt(otherPlayer.minted_id.toString()),
+                        otherPlayer.max_health,
+                        otherPlayer.max_stamina,
                       );
                       otherPlayer.gameObject.currHealth = _details.health;
                       otherPlayer.sprite = otherPlayer.gameObject.sprite;
@@ -158,7 +158,7 @@ export default class Network {
                     wallet_address: _details.walletAddress,
                     nick_name: _details.nick_name,
                     setupDone: false,
-                    all_data: _details.all_nft_data,
+                    // all_data: _details.all_nft_data,
                     sprite_url: _details.sprite_url,
                     profile_image: _details.profile_image,
                     x: _details.last_position_x,
@@ -166,6 +166,8 @@ export default class Network {
                     minted_id: _details.minted_id.toString(),
                     lastKickTime: 0,
                     lastPunchTime: 0,
+                    max_health: _details.max_health,
+                    max_stamina: _details.max_stamina
                   })
                   this.game.load.start();
                   console.log("adding other player live_players_init", this.game.otherPlayers)
@@ -268,7 +270,7 @@ export default class Network {
         }
 
         if (obj.event === "fight_update") {
-          console.log("debug.. fight_update", obj);
+          // console.log("debug.. fight_update", obj);
           // store.dispatch(SetFightersInfo(obj))
           const newObj: IfightersInfo = {...obj}
           
@@ -473,7 +475,7 @@ export default class Network {
         }
 
         if (obj.event === "fight_end_announcement") {
-          console.log(obj)
+          // console.log(obj)
           // store.dispatch(ChangeFightAnnouncementMessageFromServer(obj.message))
           // store.dispatch(ChangeFightAnnouncementStateFromServer(true))
           const newObj: IfightersInfo = {...obj}
@@ -807,11 +809,12 @@ export default class Network {
                 key,
                 `idle-${key}`,
                 otherPlayer.nick_name, 
-                otherPlayer.all_data,
                 this.game.lobbySocketConnection,
                 otherP,
                 otherPlayer.wallet_address,
-                parseInt(otherPlayer.minted_id.toString())
+                parseInt(otherPlayer.minted_id.toString()),
+                otherPlayer.max_health,
+                otherPlayer.max_stamina,
                 // otherPlayer.extra_data
               );
               otherPlayer.sprite = otherPlayer.gameObject.sprite;
