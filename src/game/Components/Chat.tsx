@@ -227,6 +227,8 @@ export default function Chat() {
   const placeHoderTextConst = "Press Enter to chat."
   const [timer, setTimer] = useState(0);
 
+  let lastTypingSent = 0;
+
   const handleClose = () => {
     setSnackBarOpen(false);
   };
@@ -277,13 +279,16 @@ export default function Chat() {
       // setFocused(true);
       dispatch(SetFocussedOnChat(true));
       // game.myPlayer.createNewDialogBox("...")
-      game.lobbySocketConnection.send(JSON.stringify({
-        event: "typing",
-        walletAddress: userAddress,
-        room_id:"lobby",
-        message: "...",
-      }))
-      game.disableKeyBOard()
+      if (new Date().getTime() - lastTypingSent > 1*1000) {
+        lastTypingSent = new Date().getTime()
+        game.lobbySocketConnection.send(JSON.stringify({
+          event: "typing",
+          walletAddress: userAddress,
+          room_id:"lobby",
+          message: "...",
+        }))
+        game.disableKeyBOard()
+      }
     }
     // console.log("pressing key in handlekey down in chat.", event.key)
   }

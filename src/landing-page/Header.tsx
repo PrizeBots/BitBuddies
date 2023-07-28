@@ -77,6 +77,10 @@ function Header() {
     (state) => state.metaInfoStore.net_speed
   );
 
+  const totalConnections = useAppSelector(
+    (state) => state.metaInfoStore.total_connections
+  );
+
   const selectedPlayer = useAppSelector(
     (state) => state.playerDataStore.current_game_player_info
   );
@@ -396,7 +400,7 @@ function Header() {
                   flexDirection: "row",
                   gap: "10px",
                   alignItems: "center",
-                  width: "100px",
+                  width: "150px",
                 }}
               >
                 <li
@@ -420,6 +424,27 @@ function Header() {
                   }}
                 >
                   {currentServerLatency.toString() + " ms"}
+                </li>
+
+                <li key={uuidv4()}>
+                  <div
+                    style={{
+                      width: 20,
+                    }}
+                  ></div>
+                </li>
+
+                <li
+                  className="nav-item"
+                  key={uuidv4()}
+                  style={{
+                    color: "grey",
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {totalConnections.toString()}
                 </li>
               </div>
             ) : (

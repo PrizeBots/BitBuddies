@@ -308,11 +308,11 @@ export default class Game extends Phaser.Scene {
       //   orientation: "right",
       // })
       store.dispatch(SetGameLoadingState(false))
-      this.lobbySocketConnection.send(JSON.stringify({
-        event: "geoInfo",
-        data: store.getState().geoStore.geoInfo,
-        walletAddress: store.getState().web3store.userAddress,
-      }))
+      // this.lobbySocketConnection.send(JSON.stringify({
+      //   event: "geoInfo",
+      //   data: store.getState().geoStore.geoInfo,
+      //   walletAddress: store.getState().web3store.userAddress,
+      // }))
       console.log("sending koined  ", this.nftData)
     })
 

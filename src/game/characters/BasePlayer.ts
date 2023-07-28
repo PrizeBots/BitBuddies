@@ -628,6 +628,9 @@ export class BasePlayer  {
       return;
     } else if (ntext === "..." && !this.chatBubbleActive) {
       this.createThoughtBubbleCloud("...")
+      // setTimeout(()=> {
+      //   this.clearDialogBubble(randomID)
+      // }, 2000)
       // console.log("hero.. 2")
       return
     }
@@ -709,9 +712,9 @@ export class BasePlayer  {
     )
     this.playerDialogBubble.add(innerText);
 
-    // setTimeout(() => {
-    //   this.clearDialogBubble(randomID)
-    // }, 8000)
+    setTimeout(() => {
+      this.clearDialogBubble(randomID)
+    }, 1000)
   }
 
   createCloudThoughtBubble() {

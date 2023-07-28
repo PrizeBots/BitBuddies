@@ -7,7 +7,7 @@ import { fetchPlayerWalletInfo } from "../../hooks/ApiCaller";
 import { SetEquippedBrewCount, SetInHandBrew } from "../../stores/AssetStore";
 import { addToChatArray, MessageType, AddInitialToChatArray } from "../../stores/ChatStore";
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
-import { SetServerLatency } from "../../stores/MetaInfoStore";
+import { SetServerLatency, SetTotalConnections } from "../../stores/MetaInfoStore";
 import { IfightersInfo, SetFightersInfo, ShowFightConfirmationStartTime, ShowFightConfirmationBox, FightPreStart, SetCurrentPlayerFighting, ClearFighterInfo, FightContinue, FightEnd, FightStart, SetCurrentOtherPlayerFighting } from "../../stores/UserActions";
 import { ChangeCombinedQueueData, IQueueCombined, ChangeShowQueueBox, ChangeShowMenuBox, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ShowWinnerCardAtFightEnd } from "../../stores/UserWebsiteStore";
 import { getBalances } from "../../utils/web3_utils";
@@ -752,6 +752,7 @@ export default class Network {
         // console.log("received ping ", new Date().getTime(), new Date(now_utc).getTime(), objs.server_time, (2 * tempDiff).toString(), timezoneOffset, objs.server_offset)
         // store.dispatch(SetServerLatency((2 * tempDiff).toString()))
         store.dispatch(SetServerLatency((objs.latency_time).toString()))
+        store.dispatch(SetTotalConnections((objs.total_connections)))
       }
 
       if (objs.event === "move" || objs.event === "running") {
