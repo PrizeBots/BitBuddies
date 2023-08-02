@@ -328,6 +328,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 function NewFighters() {
   const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
   const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
+  const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
   console.log("--------total_data-------", bitFightersTotalData)
   // console.log("--------total_data2-------", bitFighterNFTData)
 
@@ -372,7 +373,7 @@ function NewFighters() {
   const [formNickNameame, setFormNickName] = useState("")
   const [formLuckyNumber, setFormLuckyNumber] = useState(1)
 
-  const [game_server, set_game_server ]= useState("Washington_DC")
+  // const [game_server, set_game_server ]= useState("Washington_DC")
 
   const [registerProcessRunning, setRegisterProcessRunning] = useState(false)
 
@@ -400,16 +401,6 @@ function NewFighters() {
   const handleModalClose = () => {
     setOpenModal(false);
   };
-
-  const handleModalOpen = () => {
-    setOpenModal(true);
-  }
-
-  const SelectGameServerAndLoadInfo = async (region: string) => {
-    ListGameServers(region)
-    console.log("in SelectGameServerAndLoadInfo", region)
-    set_game_server(region);
-  }
   
   const handlePlayerSelection = async (data:IPlayerData) => {
     console.log("--player selected.. data ", data)
@@ -428,7 +419,7 @@ function NewFighters() {
     const playerAuthToken = await loginAndAuthenticatePlayer(data.user_wallet_address, data.minted_id);
     if (!isNullOrUndefined(playerAuthToken)) {
       store.dispatch(setPlayerAuthToken(playerAuthToken))
-      ListGameServers(game_server)
+      ListGameServers(gameServerReginoSelected)
     }
 
     

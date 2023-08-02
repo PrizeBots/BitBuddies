@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getEllipsisTxt } from '../../../../utils';
 import { FetchGameServerConnection, ListGameServers } from '../../../../utils/game_server_utils';
 import store from '../../../../stores';
-import { SetGameLoadingState, SetGameServersData, SetSelectedRoomId, SetShowGameServersList } from '../../../../stores/WebsiteStateStore';
+import { SetGameLoadingState, SetGameServersData, SetSelectedRegionofGameServer, SetSelectedRoomId, SetShowGameServersList } from '../../../../stores/WebsiteStateStore';
 import { SetGameStarted } from '../../../../stores/PlayerData';
 import Bootstrap from '../../../scenes/Bootstrap';
 import phaserGame from '../../../../PhaserGame';
@@ -73,15 +73,18 @@ export function ServerListInfo() {
     (state) => state.playerDataStore.current_game_player_info
   );
 
+  const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
+
   console.log("-=-- selected_player---", selectedPlayer)
-  const [game_server, set_game_server ]= useState("Washington_DC")
+  // const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
 
   const SelectGameServerAndLoadInfo = async (region: string) => {
     store.dispatch(SetGameServersData([]));
     ListGameServers(region)
     console.log("in SelectGameServerAndLoadInfo", region)
-    set_game_server(region);
+    store.dispatch(SetSelectedRegionofGameServer(region))
+    // set_game_server(region);
   }
 
   const fetchServerUrlAndConnect = async (room_id: string) => {
@@ -114,7 +117,7 @@ export function ServerListInfo() {
                 <p> Please connect to your nearest world server for best experience</p>
                 <Select
                   id="demo-simple-select"
-                  value={game_server}
+                  value={gameServerReginoSelected}
                   onChange={(event: SelectChangeEvent) => {
                     SelectGameServerAndLoadInfo(event.target.value as string)
                   }}
