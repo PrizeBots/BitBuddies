@@ -572,7 +572,7 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
 
       
     ],
-    duration: 4500,
+    duration: 4000,
     repeat: 0
   })
 

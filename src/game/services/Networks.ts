@@ -32,6 +32,10 @@ export default class Network {
 
       for (let gameQueueMessageIndex = 0; gameQueueMessageIndex < objs.length; gameQueueMessageIndex++) {
         const obj = objs[gameQueueMessageIndex];
+        // if (obj.event !== "fight_update") {
+        //   console.log("debug_messages-- ", obj)
+        // }
+        
 
         // if (obj.event === "ping") {
         //   // console.log(obj)
@@ -328,6 +332,7 @@ export default class Network {
               // _player.gameObject.sprite.x = obj.x
               // _player.gameObject.sprite.y = obj.y
               _player.gameObject.teleport = true
+              console.log("teleport_debug------", _player.gameObject.gassed_lift_off_fallen)
               _player.gameObject.teleport_coordinates = {x: obj.x, y: obj.y};
               _player.gameObject.target_position_stored = {x: obj.x, y: obj.y};
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
@@ -351,6 +356,7 @@ export default class Network {
           this.game.otherPlayers.forEach(_player => {
             if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
               _player.gameObject.gassed_lift_off_fall = true
+              _player.gameObject.gassed_lift_off_fallen = true
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
               else _player.gameObject.sprite.flipX = true
             }
@@ -523,9 +529,7 @@ export default class Network {
         }
 
         if (obj.event === "gotKickHit" || obj.event === "gotPunchHit") {
-          // console.log("attacked --", obj)
           const newObj: IfightersInfo = {...obj}
-          // store.dispatch(SetFightersInfo(newObj))
           const tempHealthP1 = newObj.player1.health;
           const tempHealthP2 = newObj.player2.health;
           const last_health_p1 = obj.last_health_p1;
@@ -549,6 +553,20 @@ export default class Network {
               }
             }
           })
+          
+
+          const newObj2: IfightersInfo = JSON.parse(JSON.stringify(store.getState().userActionsDataStore.fightersInfo));
+          this.game.otherPlayers.forEach(_player => {
+            if (_player.wallet_address === newObj.player1.walletAddress && _player.gameObject) {
+              newObj2.player1.health = newObj.player1.health;
+              newObj2.player1.stamina = newObj.player1.stamina;
+            }
+            if (_player.wallet_address === newObj.player2.walletAddress && _player.gameObject) {
+              newObj2.player2.health = newObj.player2.health;
+              newObj2.player2.stamina = newObj.player2.stamina;
+            }
+          })
+          store.dispatch(SetFightersInfo(newObj2))
         }
 
         if (obj.event === "kick" ) {
@@ -683,11 +701,20 @@ export default class Network {
 
         if (obj.event === "update_health") {
           this.game.otherPlayers.forEach(_player => {
-            // console.log("health joined .. in ", _player.wallet_address === obj.walletAddress && _player.wallet_address === store.getState().web3store.userAddress && _player.gameObject)
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
               _player.gameObject.currHealth = obj.health;
             }
           })
+          // const newObj: IfightersInfo = JSON.parse(JSON.stringify(store.getState().userActionsDataStore.fightersInfo));
+          // this.game.otherPlayers.forEach(_player => {
+          //   if (_player.wallet_address === newObj.player1.walletAddress && _player.gameObject) {
+          //     newObj.player1.health = obj.health;
+          //   }
+          //   if (_player.wallet_address === newObj.player2.walletAddress && _player.gameObject) {
+          //     newObj.player2.health = obj.health;
+          //   }
+          // })
+          // store.dispatch(SetFightersInfo(newObj))
         }
 
         if (obj.event === "brew_used") {

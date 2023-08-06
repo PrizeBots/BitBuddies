@@ -271,7 +271,7 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    this.lobbySocketConnection = new WebSocket("ws://localhost:3003/")
+    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
     // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
@@ -792,7 +792,8 @@ export default class Game extends Phaser.Scene {
     this.otherPlayers.forEach((_player) => {
       // console.log("move ing or not --", _player.moving, _player.gameObject?.tween_animation_running )
       if (_player.setupDone && _player.gameObject) {
-        if (_player.gameObject.moving || _player.gameObject.tween_animation_running) {
+        if (!_player.gameObject.tween_anim_running_down 
+          && (_player.gameObject.moving || _player.gameObject.tween_animation_running)) {
           _player.gameObject.moving = true;
         } else {
           _player.gameObject.moving = false;
@@ -840,11 +841,16 @@ export default class Game extends Phaser.Scene {
             _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               if (_player.gameObject) {
+                _player.gameObject.gassed_lift_off_fallen = false;
                 _player.gameObject.sprite.stop()
                 _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
               }
             })
-          }
+          } 
+          // else if (_player.gameObject.gassed_lift_off_fallen) {
+          //   //
+          //   console.log("debug_fallen")
+          // }
           else if (_player.gotBackHit) {
             _player.gameObject.sprite.play("gotBackHit-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
               // console.log("animation complete got back hit .. ")
@@ -912,7 +918,6 @@ export default class Game extends Phaser.Scene {
               _player.kicking = false;
               _player.gotBackHit = false;
               _player.gotHit = false;
-              // _player.moving = false;
               _player.stunned = true;
               _player.gameObject.sprite.stop();
               _player.gameObject.sprite.play("stunned-"+_player.wallet_address + "_" + _player.minted_id )
@@ -935,7 +940,6 @@ export default class Game extends Phaser.Scene {
               _player.kicking = false;
               _player.gotBackHit = false;
               _player.gotHit = false;
-              // _player.moving = false;
               _player.stunned = false;
               _player.dead = true;
               _player.gameObject.sprite.stop();

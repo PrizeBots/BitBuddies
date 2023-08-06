@@ -175,13 +175,29 @@ export default class KeyControls {
             //   event: "equip_brew",
             //   walletAddress: store.getState().web3store.userAddress,
             // }))
-          // this.game.otherPlayers.forEach((_otherplayer) => {
-          //   if (_otherplayer.wallet_address === store.getState().web3store.userAddress) {
-          //     _otherplayer.gassed_lift_off_fall = true
-          //   }
-          // })
+          this.game.otherPlayers.forEach((_otherplayer) => {
+            if (_otherplayer.wallet_address === store.getState().web3store.userAddress && _otherplayer.gameObject) {
+              if (_otherplayer.gameObject.gassed_lift_off_fallen) {
+                _otherplayer.gameObject.gassed_lift_off_fallen = false
+              } else {
+                _otherplayer.gameObject.gassed_lift_off_fall = true
+                _otherplayer.gameObject.gassed_lift_off_fallen = true
+              }
+            }
+          })
           // store.dispatch(ShowDeadSprite(true))
           break
+        case 'KeyR': {
+          this.game.otherPlayers.forEach((_otherplayer) => {
+            if (_otherplayer.wallet_address === store.getState().web3store.userAddress && _otherplayer.gameObject) {
+              _otherplayer.gameObject.target_position_stored = {
+                x: _otherplayer.gameObject.sprite.x + 20,
+                y: _otherplayer.gameObject.sprite.y,
+              }
+            }
+          })
+          break
+        }
         case 'KeyQ': {
           console.log("Q pressed..");
           if (store.getState().assetStore.equippedBrewCount > 0) {

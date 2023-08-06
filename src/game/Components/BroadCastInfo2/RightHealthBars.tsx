@@ -62,7 +62,7 @@ export function RightHealthBars() {
               padding: '1px',
               height: '20px'
             }}
-            // label={<BlackDiv> {Math.round(fightersInfo.player2.health)} </BlackDiv> }
+            label={<BlackDiv> {Math.round(fightersInfo.player2.health)} </BlackDiv> }
           />
           <ProgressBar 
             variant="#778AFD" 

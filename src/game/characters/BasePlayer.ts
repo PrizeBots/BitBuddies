@@ -245,6 +245,7 @@ export class BasePlayer  {
   }
 
   public tween_animation_running = false;
+  public tween_anim_running_down = false;
   public moving!: boolean;
   public need_to_move_player = false;
   public teleport = false;
@@ -252,6 +253,7 @@ export class BasePlayer  {
   // new animations
   // gassed + lift-off + fall
   gassed_lift_off_fall = false;
+  gassed_lift_off_fallen= false;
   dead = false;
   dead_last_time = 0;
   game: Game
@@ -804,9 +806,14 @@ export class BasePlayer  {
       
     //   return
     // }
-    
     if (!isNullOrUndefined(this.target_position_stored)){
-      this.SmoothMovement()
+      // console.log("debug----------", this.gassed_lift_off_fall, this.target_position_stored)
+      if (this.gassed_lift_off_fallen) {
+        // lying down..
+        this.SmoothMovementWhileDown()
+      } else {
+        this.SmoothMovement()
+      }
     }
   }
 
@@ -1147,6 +1154,46 @@ export class BasePlayer  {
       console.log("error_in_line 796 in baseplayer ", err, this.sprite, pos)
     }
     
+  }
+
+  SmoothMovementWhileDown(pos = this.target_position_stored) {
+    if (isNullOrUndefined(pos.x) || pos.x === 0) return;
+    if (
+      (Math.abs(pos.x - this.sprite.x) >= 0.1)
+      || (Math.abs(pos.y - this.sprite.y) >= 0.1)
+    ) {
+      this.tween_anim_running_down = true;
+    } else {
+      this.moving = false;
+    }
+    try {
+      let animTime = 400;
+      if (Math.sqrt(Math.pow(Math.abs(pos.x - this.sprite.x), 2) + 
+        Math.pow(Math.abs(pos.y - this.sprite.y), 2)) < 2
+      ) {
+        animTime = 20
+      } 
+      if (
+        Math.sqrt(
+          Math.pow(Math.abs(pos.x - this.sprite.x), 2) + 
+          Math.pow(Math.abs(pos.y - this.sprite.y), 2)
+        ) < 20) {
+          animTime = 100;
+        }
+      this.scene.tweens.add({
+        targets: this.sprite,
+        y: pos.y,
+        x: pos.x,
+        duration: animTime,
+      }).on("start", () => {
+        this.tween_anim_running_down = true;
+        // this.moving = true;
+      }).on("complete", () => {
+        this.tween_anim_running_down = false;
+      })
+    } catch (err) {
+      console.log("error_in_line 796 in baseplayer ", err, this.sprite, pos)
+    }
   }
 
   // SmoothMovementV2(pos = this.target_position_stored, moving_id = "") {

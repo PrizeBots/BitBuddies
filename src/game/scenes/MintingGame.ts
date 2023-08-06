@@ -464,7 +464,7 @@ function generateRandomXAndY(): {randomX: number, randomY: number} {
   const randomX = Math.sign(Math.random() - 0.5) *  Math.random() * 600
   const randomY = Math.random()* 100 + 200;
   for (let i =0; i < lastRandomX.length; i++) {
-    console.log("debug----- ", randomX ,lastRandomX[i], Math.abs(randomX - lastRandomX[i]) < 60)
+    // console.log("debug----- ", randomX ,lastRandomX[i], Math.abs(randomX - lastRandomX[i]) < 60)
     if (Math.abs(randomX - lastRandomX[i]) < 60 ) {
       console.log("debug.. ", Math.abs(randomX - lastRandomX[i]))
       return generateRandomXAndY()
