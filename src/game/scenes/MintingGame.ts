@@ -8,6 +8,8 @@ import KeyControls from "../services/KeyControls";
 import Bootstrap from "./Bootstrap";
 
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export default class MitingGame extends Phaser.Scene {
   
   keyControls!: KeyControls;
@@ -48,6 +50,8 @@ export default class MitingGame extends Phaser.Scene {
 
   }
 
+  
+
 
   async create(data: any) {
     console.log("minting create ", data)
@@ -63,6 +67,7 @@ export default class MitingGame extends Phaser.Scene {
         key:`${i-this.quantity}-bf`, 
         url :bitFightersTotalData[i].data.first_frame_image
       })
+      await delay(50);
     }
     this.load.start()
 
@@ -461,11 +466,11 @@ export default class MitingGame extends Phaser.Scene {
 const lastRandomX = [-10000];
 const lastRandomY = [-10000];
 function generateRandomXAndY(): {randomX: number, randomY: number} {
-  const randomX = Math.sign(Math.random() - 0.5) *  Math.random() * 600
-  const randomY = Math.random()* 100 + 200;
+  const randomX = Math.sign(Math.random() - 0.5) *  Math.random() * 900
+  const randomY = Math.sign(Math.random() - 0.5) * Math.random()* 100 + 300;
   for (let i =0; i < lastRandomX.length; i++) {
     // console.log("debug----- ", randomX ,lastRandomX[i], Math.abs(randomX - lastRandomX[i]) < 60)
-    if (Math.abs(randomX - lastRandomX[i]) < 60 ) {
+    if (Math.abs(randomX - lastRandomX[i]) < 30 ) {
       console.log("debug.. ", Math.abs(randomX - lastRandomX[i]))
       return generateRandomXAndY()
     }

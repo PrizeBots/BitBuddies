@@ -120,6 +120,9 @@ export default function AtmViewBox(data: IQueueOptions) {
                   type="number" 
                   placeholder='amount in BITS' 
                   value={data.amount}
+                  style={{
+                    width: "200px"
+                  }}
                   onChange={(e) => {
                     data.setAmount(e.target.value)
                   }}></input>

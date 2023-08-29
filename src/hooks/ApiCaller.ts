@@ -392,10 +392,17 @@ export const redeemPlayerBalance = async (amount: string) => {
     })
   })
   if (result.status !== 200) {
-    return false;
+    const data = await result.json();
+    console.log("debug_balance--", data)
+    return {
+      done: false,
+      error: data.error
+    };
   }
   // await fetchPlayerWalletInfo()
-  return true;
+  return {
+    done: true
+  };
 }
 
 export const EnterFightQueueApi = async (amount: string) => {
@@ -801,6 +808,51 @@ export const randomGenarateDripBitfightersV2 = async (userAddress: string, refer
   } else {
     console.log("output in randm generate --", [])
     throw "Error in Creating DripFighter"
+  }
+  
+}
+
+export const checkIfUserSignedMetamask = async (userAddress: string) => {
+  if (userAddress === "") {
+    console.log("nil user address in checkIfUserSignedMetamask");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/auth/check/signed/${userAddress}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  if (result.status !== 200) {
+    return null;
+  }
+  const output = await result.json();
+  return output.bool;
+}
+
+
+export const postUserSignedMessage = async (userAddress: string, message: string) => {
+  console.log("in postUserSignedMessage", userAddress)
+  if (userAddress === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/auth/save/signature/${userAddress}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "message" : message,
+    })
+  });
+  if (result.status === 200) {
+    const output = await result.json();
+    console.log("output in randm generate --", output)
+    return output;
+  } else {
+    console.log("output in randm generate --", [])
+    throw "Error in Posting Signature"
   }
   
 }

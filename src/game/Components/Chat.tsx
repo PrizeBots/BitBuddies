@@ -234,7 +234,7 @@ export default function Chat() {
   };
   
   const startTimer = () => {
-    const time = 6
+    const time = 1
     setTimer(time)
     countDown(time)
   };
@@ -296,7 +296,7 @@ export default function Chat() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     console.log("focus-- handle submit pressed", )
-    if (new Date().getTime() - lastMessageSubmittedTime < 6 * 1000) {
+    if (new Date().getTime() - lastMessageSubmittedTime < 1 * 1000) {
       setSnackBarMessage("Please wait for the Slow Mode time to finish")
       inputRef.current?.blur()
       setSnackBarOpen(true);

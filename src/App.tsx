@@ -16,6 +16,7 @@ import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
 // import { LoopAllFightsAndUpdate } from './utils/fight_utils';
 // import { FetchFightInfo } from './hooks/ApiCaller';
 import DocumentMeta from 'react-document-meta';
+import { ListGameServers } from "./utils/game_server_utils";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -44,6 +45,8 @@ function App() {
   );
   const ValidUser = useAppSelector((state) => state.userPathStore.ValidUser);
   const dispatch = useAppDispatch();
+  const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
+  const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
 
   const meta = {
       title: 'Some Meta Title',
@@ -78,13 +81,21 @@ function App() {
       });
   };
 
+  let counter = 0;
   const LoopApiCaller = () => {
     setTimeout(() => {
       // FetchFightInfo(store.getState().fightInfoStore.current_fight_id)
       // TODO: call update for all of the fight ids in queuue
       LoopAllFightsAndUpdate();
+      if (counter >0) {
+        if (!gameStarted) {
+          ListGameServers(gameServerReginoSelected)
+        }
+        counter = -1
+      }
+      counter = counter + 1;
       LoopApiCaller();
-    }, 15000);
+    }, 20000);
   };
 
   useEffect(() => {
@@ -102,7 +113,7 @@ function App() {
       Web3Login();
     }
 
-    getGeoInfo();
+    // getGeoInfo();
     LoopApiCaller();
 
     // else if (!isNullOrUndefined(localStorage.getItem("web2_email_address")) && localStorage.getItem("web2_email_address") !== "" ) {

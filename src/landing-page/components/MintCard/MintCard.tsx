@@ -511,10 +511,10 @@ function MintCard() {
     );
 
     // store.dispatch(SetMintGameStarted(true))
-    // store.dispatch(SetMintGameQuantity(5))
+    // store.dispatch(SetMintGameQuantity(30))
     
     // bootstrap.launchMintingGame({
-    //   quantity: 5
+    //   quantity: 30
     // })
     // return
 
@@ -775,10 +775,10 @@ function MintCard() {
         dispatch(setCardState(PageStates.Bitfighter))
 
         store.dispatch(SetMintGameStarted(true))
-        store.dispatch(SetMintGameQuantity(bitFightersMintQuantity))
+        store.dispatch(SetMintGameQuantity(dripFightersMintQuantity))
         
         bootstrap.launchMintingGame({
-          quantity: bitFightersMintQuantity
+          quantity: dripFightersMintQuantity
         })
       }
     } else {

@@ -29,6 +29,7 @@
     "bignumber.js": "^9.1.1",
     "bootstrap": "^5.2.1",
     "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
     "colyseus.js": "^0.14.13",
     "customize-cra": "^1.0.0",
     "email-validator": "^2.0.4",

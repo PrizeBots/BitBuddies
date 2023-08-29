@@ -85,6 +85,17 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
+    "name": "atmVaultWallet",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "bitfighterNFTContract",
     "outputs": [{
       "internalType": "address",
@@ -129,6 +140,17 @@ export const GameLogicABI = [{
     "name": "depositMoneyToWallet",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "depositWalletShares",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -206,14 +228,35 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "jackpotWalletAddress",
-    "outputs": [{
-      "internalType": "address",
-      "name": "",
-      "type": "address"
-    }],
-    "stateMutability": "view",
+    "inputs": [{
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_partner",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "tattoo",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "tag",
+        "type": "bool"
+      }
+    ],
+    "name": "mintBitFighter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -231,33 +274,26 @@ export const GameLogicABI = [{
         "internalType": "string",
         "name": "_partner",
         "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "tattoo",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "tag",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
       }
     ],
-    "name": "mintBitFighter",
+    "name": "mintMultiBitFighter",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "mintJackPotShare",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "mintPrizePoolShare",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -316,11 +352,33 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "prizePoolWalletAddress",
+    "name": "priceOfTagAddon",
     "outputs": [{
-      "internalType": "address",
+      "internalType": "uint256",
       "name": "",
-      "type": "address"
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOfTattooAddon",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOfTattooAndTagAddon",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -368,11 +426,6 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "address",
-        "name": "_jackpotWalletAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_systemWalletAddress1",
         "type": "address"
       },
@@ -383,12 +436,12 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "address",
-        "name": "_prizePoolWalletAddress",
+        "name": "_depositWalletAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_depositWalletAddress",
+        "name": "_atmVaultAddress",
         "type": "address"
       }
     ],
@@ -410,18 +463,19 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
+      "internalType": "uint256",
+      "name": "_share",
+      "type": "uint256"
+    }],
+    "name": "setDepositWalletShare",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
         "internalType": "uint256",
         "name": "_mintTreasuryShare",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_mintPrizePoolShare",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_mintJackPotShare",
         "type": "uint256"
       },
       {
@@ -480,28 +534,8 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
-    "inputs": [{
-        "internalType": "address",
-        "name": "send_to",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenID",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_gen",
-        "type": "uint8"
-      }
-    ],
-    "name": "transfer",
+    "inputs": [],
+    "name": "transferMoneyToDepositWalletFromVault",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -558,4 +592,5 @@ export const GameLogicABI = [{
   }
 ]
 
-export const gamelogic_contract_address = "0xDb0eF2EF3C7dB10597BC66523DF2b76137197fB6"
+
+export const gamelogic_contract_address = "0x7C2A0b5aAd6b3c0db9EFdcF75367325471D8f1f8"

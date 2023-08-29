@@ -1,7 +1,5 @@
-// import { useAppDispatch, useAppSelector } from "../../hooks"
 import styled from 'styled-components'
 import { Box } from "@mui/material"
-// import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { TurnMouseClickOff } from '../../../stores/UserActions';
 import { fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
@@ -9,8 +7,7 @@ import { IQueueCombined, ShowWinnerCardAtFightEnd } from '../../../stores/UserWe
 import { parseWBTCBalanceV3, parseWBTCBalanceV4 } from '../../../utils/web3_utils';
 import store from '../../../stores';
 import { isNullOrUndefined } from 'util';
-import { useEffect, useState } from 'react';
-
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 
 const Wrapper = styled.div`
@@ -75,7 +72,7 @@ const CustomBox = styled(Box)`
 const Backdrop = styled.div`
   margin: auto;
   max-height: 25%;
-  max-width: 40%;
+  max-width: 25%;
 `
 
 const MyDivider = styled.hr`
@@ -176,28 +173,29 @@ export default function WinnersReceipt() {
   }
   // console.log("debug--22 ", updateOrNot, p1, p2, store.getState().web3store.userAddress, combinedQueueData.length )
 
-  console.log("debug___receipt__", p1, p2_win_pot, p1_win_pot)
+  console.log("debug___receipt__", p1, p2_win_pot, p1_win_pot, p1_self_bet, p2_self_bet)
 
   // showWinnersCardBool = true
   const closeDialogMenu = () => {
     console.log("quit happened .. ")
     dispatch(ShowWinnerCardAtFightEnd(false))
     fetchPlayerWalletInfo()
-    // dispatch(HitFightMachine(false))
   }
-  // const ref = useDetectClickOutside({ onTriggered: closeDialogMenu });
-  const dispatch = useAppDispatch()
+
+  const ref = useDetectClickOutside({ onTriggered: closeDialogMenu });
+  const dispatch = useAppDispatch();
   return(
-    <div>
-      {showWinnersCardBool && <Backdrop onClick={() => {closeDialogMenu()}}>
-        <Wrapper 
-          onMouseOver={() => {
+    <div ref={ref}>
+      {showWinnersCardBool && <Backdrop onMouseOver={() => {
             dispatch(TurnMouseClickOff(true))
           }}
           onMouseOut={() =>{ 
             dispatch(TurnMouseClickOff(false))
           }}
-        >
+          onClick={() => {closeDialogMenu()}}
+          >
+            
+        <Wrapper>
           <CustomBox>
               <Header>
                 <h3>You win</h3>
@@ -216,8 +214,8 @@ export default function WinnersReceipt() {
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_self_bet) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_self_bet) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 1000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 1000) } bits </h4>
                   }
                 </div>
                 
@@ -225,8 +223,8 @@ export default function WinnersReceipt() {
                 <div>
                   {
                     (store.getState().web3store.userAddress !== store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p2_self_bet) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p1_self_bet) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 1000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 1000) } bits </h4>
                   }
                 </div>
 
@@ -244,24 +242,26 @@ export default function WinnersReceipt() {
               {
                 fight_winner === p1 ?
                 <>
-                  <h4> 2% BLDG - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
-                  <h4> 2% GANG - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
-                  <h4> 2% Treasury - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
-                  <h4> 2% System - {parseWBTCBalanceV4(p1_win_pot) * 0.02} </h4>
-                  <h4> 1% Prize Pool - {parseWBTCBalanceV4(p1_win_pot) * 0.01} </h4>
-                  <h4> 1% JackPot - {parseWBTCBalanceV4(p1_win_pot) * 0.01} </h4>
-                  <DottedDivider />
                   <h4> 10% PPS - {(parseWBTCBalanceV4(p1_win_pot) * 0.1).toFixed(2)} </h4>
+                  <DottedDivider />
+                  <h4> 2% BLDG - {(parseWBTCBalanceV4(p1_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% GANG - {(parseWBTCBalanceV4(p1_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% Treasury - {(parseWBTCBalanceV4(p1_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% System - {(parseWBTCBalanceV4(p1_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 1% Prize Pool - {(parseWBTCBalanceV4(p1_win_pot) * 0.01).toFixed(2)} </h4>
+                  <h4> 1% JackPot - {(parseWBTCBalanceV4(p1_win_pot) * 0.01).toFixed(2)} </h4>
+                  <DottedDivider />
                 </>:
                 <>
-                  <h4> 2% BLDG - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
-                  <h4> 2% GANG - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
-                  <h4> 2% Treasury - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
-                  <h4> 2% System - {parseWBTCBalanceV4(p2_win_pot) * 0.02} </h4>
-                  <h4> 1% Prize Pool - {parseWBTCBalanceV4(p2_win_pot) * 0.01} </h4>
-                  <h4> 1% JackPot - {parseWBTCBalanceV4(p2_win_pot) * 0.01} </h4>
-                  <DottedDivider />
                   <h4> 10% PPS - {(parseWBTCBalanceV4(p2_win_pot) * 0.1).toFixed(2)} </h4>
+                  <DottedDivider />
+                  <h4> 2% BLDG - {(parseWBTCBalanceV4(p2_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% GANG - {(parseWBTCBalanceV4(p2_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% Treasury - {(parseWBTCBalanceV4(p2_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 2% System - {(parseWBTCBalanceV4(p2_win_pot) * 0.02).toFixed(2)} </h4>
+                  <h4> 1% Prize Pool - {(parseWBTCBalanceV4(p2_win_pot) * 0.01).toFixed(2)} </h4>
+                  <h4> 1% JackPot - {(parseWBTCBalanceV4(p2_win_pot) * 0.01).toFixed(2)} </h4>
+                  <DottedDivider />
                 </>
               }
             </TextInfo>

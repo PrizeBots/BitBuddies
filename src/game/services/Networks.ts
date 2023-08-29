@@ -88,7 +88,7 @@ export default class Network {
         }
 
         if ( obj.event === "live_players_init" ) {
-          // console.log("live_players_init --- 1", obj.live_players)
+          console.log("live_players_init --- 1", obj)
           // console.log("live_players_init --- 1", this.game.otherPlayers)
           obj.live_players.forEach(( _details : INFTDataOfConnections) => {
             // if (
@@ -96,7 +96,7 @@ export default class Network {
             //   true
             // ) {
               if (!this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)) {
-                console.log("live_players_init player exists ", this.game.otherPlayers.size)
+                console.log("live_players_init player does not exists ", this.game.otherPlayers.size, _details)
                 if (this.game.textures.exists(_details.walletAddress+ "_"+_details.minted_id)) {
                   console.log("live_players_init texture exists ", this.game.otherPlayers.size)
                   // if (!isNullOrUndefined(this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id))) {
@@ -121,7 +121,13 @@ export default class Network {
                       lastKickTime: 0,
                       lastPunchTime: 0,
                       max_health: _details.max_health,
-                      max_stamina: _details.max_stamina
+                      max_stamina: _details.max_stamina,
+                      defense: _details.defense,
+                      kickpower: _details.kickpower,
+                      punchpower: _details.punchpower,
+                      speed: _details.speed,
+                      stamina: _details.stamina,
+                      health: _details.health,
                     })
                     const otherPlayer = this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
 
@@ -141,6 +147,14 @@ export default class Network {
                         parseInt(otherPlayer.minted_id.toString()),
                         otherPlayer.max_health,
                         otherPlayer.max_stamina,
+                        {
+                          defense: otherPlayer.defense,
+                          kickpower: otherPlayer.kickpower,
+                          punchpower: otherPlayer.punchpower,
+                          speed: otherPlayer.speed,
+                          stamina: otherPlayer.stamina,
+                          health: otherPlayer.stamina,
+                        }
                       );
                       otherPlayer.gameObject.currHealth = _details.health;
                       otherPlayer.sprite = otherPlayer.gameObject.sprite;
@@ -171,7 +185,13 @@ export default class Network {
                     lastKickTime: 0,
                     lastPunchTime: 0,
                     max_health: _details.max_health,
-                    max_stamina: _details.max_stamina
+                    max_stamina: _details.max_stamina,
+                    defense: _details.defense,
+                    kickpower: _details.kickpower,
+                    punchpower: _details.punchpower,
+                    speed: _details.speed,
+                    stamina: _details.stamina,
+                    health: _details.health,
                   })
                   this.game.load.start();
                   console.log("adding other player live_players_init", this.game.otherPlayers)
@@ -516,6 +536,8 @@ export default class Network {
                     setTimeout(() => {
                       store.dispatch(ShowWinnerCardAtFightEnd(true))
                     }, 8000)
+                    store.dispatch(ChangeFightAnnouncementMessageFromServer("You Win"))
+                    store.dispatch(ChangeFightAnnouncementStateFromServer(true))
                   } else {
                     store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
                     store.dispatch(ChangeFightAnnouncementStateFromServer(true))
@@ -558,11 +580,20 @@ export default class Network {
           const newObj2: IfightersInfo = JSON.parse(JSON.stringify(store.getState().userActionsDataStore.fightersInfo));
           this.game.otherPlayers.forEach(_player => {
             if (_player.wallet_address === newObj.player1.walletAddress && _player.gameObject) {
-              newObj2.player1.health = newObj.player1.health;
+              if (newObj.player1.health < 0) {
+                newObj2.player1.health = 0;
+              } else {
+                newObj2.player1.health = newObj.player1.health;
+              }
               newObj2.player1.stamina = newObj.player1.stamina;
             }
             if (_player.wallet_address === newObj.player2.walletAddress && _player.gameObject) {
-              newObj2.player2.health = newObj.player2.health;
+              if (newObj.player2.health < 0) {
+                newObj2.player2.health = 0;
+              } else {
+                newObj2.player2.health = newObj.player2.health;
+              }
+              
               newObj2.player2.stamina = newObj.player2.stamina;
             }
           })
@@ -702,7 +733,11 @@ export default class Network {
         if (obj.event === "update_health") {
           this.game.otherPlayers.forEach(_player => {
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
-              _player.gameObject.currHealth = obj.health;
+              if (obj.health < 0) {
+                _player.gameObject.currHealth = 0;
+              } else {
+                _player.gameObject.currHealth = obj.health;
+              }
             }
           })
           // const newObj: IfightersInfo = JSON.parse(JSON.stringify(store.getState().userActionsDataStore.fightersInfo));
@@ -843,7 +878,14 @@ export default class Network {
                 parseInt(otherPlayer.minted_id.toString()),
                 otherPlayer.max_health,
                 otherPlayer.max_stamina,
-                // otherPlayer.extra_data
+                {
+                  defense: otherPlayer.defense,
+                  kickpower: otherPlayer.kickpower,
+                  punchpower: otherPlayer.punchpower,
+                  speed: otherPlayer.speed,
+                  stamina: otherPlayer.stamina,
+                  health: otherPlayer.stamina,
+                }
               );
               otherPlayer.sprite = otherPlayer.gameObject.sprite;
               this.game.otherPlayers.set(key, otherPlayer)

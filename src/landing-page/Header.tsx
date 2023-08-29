@@ -393,6 +393,12 @@ function Header() {
               </Link>
             </li>
 
+            <li className="nav-item" key={uuidv4()}>
+              <Link className="nav-link" to="/leaderboard">
+                <div className="cooper-black-tab">Leaderboard</div>
+              </Link>
+            </li>
+
             {HistoryPath === "gamePlay" ? (
               <div
                 style={{

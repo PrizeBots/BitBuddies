@@ -166,11 +166,11 @@ export default class Game extends Phaser.Scene {
 
   preload(data: {data: IPlayerData, key: string}) {
     console.log("running preload in game .. ", this.nftData)
-    this.load.atlas(
-      'player-'+this.nftData.minted_id.toString(),
-      this.nftData.data.sprite_image,
-      'bitfgihter_assets/player/texture-v2.json'
-    )
+    // this.load.atlas(
+    //   'player-'+this.nftData.minted_id.toString(),
+    //   this.nftData.data.sprite_image,
+    //   'bitfgihter_assets/player/texture-v2.json'
+    // )
 
     // for (let i = 0 ; i < 10 ; i++) {
     //   // load rats
@@ -271,10 +271,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
+    // this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
@@ -429,7 +429,8 @@ export default class Game extends Phaser.Scene {
     const worldPoint: Phaser.Math.Vector2 = this.input.activePointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
     
     // console.log(worldPoint, this.radiatorRect)
-    // console.log("mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, this.mousePressed, pointer.leftButtonDown())
+    // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, this.mousePressed, pointer.leftButtonDown())
+    // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, store.getState().userActionsDataStore.gameTurnOffMouse)
     
     if (
       // this.input.keyboard.enabled 

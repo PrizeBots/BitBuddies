@@ -1,6 +1,6 @@
 import phaserGame from "../../../PhaserGame";
 import store from "../../../stores";
-import { BrewMachinePunched, OpenAtmView, SelectFightInFightMachineMenu, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
+import { BrewMachinePunched, GameTurnMouseClickOff, OpenAtmView, SelectFightInFightMachineMenu, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
 import { HitFightMachine } from "../../../stores/UserActions";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../../../stores/UserWebsiteStore";
 import Boundary, { Rect, calculateRect, calculateRectReverse } from "../../Components/Boundary";
@@ -204,6 +204,8 @@ export class HQ {
   update(keysInfo: IKeysInfo) {
     // /*
     const tempMyPlayer = this.game.otherPlayers.get(store.getState().web3store.player_id)
+    // const pointer: Phaser.Input.Pointer = this.game.input.activePointer;
+    // let onGameUI = false;
     // console.log("debug-pos ... ", stempMyPlayer?.sprite?.x, tempMyPlayer?.sprite?.y)
     // console.log("overlap atm and kick", store.getState().userActionsDataStore.openAtmView);
     if (tempMyPlayer?.gameObject) {
@@ -215,6 +217,7 @@ export class HQ {
           && tempMyPlayer.gameObject.sprite.y < this.atmRect.leftY + this.atmRect.height ) )
         // && (keysInfo.keyK.pressed || keysInfo.keyP.pressed)
       ) {
+        // onGameUI = true;
         if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed)) {
           // overlap with atm
           console.log("overlap atm and kick");
@@ -238,6 +241,7 @@ export class HQ {
           && tempMyPlayer.gameObject.sprite.y < this.brewRect.leftY + this.brewRect.height ) )
         // && (keysInfo.keyK.pressed || keysInfo.keyP.pressed)
       ) {
+        // onGameUI = true;
         if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "left")) {
           // overlap with atm
           console.log("overlap brew and kick", store.getState().userActionsDataStore.brewMachinePunched);
@@ -263,6 +267,7 @@ export class HQ {
       if ((tempMyPlayer.gameObject.sprite.x > this.FightMachineRect.leftX &&tempMyPlayer.gameObject.sprite.x < this.FightMachineRect.leftX + this.FightMachineRect.width )
         && (tempMyPlayer.gameObject.sprite.y > this.FightMachineRect.leftY && tempMyPlayer.gameObject.sprite.y < this.FightMachineRect.leftY + this.FightMachineRect.height ) 
       ) {
+        // onGameUI = true;
         if ((keysInfo.keyK.pressed || keysInfo.keyP.pressed) && (tempMyPlayer.orientation === "left")) {
           let check = false;
           
@@ -306,9 +311,18 @@ export class HQ {
         }
       } else {
         this.game.fightMachineOverlapText.setDepth(-1);
-          store.dispatch(HitFightMachine(false));
-        }
+        store.dispatch(HitFightMachine(false));
+        store.dispatch(SelectFightInFightMachineMenu(false))
+      }
     }
+
+    // console.log("debug_onmouse ", onGameUI)
+    // if (onGameUI) {
+    //   store.dispatch(GameTurnMouseClickOff(true))
+    // } 
+    // if (!onGameUI) {
+    //   store.dispatch(GameTurnMouseClickOff(false))
+    // }
 
     if (store.getState().userActionsDataStore.showBrewEjectAnimation) {
       this.game.lobbySocketConnection.send(JSON.stringify({

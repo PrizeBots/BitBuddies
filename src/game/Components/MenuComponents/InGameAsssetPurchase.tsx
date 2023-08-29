@@ -67,6 +67,7 @@ export default function InGameAssetPurchase() {
 
   const closeFunction = () => {
     // store.dispatch(BrewMachinePunched(false))
+    dispatch(TurnMouseClickOff(false))
   }
 
   const ref = useDetectClickOutside({ onTriggered: closeFunction });
@@ -126,6 +127,12 @@ export default function InGameAssetPurchase() {
       onMouseOut={() =>{ 
         dispatch(TurnMouseClickOff(false))
       }}
+      // onMouseLeave={() =>{ 
+      //   dispatch(TurnMouseClickOff(false))
+      // }}
+      // onMouseDown={() =>{ 
+      //   dispatch(TurnMouseClickOff(true))
+      // }}
     >
       {brewMachinePunched && 
       <Wrapper>
@@ -145,7 +152,7 @@ export default function InGameAssetPurchase() {
                   if (e.target.value.length > 0 && parseInt(e.target.value) < 10) {
                     setQuantity(parseInt(e.target.value))
                     console.log("quantity ,,, ", quantity, parseInt(e.target.value))
-                  } 
+                  }
                 }
               }}
               style={{
@@ -155,8 +162,8 @@ export default function InGameAssetPurchase() {
               }}
             >
             </input></h3> */}
-          <h3 style={{marginBottom: '20px'}}>Price: 100 Bits</h3>
-          <h3 style={{marginBottom: '20px'}}>Total BITS: {parseWBTCBalanceV3(10000 * quantity)}</h3>
+          <h3 style={{marginBottom: '20px'}}>Price: 10 Bits</h3>
+          <h3 style={{marginBottom: '20px'}}>Total BITS: {parseWBTCBalanceV3(1000 * quantity)}</h3>
           {transactionStarted?
             <Button 
             variant="contained" 

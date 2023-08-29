@@ -93,6 +93,9 @@ interface UserWebsiteStore {
   LoggerMessage: string,
   ShowGangView: boolean,
 
+  ShowStatsView: boolean,
+  OtherPlayerSelectedForStats: string,
+
   playersBetInfo: Array<BetData>;
 
   showWinnerCardAtFightEnd: boolean;
@@ -130,6 +133,9 @@ const initialState: UserWebsiteStore = {
 
   playersBetInfo: [],
   showWinnerCardAtFightEnd: false,
+
+  ShowStatsView: false,
+  OtherPlayerSelectedForStats: ""
 }
 
 export const UserWebsiteStoreSlice = createSlice({
@@ -176,6 +182,14 @@ export const UserWebsiteStoreSlice = createSlice({
 
     ChangeShowGangView: (state: { ShowGangView: boolean; },  action: PayloadAction<boolean>) => {
       state.ShowGangView = action.payload;
+    },
+
+    ChangeShowStatsView: (state: { ShowStatsView: boolean; },  action: PayloadAction<boolean>) => {
+      state.ShowStatsView = action.payload;
+    },
+
+    SelectOtherPlayerForStats: (state: { OtherPlayerSelectedForStats: string; },  action: PayloadAction<string>) => {
+      state.OtherPlayerSelectedForStats = action.payload;
     },
 
     ChangeShowMenuBox: (state: { ShowMenuBox: boolean; },  action: PayloadAction<boolean>) => {
@@ -248,7 +262,7 @@ export const { ChangePath, ChangeAuthTOken, ChangeUserData,
   ChangeShowQueueBox, ChangeShowMenuBox, 
   ChangeValidUserState, ChangeMaticBalance, ChangeBitsBalance,
   ChangewbtcBalance, 
-  ChangeMetaMaskInstalled, ChangeShowControls, ChangeWebSocketConnectedTime, ChangeLoggerMessage, ChangeShowGangView,
+  ChangeMetaMaskInstalled, ChangeShowControls, ChangeWebSocketConnectedTime, ChangeLoggerMessage, ChangeShowGangView,  ChangeShowStatsView, SelectOtherPlayerForStats,
   ChangeRegisterShowInGame, ChangeProfileWindowView, AddPlayersBetInfo, ShowWinnerCardAtFightEnd} =
   UserWebsiteStoreSlice.actions
 

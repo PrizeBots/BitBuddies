@@ -46,11 +46,13 @@ const Landing = (props: any) => {
 
   if (
     HistoryPath === "gamePlay" &&
-    (location.pathname === "/home" ||
+    (
+      location.pathname === "/home" ||
       location.pathname === "/" ||
       location.pathname === "/mint" ||
-      // location.pathname === "/mint-cards" ||
-      location.pathname === "/presale")
+      location.pathname === "/leaderboard" ||
+      location.pathname === "/presale"
+    )
   ) {
     if (window.confirm("Are you sure?") == true) {
       if (bootstrap) {

@@ -8,7 +8,7 @@ import SentFriendRequests from './MenuComponents/SentFriendRequest';
 import QueueList from './MenuComponents/QueueList'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import store from '../../stores'
-import { ChangeShowGangView, ChangeShowQueueBox } from '../../stores/UserWebsiteStore'
+import { ChangeShowGangView, ChangeShowQueueBox, ChangeShowStatsView } from '../../stores/UserWebsiteStore'
 import { TurnMouseClickOff } from '../../stores/UserActions'
 import { getEllipsisTxt } from '../../utils';
 import { setNFTLoadedBool } from '../../stores/BitFighters';
@@ -16,6 +16,7 @@ import { LogOut } from '../../stores/Web3Store';
 // import BetWindowView from './MenuComponents/BetWindowView';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { updateBetInfOfPlayer } from '../../utils/fight_utils';
+import StatsView from './MenuComponents/StatsView';
 
 
 
@@ -144,14 +145,15 @@ export default function NewMenuSideBar() {
   // const userAddress = useAppSelector((state) => state.web3store.userAddress)
   const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
   const showQueueBoxRedux = useAppSelector((state) => state.userPathStore.ShowQueueBox)
+
+  const showStatsBox = useAppSelector((state) => state.userPathStore.ShowStatsView)
+
   const ShowMenuBoxRedux = useAppSelector((state) => state.userPathStore.ShowMenuBox)
   const userAddress = useAppSelector((state) => state.web3store.userAddress)
-  // const ShowMenuBoxRedux =true
   const [value, setValue] = React.useState(0);
   const [value2, setValue2] = React.useState(0);
   const dispatch = useAppDispatch();
-  // const game = phaserGame.scene.keys.game as Game
-  console.log("-- debug showmenubox ", ShowMenuBoxRedux, showQueueBoxRedux, ProfilemenuClicked )
+  console.log("-- debug showmenubox ", ShowMenuBoxRedux, showQueueBoxRedux, ProfilemenuClicked, showStatsBox )
 
   const web3LogOut = async () => {
     console.log("button pressed");
@@ -194,21 +196,21 @@ export default function NewMenuSideBar() {
     setValue2(newValue);
   };
 
-  const LogoutButtonView =  () => {
-    return (  
-                            <button 
-                              type="button" 
-                              className="btn btn-danger"
-                              style={{
-                                margin: '10px',
+  // const LogoutButtonView =  () => {
+  //   return (  
+  //                           <button 
+  //                             type="button" 
+  //                             className="btn btn-danger"
+  //                             style={{
+  //                               margin: '10px',
 
-                              }}
-                              onClick={() => web3LogOut()}
-                            >
-                              LogOut
-                            </button>
-    )
-  }                         
+  //                             }}
+  //                             onClick={() => web3LogOut()}
+  //                           >
+  //                             LogOut
+  //                           </button>
+  //   )
+  // }                         
 
   // console.log("queue -> menu box and friends box ", ShowMenuBoxRedux, showQueueBoxRedux)
 
@@ -224,11 +226,9 @@ export default function NewMenuSideBar() {
         >
             {ShowMenuBoxRedux && ((
                 <Wrapper onMouseOver={() => {
-                    // console.log(" mouse over in menu side bar")
                     dispatch(TurnMouseClickOff(true))
                   }}
                   onMouseOut={() => {
-                    // console.log(" mouse out in menu side bar")
                     dispatch(TurnMouseClickOff(false))
                   }}>
                   <TextWrapper>Connected Wallet 
@@ -248,7 +248,8 @@ export default function NewMenuSideBar() {
                   <TextWrapper style={{color: "#BF8B8B", fontSize: '20px'}}>{getEllipsisTxt(userAddress)}</TextWrapper>
                   <MenuBoxHeader>
                     <ButtonGroup>
-                      <Button
+
+                      {/* <Button
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
@@ -256,7 +257,8 @@ export default function NewMenuSideBar() {
                         }}
                       >
                         Friends
-                      </Button>
+                      </Button> */}
+
                       <Button
                         variant="outlined"
                         color="secondary"
@@ -267,7 +269,7 @@ export default function NewMenuSideBar() {
                         Game
                       </Button>
 
-                      <Button
+                      {/* <Button
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
@@ -275,43 +277,23 @@ export default function NewMenuSideBar() {
                         }}
                       >
                         Gang
+                      </Button> */}
+
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => {
+                          console.log("debug. clicked stats")
+                          store.dispatch(ChangeShowStatsView(true))
+                          store.dispatch(ChangeShowQueueBox(false))
+                        }}
+                      >
+                        Stats
                       </Button>
                     </ButtonGroup>
                   </MenuBoxHeader>
 
-                  { !showQueueBoxRedux?
-                    <TabsSection>
-                    
-                      <TabsBoxHeader>
-                        <Tabs aria-label="basic tabs example" centered style={{ fontSize: '15px' }} onChange={handleChange} value={value} textColor="secondary" indicatorColor="secondary" >
-                          <Tab label="Friends" {...a11yProps(0)} />
-                          <Tab label="Pending" {...a11yProps(1)} />
-                          <Tab label="Sent" {...a11yProps(2)} />
-                        </Tabs>
-                      </TabsBoxHeader>
-
-                      
-                      <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabPanel value={value} index={0}>
-                          <div> 
-                            <FriendsList />
-                          </div>
-                        </TabPanel>
-                        <TabPanel value={value} index={1}>
-                          <div> 
-                            <PendingRequests />
-                          </div>
-                        </TabPanel>
-                        <TabPanel value={value} index={2}>
-                          <div> 
-                            <SentFriendRequests />
-                          </div>
-                        </TabPanel>
-                      </MenuBox>
-
-                      {/* <LogoutButtonView /> */}
-                    </TabsSection>
-                    :   
+                  { showQueueBoxRedux?
                     <TabsSection>
                     
                       <TabsBoxHeader>
@@ -329,9 +311,74 @@ export default function NewMenuSideBar() {
                         </TabPanel2>
                       </MenuBox>
 
-                    {/* <LogoutButtonView /> */}
+                    </TabsSection>:
+
+                    showStatsBox?
+                    <TabsSection>
+                    
+                      <TabsBoxHeader>
+                        <Tabs aria-label="basic tabs example" centered style={{ fontSize: '15px' }} onChange={handleChange} value={value} textColor="secondary" indicatorColor="secondary" >
+                          <Tab label="Self" {...a11yProps(0)} />
+                          <Tab label="Others" {...a11yProps(1)} />
+                        </Tabs>
+                      </TabsBoxHeader>
+
+                      
+                      <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabPanel value={value} index={0}>
+                          <div> 
+                            <StatsView data={true} />
+                          </div>
+                        </TabPanel>
+                        <TabPanel value={value} index={1}>
+                          <div> 
+                            <StatsView data={false} />
+                          </div>
+                        </TabPanel>
+                      </MenuBox>
+
+                    </TabsSection>:
+
+                    <TabsSection>
+                      <TabsBoxHeader>
+                      </TabsBoxHeader>
+                      
+                      <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      </MenuBox>
 
                     </TabsSection>
+                    
+                    // <TabsSection>
+                    
+                    //   <TabsBoxHeader>
+                    //     <Tabs aria-label="basic tabs example" centered style={{ fontSize: '15px' }} onChange={handleChange} value={value} textColor="secondary" indicatorColor="secondary" >
+                    //       <Tab label="Friends" {...a11yProps(0)} />
+                    //       <Tab label="Pending" {...a11yProps(1)} />
+                    //       <Tab label="Sent" {...a11yProps(2)} />
+                    //     </Tabs>
+                    //   </TabsBoxHeader>
+
+                      
+                    //   <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    //     <TabPanel value={value} index={0}>
+                    //       <div> 
+                    //         <FriendsList />
+                    //       </div>
+                    //     </TabPanel>
+                    //     <TabPanel value={value} index={1}>
+                    //       <div> 
+                    //         <PendingRequests />
+                    //       </div>
+                    //     </TabPanel>
+                    //     <TabPanel value={value} index={2}>
+                    //       <div> 
+                    //         <SentFriendRequests />
+                    //       </div>
+                    //     </TabPanel>
+                    //   </MenuBox>
+
+                    //   {/* <LogoutButtonView /> */}
+                    // </TabsSection>
                   }
                   
                   

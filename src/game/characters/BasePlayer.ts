@@ -11,6 +11,7 @@ import { isNullOrUndefined } from "util";
 import messageSender from "../../utils/websocket_helper";
 import Game from "../scenes/Game";
 import phaserGame from "../../PhaserGame";
+import { ChangeShowMenuBox, ChangeShowStatsView, SelectOtherPlayerForStats } from "../../stores/UserWebsiteStore";
 
 
 export const HealthAndStaminaMap = {
@@ -189,6 +190,7 @@ export class BasePlayer  {
   dialogBubbleText!: string;
 
   currentBubbleID!: string;
+  bubbleIds: Array<string> = []
 
   public playerInfoIcon!: Phaser.GameObjects.Image;
   playerAllData!: IPlayerData;
@@ -268,6 +270,7 @@ export class BasePlayer  {
   minted_id: number | undefined;
   deadTweenRunning = false;
   nick_name = ''
+  extra_data: any = {}
 
   constructor(
     scene: Phaser.Scene,
@@ -283,11 +286,14 @@ export class BasePlayer  {
     minted_id?: number,
     max_health?: number,
     max_stamina?: number,
+    extra_data?: any,
     
     // extra_data: INFTDataOfConnections,
   ) {
     this.wallet_address = wallet_address
     this.minted_id = minted_id
+    console.log("debug_stats --- ", extra_data)
+    this.extra_data = extra_data;
 
     this.nick_name = nick_name
     // health
@@ -409,6 +415,9 @@ export class BasePlayer  {
         // this.playerContainer.add(this.buttonContainer)
         // store.dispatch(setInfoButtonClicked(true)); 
         // store.dispatch(setPlayerSelected(this.playerAllData))
+        store.dispatch(SelectOtherPlayerForStats(`${this.wallet_address}_${this.minted_id}`))
+        store.dispatch(ChangeShowStatsView(true))
+        store.dispatch(ChangeShowMenuBox(true))
         console.log("all container info button clicked... --- ", this.allInfoButtonStateHandler)
       })
 
@@ -539,13 +548,7 @@ export class BasePlayer  {
 
     this.AllInfoButtonCOntainer.setVisible(false)
     this.playerDialogBubble = this.scene.add.container(0, 0).setDepth(90000)
-    this.playerContainer.add(this.playerDialogBubble)
-    this.playerContainer.add(this.playerName)
-    if (otherPlayer) {
-      this.playerContainer.add(this.playerInfoIcon)
-      this.playerContainer.add(this.AllInfoButtonCOntainer)
-    }
-    
+
     this.moveUpAnimation = this.scene.tweens.add({
       targets: this.playerDialogBubble,
       y: -80,
@@ -571,6 +574,14 @@ export class BasePlayer  {
       this.dialogBubbleText = ""
     });
 
+    
+    this.playerContainer.add(this.playerDialogBubble)
+    this.playerContainer.add(this.playerName)
+    if (otherPlayer) {
+      this.playerContainer.add(this.playerInfoIcon)
+      this.playerContainer.add(this.AllInfoButtonCOntainer)
+    }
+    
     // this.PopHealthReduced(1)
     this.EnableHealthBars()
 
@@ -612,10 +623,26 @@ export class BasePlayer  {
     this.dialogBubbleText = "";
   }
 
+  removeElementFromArray(element: any) {
+    let req_index = -1;
+    for(let i =0; i < this.bubbleIds.length; i++) {
+      if (this.bubbleIds[i] === element) {
+        req_index = i;
+      }
+    }
+    if (req_index> -1) {
+      this.bubbleIds.splice(req_index, 1)
+    }
+  }
+
   createNewDialogBox(text: string) {
     const randomID = uuidv4()
     this.currentBubbleID = randomID;
-    // console.log("----------- in createNewDialogBox-----------", text, this.chatBubbleActive)
+    this.bubbleIds.push(randomID);
+    setTimeout(()=> {
+      this.removeElementFromArray(randomID)
+    }, 4000)
+    console.log("----------- in createNewDialogBox-----------", text, this.chatBubbleActive)
     let ntext = ""
     if (text.length > 30) {
       for (let i =0; i< text.length; i = i + 30) {
@@ -639,7 +666,7 @@ export class BasePlayer  {
     // console.log("-=------------------------- here ... -----------", ntext, this.chatBubbleActive)
     this.clearDialogBubble(randomID)
     if (this.moveUpAnimation.isPlaying()) {
-      console.log("yes is playing.. ")
+      console.log("createNewDialogBox yes is playing.. ")
       this.moveUpAnimation.seek(0);
       this.moveUpAnimation.pause();
       this.playerDialogBubble
@@ -716,7 +743,7 @@ export class BasePlayer  {
 
     setTimeout(() => {
       this.clearDialogBubble(randomID)
-    }, 1000)
+    }, 500)
   }
 
   createCloudThoughtBubble() {

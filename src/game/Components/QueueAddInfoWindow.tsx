@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks"
 import styled from 'styled-components'
 import { LinearProgress } from "@mui/material"
 import Utils from "../../landing-page/Utils";
-import { HitFightMachine, SelectFightInFightMachineMenu } from "../../stores/UserActions";
+import { HitFightMachine, SelectFightInFightMachineMenu, TurnMouseClickOff } from "../../stores/UserActions";
 import { useState } from "react";
 import store from "../../stores";
 import AddToQueueBox from "./MenuComponents/AddToQueueBox";
@@ -21,6 +21,8 @@ const ProgressBarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  color: blue;
 
   h3 {
     color: #33ac96;
@@ -175,6 +177,7 @@ export function QueueAddInfoWindow() {
 
   const closeDialogMenu = () => {
     console.log("click happened .. ")
+    dispatch(TurnMouseClickOff(false))
   }
 
   return(

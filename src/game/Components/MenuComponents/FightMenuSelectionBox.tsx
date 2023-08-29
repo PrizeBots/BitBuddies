@@ -41,9 +41,41 @@ const FriendRequestBox = styled(Box)`
   border-radius: 16px;
 
   span {
-    font-family:'Cooper Black', sans-serif;
+    // font-family:'Cooper Black', sans-serif;
     font-style: bold;
     font-size: 20px;
+  }
+`
+
+const FriendRequestBox2 = styled(Box)`
+  width: 200px;
+  overflow: auto;
+  opacity: 0.9;
+  background: #2c2c2c;
+  border: 5px solid #000000;
+  border-radius: 10px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  span {
+    font-family: Monospace;
+    font-style: bold;
+    font-size: 20px;
+  }
+
+  h2, h3 {
+    font-family: Monospace;
+    font-style: bold;
+    font-size: 22px;
+    color: white;
+    line-height: 75%;
+  }
+
+  input {
+    color: black;
   }
 `
 
@@ -81,13 +113,12 @@ export default function FightMenuSelectionBox(data: any) {
           dispatch(TurnMouseClickOff(false))
         }}
       >
-        <FriendRequestBox>
+        <FriendRequestBox2>
 
-          <ButtonView 
+          <Button
             variant="contained" 
             color="primary"
             onClick={() => {
-              // data.enterQueue()
               store.dispatch(SelectFightInFightMachineMenu(true))
               dispatch(TurnMouseClickOff(false))
             }}
@@ -95,10 +126,10 @@ export default function FightMenuSelectionBox(data: any) {
             <span style={{
               color: 'aliceblue'
             }}>Fight</span>
-          </ButtonView>
+          </Button>
 
 
-          <ButtonView 
+          <Button
             variant="contained" 
             color="primary"
             onClick={() => {
@@ -111,8 +142,8 @@ export default function FightMenuSelectionBox(data: any) {
             <span style={{
               color: 'aliceblue'
             }}>Bet</span>
-          </ButtonView>
-        </FriendRequestBox>
+          </Button>
+        </FriendRequestBox2>
       </Wrapper>
     </div>
   )

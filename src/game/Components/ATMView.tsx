@@ -121,7 +121,7 @@ export function ATMView() {
     setAddMoneyState("Removing from wallet")
 
     const done = await redeemPlayerBalance(convertWBTCToBigIntWithDecimlas(amount).toString())
-    if (done) {
+    if (done && done.done) {
       setSnackBarOpen(true)
       setSuccessSnackBarMessage("Updating Balance")
       const check = await fetchPlayerWalletInfo();
@@ -133,6 +133,7 @@ export function ATMView() {
       }
     } else {
       setErrSnackBarOpen(true)
+      setErrSnackBarMessage(done?.error)
     }
     setAmount(0)
     await getBalances(store.getState().web3store.userAddress)

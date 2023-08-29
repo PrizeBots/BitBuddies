@@ -77,6 +77,7 @@ interface UserActionData {
 
   // switch off mouse
   turnMouseClickOff: boolean,
+  gameTurnOffMouse: boolean,
 
   // curent player is fighting
   currentPlayerFighting: boolean,
@@ -191,6 +192,7 @@ const initialState: UserActionData = {
 
   showDeadSprite: false,
   turnMouseClickOff: false,
+  gameTurnOffMouse: false,
 
   currentPlayerFighting: false,
   currentOtherPlayerFighting: "",
@@ -374,6 +376,10 @@ export const userActionData = createSlice({
       state.turnMouseClickOff = action.payload;
     },
 
+    GameTurnMouseClickOff: (state: { gameTurnOffMouse: boolean; }, action: PayloadAction<boolean>) => {
+      state.gameTurnOffMouse = action.payload;
+    },
+
     SetCurrentPlayerFighting: (state: { currentPlayerFighting: boolean; }, action: PayloadAction<boolean>) => {
       state.currentPlayerFighting = action.payload;
     },
@@ -430,7 +436,7 @@ export const {
   ShowGotHitSprite, 
   FightPreStart, ClearFighterInfo, ShowBrewEjectAnimationFromServer,
   ShowGotBacktHitSprite, ShowDownSprite, ShowStunnedSprite, ShowChatWindow, SetFocussedOnChat,
-  ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
+  ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, GameTurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
   OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew, SelectFightInFightMachineMenu
   // SetFightInfo 
 } = userActionData.actions

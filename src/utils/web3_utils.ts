@@ -66,17 +66,22 @@ export function parseWBTCBalanceV3(balance: number| undefined) {
   // console.log("-----parseWBTCBalanceV3 2 ", z.toString())
   // const x = new BigNumber(10**6)
   // console.log("-----parseWBTCBalanceV3 2 ", z.toString())
-  return Math.floor(bn.dividedBy(10**2).toNumber()).toLocaleString();
+  return roundToNDecimalPlaces(Math.floor(bn.dividedBy(10**2).toNumber())).toLocaleString();
   // return Math.floor(bn.dividedBy(z).multipliedBy(x).toNumber()).toLocaleString();
 }
 
+export function roundToNDecimalPlaces(num: number) {
+  // return Math.round(num * 100) / 100
+  // return 
+  return Math.round((num + Number.EPSILON) * 100) / 100
+}
 export function parseWBTCBalanceV4(balance: number) {
   // console.log("-----parseWBTCBalanceV4 ", balance)
   if (isNullOrUndefined(balance)) {
     return 0
   }
   const bn = new BigNumber(balance);
-  return Math.floor(bn.dividedBy(10**2).toNumber());
+  return roundToNDecimalPlaces(Math.floor(bn.dividedBy(10**2).toNumber()));
 }
 
 // export function parseWBTCBalanceV4(balance: number) {

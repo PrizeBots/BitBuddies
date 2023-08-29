@@ -3,7 +3,7 @@ import { setNFTDetails, setNFTLoadedBool, setTotalNFTData } from '../stores/BitF
 import { validation } from '../utils/Validation';
 import { ethers } from "ethers";
 import { ChangeAuthTOken, ChangeLoggerMessage, ChangeUserData, ChangeValidUserState, USER_DETAILS } from '../stores/UserWebsiteStore';
-import { fetchNFTsFromDB, fetchUserDetails, loginAndAuthenticateUser } from '../hooks/ApiCaller';
+import { checkIfUserSignedMetamask, fetchNFTsFromDB, fetchUserDetails, loginAndAuthenticateUser, postUserSignedMessage } from '../hooks/ApiCaller';
 import store from '../stores';
 import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -11,16 +11,59 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { FetchDripPresaleInfoMintedByUser, getBalances, updateBitfightersMintedCountAndTotal, updateDripPresaleMintedCount, updateOneKClubMintedCount, updatePresaleMintedCount } from '../utils/web3_utils';
 import { setCardState } from '../stores/MintCardStateStore';
 import { PageStates } from './components/SidePanel/SidePanel';
+import {Buffer} from 'buffer';
+// import {
+//   recoverPersonalSignature,
+// } from '@metamask/eth-sig-util';
+
 // import { SetWbtcBalance } from '../stores/Web3StoreBalances';
 // import WalletConnectProvider from "@walletconnect/web3-provider";
 
-
+//
+// const from = accounts[0];
+//       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
+//       const sign = personalSignResult.innerHTML;
+//       const recoveredAddr = recoverPersonalSignature({
+//         data: msg,
+//         sig: sign,
+//       });
+//
 
 declare global {
   interface Window{
     ethereum?:any
   }
 }
+
+const siweSign = async (accounts: Array<string>, siweMessage: string) => {
+  console.log("in siweSign")
+  try {
+    const from = accounts[0];
+    // const hashedMessage = Web3.utils.sha3(message);
+    const msg = `0x${Buffer.from(siweMessage, 'utf8').toString('hex')}`;
+    const sign = await window.ethereum.request({
+      method: 'personal_sign',
+      params: [msg, from],
+    });
+    console.log("in siweSign ", sign)
+    return sign;
+  } catch (err) {
+    console.error("error in siweSign" ,err);
+    return "Error";
+  }
+};
+
+// const verifyMetamaskSignature = async (accounts: Array<string>, message: string, sign: string) => {
+//   const from = accounts[0];
+//   const msg = `0x${Buffer.from(message, 'utf8').toString('hex')}`;
+//   const recoveredAddr = recoverPersonalSignature({
+//     data: msg,
+//     signature: sign,
+//   });
+//   console.log("in siweSign ", recoveredAddr)
+// }
+
+const SignatureMessage = "By participating in this game you are acknowledging that you have read, understood, and agree to be bound by the terms and conditions found here: www.BitFighters.club/termsandconditions Failure to comply with these terms and conditions may result in, but will not be limited to, disqualification from participation in the game and the forfeiture of your account and all associated game assets."
 
 export async function Web3Login() {
   console.log("in web3login ", window.ethereum)
@@ -109,6 +152,22 @@ export async function Web3Login() {
     }
   }
   const accounts = await provider.send("eth_requestAccounts", []);
+
+  // check if signature exist in DB
+  const userMetamaskSigned = await checkIfUserSignedMetamask(accounts[0]);
+  console.log("Validation before siweSign -- ", userMetamaskSigned)
+  if (!userMetamaskSigned) {
+    const signedRes = await siweSign(accounts, SignatureMessage)
+    if ( signedRes === "Error"){
+      window.alert("Failed Metamask signature. Without that you cannot play.")
+      return 
+    }
+    // post data to db
+    postUserSignedMessage(accounts[0], signedRes);
+    // verifyMetamaskSignature(accounts[0], SignatureMessage, signedRes)
+  }
+  
+  
   localStorage.setItem("connected_matic_network", "10")
   console.log("-------accounts---- .",);
   console.log(accounts[0]);
@@ -120,6 +179,9 @@ export async function Web3Login() {
   store.dispatch(Login(accounts[0]));
   store.dispatch(setCardState(PageStates.ProgressState))
   store.dispatch(ChangeValidUserState(true))
+
+  // check if user owns 1k club card - prod
+  
 
   const auth_token: string = await loginAndAuthenticateUser(accounts[0]);
   store.dispatch(ChangeAuthTOken(auth_token)); 
@@ -136,8 +198,8 @@ export async function Web3Login() {
 
   
 
-  const user_all_data: USER_DETAILS = await fetchUserDetails();
-  store.dispatch(ChangeUserData(user_all_data)); 
+  // const user_all_data: USER_DETAILS = await fetchUserDetails();
+  // store.dispatch(ChangeUserData(user_all_data)); 
 
 
 

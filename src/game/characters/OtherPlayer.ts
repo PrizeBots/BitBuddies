@@ -63,6 +63,13 @@ export interface IOtherPlayer {
   orientation?: string,
   extra_data?: INFTDataOfConnections,
 
+  defense?: number,
+  punchpower?: number,
+  kickpower?: number,
+  speed?: number,
+  stamina? : number,
+  health?: number,
+
   // // new animations
   // // gassed + lift-off + fall
   // gassed_lift_off_fall?: boolean,
@@ -85,10 +92,11 @@ export class OtherPlayer extends BasePlayer {
     minted_id?: number,
     max_health?: number,
     max_stamina?: number,
-    // extra_data: INFTDataOfConnections,
+    extra_data?: any,
   ) {
+    console.log("debug stats otherp ", extra_data)
     console.log("otherplayer_create ", otherPlayer, max_health, max_stamina )
-    super(scene, x, y, texture, id, otherPlayer, socketConnection,nick_name, wallet_address, minted_id, max_health, max_stamina)
+    super(scene, x, y, texture, id, otherPlayer, socketConnection,nick_name, wallet_address, minted_id, max_health, max_stamina, extra_data)
     this.playContainerBody = this.playerContainer.body as Phaser.Physics.Arcade.Body
   }
 

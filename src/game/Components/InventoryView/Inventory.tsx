@@ -94,8 +94,8 @@ export function Inventory() {
           walletAddress: store.getState().web3store.userAddress,
         }));
 
-        store.dispatch(SetSuccessNotificationBool(true))
-        store.dispatch(SetSuccessNotificationMessage("Successfully Used."))
+        // store.dispatch(SetSuccessNotificationBool(true))
+        // store.dispatch(SetSuccessNotificationMessage("Successfully Used."))
         // bootstrap.play_err_sound()
       }, 1000);
     }  else {

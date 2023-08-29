@@ -464,9 +464,9 @@ function NewFighters() {
       return
     }
 
-    if (!(formNickNameame.length > 3 && formNickNameame.length < 11)) {
+    if (!(formNickNameame.length > 0 && formNickNameame.length < 13)) {
       store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Nick name should be of length 3-10"))
+      store.dispatch(SetFailureNotificationMessage("Nick name should be of length 1-12"))
       setRegisterProcessRunning(false)
       return
     }

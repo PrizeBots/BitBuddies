@@ -488,7 +488,7 @@ export const USDC_ABI = [{
   }
 ]
 
-const DEV_WBTC_ADDRESS = "0x5a78C9014704d1dbDbCD143cA87077D8C0db9ccF"
+const DEV_WBTC_ADDRESS = "0x4F74bAC10Cf6DF5DC77573c18988480BeeDcF9D1"
 const PROD_WBTC_ADDRESS = "0x152b9d0FdC40C096757F570A51E494bd4b943E50" // recheck snowtrace 
 export let WBTC_ADDRESS = ""
 if (process.env.REACT_APP_DEV_ENV === "production") {

@@ -90,7 +90,7 @@ export default class Bootstrap extends Phaser.Scene {
     // this.load.css('80s', 'bitfgihter_assets/80stypography.css');
 
     this.load.tilemapTiledJSON("new_hq", 'new_assets/map/HQ_3.json')
-    this.load.image("hq_sheet_01", 'new_assets/map/HQ_Sheet_02.png')
+    this.load.image("hq_sheet_01", 'new_assets/map/HQ_Sheet_04.png')
 
     // coins 
     this.load.atlas(
