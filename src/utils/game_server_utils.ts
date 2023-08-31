@@ -9,9 +9,17 @@ export async function ListGameServers(region: string) {
   store.dispatch(SetGameServersData(serverList.data));
 }
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export async function FetchGameServerConnection(room_id: string) {
   console.log("FetchGameServerConnection")
-  const serverConnection = await FetchGameServerConnectionURL(store.getState().web3store.userAddress, room_id)
+  let serverConnection = await FetchGameServerConnectionURL(store.getState().web3store.userAddress, room_id)
+  if (serverConnection === "false") {
+    while (serverConnection === "false") {
+      serverConnection = await FetchGameServerConnectionURL(store.getState().web3store.userAddress, room_id)
+      await delay(5000)
+    }
+  }
   console.log("server info FetchGameServerConnection -- ", serverConnection.data)
   store.dispatch(SetSelectedGameServerURL(serverConnection.data));
 }

@@ -780,6 +780,14 @@ export default class Network {
             }
           }
         }
+
+        if (obj.event === "show_brew_drop_frame") {
+          this.game.otherPlayers.forEach(_player => {
+            if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
+              _player.showBrewDropFrame = true;
+            }
+          })
+        }
       }
 
       if (objs.event === "all_chats") {

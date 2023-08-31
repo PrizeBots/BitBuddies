@@ -97,6 +97,7 @@ export function ServerListInfo() {
   const startGame = async () => {
     // event.preventDefault();
     store.dispatch(SetGameStarted(true));
+    localStorage.setItem("game_state", "start")
     store.dispatch(SetGameLoadingState(true));
     bootstrap.launchGame(store.getState().playerDataStore.current_game_player_info)
     store.dispatch(SetShowGameServersList(false));

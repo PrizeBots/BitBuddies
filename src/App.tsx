@@ -17,6 +17,7 @@ import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
 // import { FetchFightInfo } from './hooks/ApiCaller';
 import DocumentMeta from 'react-document-meta';
 import { ListGameServers } from "./utils/game_server_utils";
+import { fetchPlayerWalletInfo } from "./hooks/ApiCaller";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -87,10 +88,14 @@ function App() {
       // FetchFightInfo(store.getState().fightInfoStore.current_fight_id)
       // TODO: call update for all of the fight ids in queuue
       LoopAllFightsAndUpdate();
+      console.log("debug_game_state ", gameStarted)
       if (counter >0) {
         if (!gameStarted) {
-          ListGameServers(gameServerReginoSelected)
+          if (localStorage.getItem("game_state")=== "start") {
+            ListGameServers(gameServerReginoSelected)
+          }
         }
+        fetchPlayerWalletInfo()
         counter = -1
       }
       counter = counter + 1;

@@ -16,7 +16,8 @@ import { LogOut } from '../../stores/Web3Store';
 // import BetWindowView from './MenuComponents/BetWindowView';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { updateBetInfOfPlayer } from '../../utils/fight_utils';
-import StatsView from './MenuComponents/StatsView';
+import MyStatsView from './MenuComponents/MyStatsView';
+import OtherStatsView from './MenuComponents/OtherStatsView';
 
 
 
@@ -318,8 +319,8 @@ export default function NewMenuSideBar() {
                     
                       <TabsBoxHeader>
                         <Tabs aria-label="basic tabs example" centered style={{ fontSize: '15px' }} onChange={handleChange} value={value} textColor="secondary" indicatorColor="secondary" >
-                          <Tab label="Self" {...a11yProps(0)} />
-                          <Tab label="Others" {...a11yProps(1)} />
+                          <Tab label="Others" {...a11yProps(0)} />
+                          <Tab label="Self" {...a11yProps(1)} />
                         </Tabs>
                       </TabsBoxHeader>
 
@@ -327,12 +328,12 @@ export default function NewMenuSideBar() {
                       <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabPanel value={value} index={0}>
                           <div> 
-                            <StatsView data={true} />
+                            <OtherStatsView data={false} />
                           </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                           <div> 
-                            <StatsView data={false} />
+                            <MyStatsView data={true} />
                           </div>
                         </TabPanel>
                       </MenuBox>

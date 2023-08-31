@@ -534,6 +534,7 @@ export default class Game extends Phaser.Scene {
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+                && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 ) {
                   // console.log("sending move signal")
                   const direction = []
@@ -596,6 +597,7 @@ export default class Game extends Phaser.Scene {
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
           ) {
             // let action_id = uuidv4();
             // ActionManager.AddToActionQueue({ event: "kick", walletAddress: store.getState().web3store.userAddress }, action_id );
@@ -656,6 +658,7 @@ export default class Game extends Phaser.Scene {
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
           ) {
             if (!_otherplayer.punchStartTime) {
               this.lobbySocketConnection.send(JSON.stringify({
@@ -825,6 +828,24 @@ export default class Game extends Phaser.Scene {
                 _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
               }
             })
+          } else if (_player.gotBackHit) {
+            _player.gameObject.sprite.play("gotBackHit-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
+              // console.log("animation complete got back hit .. ")
+              _player.gotBackHit = false
+              if (_player.gameObject) {
+                _player.gameObject.sprite.stop()
+                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+              }
+            })
+          } else if (_player.showBrewDropFrame) {
+            _player.gameObject.sprite.play("brew-dropped-"+_player.wallet_address + "_" + _player.minted_id )
+            .once('animationcomplete', () => {
+              _player.showBrewDropFrame = false
+              if (_player.gameObject) {
+                _player.gameObject.sprite.stop()
+                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+              }
+            })
           }
           else if (_player.gameObject.dead ) {
             _player.gameObject.dead = false
@@ -852,16 +873,7 @@ export default class Game extends Phaser.Scene {
           //   //
           //   console.log("debug_fallen")
           // }
-          else if (_player.gotBackHit) {
-            _player.gameObject.sprite.play("gotBackHit-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
-              // console.log("animation complete got back hit .. ")
-              _player.gotBackHit = false
-              if (_player.gameObject) {
-                _player.gameObject.sprite.stop()
-                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
-              }
-            })
-          }
+          
           else if (_player.showEquipAnimationStarted) {
             _player.showEquipAnimationStarted = false
             _player.gameObject.sprite.play("equipBrew-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
@@ -1021,11 +1033,13 @@ export default class Game extends Phaser.Scene {
                 && _player.gameObject.sprite.anims.currentAnim.key !== "punch-"+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== "run-"+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'walk-'+_player.wallet_address + "_" + _player.minted_id
+                && _player.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'gotHit-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'gotBackHit-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_player.wallet_address + "_" + _player.minted_id
+                && _player.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_player.wallet_address + "_" + _player.minted_id
               ) {
                 _player.running = false
                 _player.gameObject.sprite.stop()
@@ -1055,6 +1069,7 @@ export default class Game extends Phaser.Scene {
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'front_gassed_lift_off_fall-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_player.wallet_address + "_" + _player.minted_id
+                && _player.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_player.wallet_address + "_" + _player.minted_id
                 && !_player.stunnedStarted
                 && !_player.deadStarted
                 // && _player.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_player.wallet_address + "_" + _player.minted_id

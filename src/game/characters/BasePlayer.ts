@@ -181,13 +181,13 @@ export class BasePlayer  {
   staminaBarBackGround!: Phaser.GameObjects.Graphics;
   staminaBar!: Phaser.GameObjects.Graphics
   textBox!: TextBox
-  playerMessageText!: Phaser.GameObjects.Text
-  playerDialogBubble!: Phaser.GameObjects.Container
-  moveUpAnimation!: Phaser.Tweens.Tween
-  realMoveUpAnimation!: Phaser.Tweens.Tween
+  // playerMessageText!: Phaser.GameObjects.Text
+  // playerDialogBubble!: Phaser.GameObjects.Container
+  // moveUpAnimation!: Phaser.Tweens.Tween
+  // realMoveUpAnimation!: Phaser.Tweens.Tween
 
   chatBubbleActive = false;
-  dialogBubbleText!: string;
+  // dialogBubbleText!: string;
 
   currentBubbleID!: string;
   bubbleIds: Array<string> = []
@@ -271,6 +271,7 @@ export class BasePlayer  {
   deadTweenRunning = false;
   nick_name = ''
   extra_data: any = {}
+  playerThoughtBubbles: Array<Phaser.GameObjects.Container> = [];
 
   constructor(
     scene: Phaser.Scene,
@@ -547,35 +548,35 @@ export class BasePlayer  {
       })
 
     this.AllInfoButtonCOntainer.setVisible(false)
-    this.playerDialogBubble = this.scene.add.container(0, 0).setDepth(90000)
+    // this.playerDialogBubble = this.scene.add.container(0, 0).setDepth(90000)
 
-    this.moveUpAnimation = this.scene.tweens.add({
-      targets: this.playerDialogBubble,
-      y: -80,
-      scale: 0.8,
-      duration: 3000,
-      paused: true
-    })
+    // this.moveUpAnimation = this.scene.tweens.add({
+    //   targets: this.playerDialogBubble,
+    //   y: -80,
+    //   scale: 0.8,
+    //   duration: 3000,
+    //   paused: true
+    // })
 
-    this.realMoveUpAnimation = this.scene.tweens.add({
-      targets: this.playerDialogBubble,
-      y: -50,
-      // scale: 0.8,
-      duration: 2000,
-      paused: true
-    })
+    // this.realMoveUpAnimation = this.scene.tweens.add({
+    //   targets: this.playerDialogBubble,
+    //   y: -50,
+    //   // scale: 0.8,
+    //   duration: 2000,
+    //   paused: true
+    // })
 
-    this.moveUpAnimation.on('complete', () => {
-      this.playerDialogBubble
-        .setPosition(0,0)
-        .setScale(1);
-      this.chatBubbleActive = false
-      this.clearDialogBubble(this.currentBubbleID)
-      this.dialogBubbleText = ""
-    });
+    // this.moveUpAnimation.on('complete', () => {
+    //   this.playerDialogBubble
+    //     .setPosition(0,0)
+    //     .setScale(1);
+    //   this.chatBubbleActive = false
+    //   this.clearDialogBubble(this.currentBubbleID)
+    //   this.dialogBubbleText = ""
+    // });
 
-    
-    this.playerContainer.add(this.playerDialogBubble)
+
+    // this.playerContainer.add(this.playerDialogBubble)
     this.playerContainer.add(this.playerName)
     if (otherPlayer) {
       this.playerContainer.add(this.playerInfoIcon)
@@ -618,9 +619,9 @@ export class BasePlayer  {
 
   private clearDialogBubble(id: string) {
     if (id != this.currentBubbleID) return;
-    this.playerDialogBubble.removeAll(true);
+    // this.playerDialogBubble.removeAll(true);
     this.chatBubbleActive = false;
-    this.dialogBubbleText = "";
+    // this.dialogBubbleText = "";
   }
 
   removeElementFromArray(element: any) {
@@ -652,31 +653,77 @@ export class BasePlayer  {
       ntext = text;
     }
 
-    if (ntext === "..." && this.chatBubbleActive) {
-      // console.log("hero.. 1")
-      return;
-    } else if (ntext === "..." && !this.chatBubbleActive) {
-      this.createThoughtBubbleCloud("...")
-      // setTimeout(()=> {
-      //   this.clearDialogBubble(randomID)
-      // }, 2000)
-      // console.log("hero.. 2")
+    if (ntext === "..." && !this.chatBubbleActive) {
+      this.chatBubbleActive = true
+      
+      const playerThoughtBubble = this.scene.add.container(0, 0).setDepth(90000)
+      playerThoughtBubble.add(
+        this.scene.add.image(0, -10, 'cloud_chat_bubble')
+        .setScale(0.1)
+        .setAlpha(0.5)
+      )
+      const innerText = this.scene.add
+        .text(0, 0, text, { wordWrap: { width: 165, useAdvancedWrap: true } })
+        .setFontFamily('monospace')
+        .setFontSize(28)
+        .setColor('#000000')
+        .setOrigin(0.5)
+        .setScale(0.3)
+
+      const innerTextHeight = innerText.height
+      const innerTextWidth = innerText.width
+
+      // innerText.setY(-innerTextHeight / 2 - this.playerName.height / 2 - 10)
+      innerText.setY(-innerTextHeight / 2)
+      this.playerContainer.add(playerThoughtBubble)
+      playerThoughtBubble.add(innerText);
+
+      this.playerThoughtBubbles.push(playerThoughtBubble)
+      setTimeout(()=> {
+        playerThoughtBubble.removeAll(true);
+        this.chatBubbleActive = false;
+      }, 2000)
       return
     }
-    // console.log("-=------------------------- here ... -----------", ntext, this.chatBubbleActive)
-    this.clearDialogBubble(randomID)
-    if (this.moveUpAnimation.isPlaying()) {
-      console.log("createNewDialogBox yes is playing.. ")
-      this.moveUpAnimation.seek(0);
-      this.moveUpAnimation.pause();
-      this.playerDialogBubble
-        .setPosition(0,0)
-        .setScale(1);
+    if (ntext === "..." && this.chatBubbleActive){
+      // this.playerThoughtBubble.removeAll(true);
+      // this.chatBubbleActive = false;
+      return
     }
-    this.chatBubbleActive = true;
-    this.dialogBubbleText = ntext;
+
+    for(let i=0; i < this.playerThoughtBubbles.length; i++) {
+      this.playerThoughtBubbles[i].removeAll(true)
+    }
+    // this.playerThoughtBubble.removeAll(true);
+    this.chatBubbleActive = false;
+    
+    
+    // if (ntext === "..." && this.chatBubbleActive) {
+    //   // console.log("hero.. 1")
+    //   return;
+    // } else if (ntext === "..." && !this.chatBubbleActive) {
+    //   this.createThoughtBubbleCloud("...")
+    //   // setTimeout(()=> {
+    //   //   this.clearDialogBubble(randomID)
+    //   // }, 2000)
+    //   // console.log("hero.. 2")
+    //   return
+    // }
+    // console.log("-=------------------------- here ... -----------", ntext, this.chatBubbleActive)
+    // this.clearDialogBubble(randomID)
+
+    // if (this.moveUpAnimation.isPlaying()) {
+    //   console.log("createNewDialogBox yes is playing.. ")
+    //   this.moveUpAnimation.seek(0);
+    //   this.moveUpAnimation.pause();
+    //   this.playerDialogBubble
+    //     .setPosition(0,0)
+    //     .setScale(1);
+    // }
+    // this.chatBubbleActive = true;
+    // this.dialogBubbleText = ntext;
     const innerText = this.scene.add
-      .text(0, 0, this.dialogBubbleText, { wordWrap: { width: 250, useAdvancedWrap: true } })
+      .text(0, 0, ntext, { wordWrap: { width: 250, useAdvancedWrap: true } })
       .setFontFamily('monospace')
       .setFontSize(28)
       .setColor('#000000')
@@ -693,7 +740,36 @@ export class BasePlayer  {
     const dialogBoxX = innerText.x - innerTextWidth / 2 - 5
     const dialogBoxY = innerText.y - innerTextHeight / 2 - 2
 
-    this.playerDialogBubble.add(
+    const playerDialogBubble = this.scene.add.container(0, 0).setDepth(90000)
+
+    const moveUpAnimation = this.scene.tweens.add({
+      targets: playerDialogBubble,
+      y: -80,
+      scale: 0.8,
+      duration: 3000,
+      paused: true
+    })
+
+    const realMoveUpAnimation = this.scene.tweens.add({
+      targets: playerDialogBubble,
+      y: -50,
+      // scale: 0.8,
+      duration: 2000,
+      paused: true
+    })
+
+    moveUpAnimation.on('complete', () => {
+      playerDialogBubble
+        .setPosition(0,0)
+        .setScale(1);
+      this.chatBubbleActive = false
+      this.clearDialogBubble(this.currentBubbleID)
+      // this.dialogBubbleText = ""
+    });
+
+    this.playerContainer.add(playerDialogBubble)
+
+    playerDialogBubble.add(
       this.scene.add
         .graphics()
         .fillStyle(0xffffff, 0.5)
@@ -701,19 +777,20 @@ export class BasePlayer  {
         .lineStyle(1, 0x000000, 1)
         .strokeRoundedRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight, 3)
     )
-    this.playerDialogBubble.add(innerText);
+    playerDialogBubble.add(innerText);
 
     setTimeout(() => {
-      this.realMoveUpAnimation.play()
+      realMoveUpAnimation.play()
     }, 1000);
     
     setTimeout(() => {
-      this.moveUpAnimation.play()
+      moveUpAnimation.play()
     }, 3000);
 
     setTimeout(() => {
-      this.clearDialogBubble(randomID)
-    }, 5000)
+      playerDialogBubble.removeAll(true);
+      // this.clearDialogBubble(randomID)
+    }, 4000)
   }
 
   createThoughtBubbleCloud(text: string) {
@@ -734,12 +811,12 @@ export class BasePlayer  {
 
     // innerText.setY(-innerTextHeight / 2 - this.playerName.height / 2 - 10)
     innerText.setY(-innerTextHeight / 2)
-    this.playerDialogBubble.add(
-      this.scene.add.image(0, -10, 'cloud_chat_bubble')
-      .setScale(0.1)
-      .setAlpha(0.5)
-    )
-    this.playerDialogBubble.add(innerText);
+    // this.playerDialogBubble.add(
+    //   this.scene.add.image(0, -10, 'cloud_chat_bubble')
+    //   .setScale(0.1)
+    //   .setAlpha(0.5)
+    // )
+    // this.playerDialogBubble.add(innerText);
 
     setTimeout(() => {
       this.clearDialogBubble(randomID)

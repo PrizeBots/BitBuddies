@@ -301,7 +301,20 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
   // drink
   anims.create({
     key: 'drink-'+ key,
-    frames: [{
+    frames: [
+      {
+        key,
+        frame: 'drink005.png'
+      },
+      {
+        key,
+        frame: 'drink000.png'
+      },
+      {
+        key,
+        frame: 'drink000.png'
+      },
+      {
         key,
         frame: 'drink000.png'
       },
@@ -419,6 +432,17 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
     ],
     frameRate: 1,
     repeat: -1
+  })
+
+  anims.create({
+    key: 'brew-dropped-'+ key,
+    frames: [{
+        key,
+        frame: 'destroy000.png'
+      },
+    ],
+    duration: 500,
+    repeat: 0
   })
 
   // front_gassed_lift_off_fall

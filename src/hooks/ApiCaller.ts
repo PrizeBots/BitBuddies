@@ -753,6 +753,9 @@ export const FetchGameServerConnectionURL = async (userAddress: string, room_id:
     },
   })
   const output = await result.json();
+  if (result.status!== 200) {
+    return "false"
+  }
   console.log("output in FetchGameServerConnectionURL --", output)
   return output;
 }

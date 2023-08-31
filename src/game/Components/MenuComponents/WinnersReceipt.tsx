@@ -173,7 +173,7 @@ export default function WinnersReceipt() {
   }
   // console.log("debug--22 ", updateOrNot, p1, p2, store.getState().web3store.userAddress, combinedQueueData.length )
 
-  console.log("debug___receipt__", p1, p2_win_pot, p1_win_pot, p1_self_bet, p2_self_bet)
+  // console.log("debug___receipt__", p1, p2_win_pot, p1_win_pot, p1_self_bet, p2_self_bet)
 
   // showWinnersCardBool = true
   const closeDialogMenu = () => {

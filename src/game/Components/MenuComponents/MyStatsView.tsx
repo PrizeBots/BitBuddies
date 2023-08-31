@@ -35,9 +35,9 @@ const ColoredH1 = styled.div`
 
 `
 
-export default function StatsView(data : any) {
+export default function MyStatsView(data : any) {
   const game = phaserGame.scene.keys.game as Game;
-  const otherPlayerSelected = useAppSelector((state) => state.userPathStore.OtherPlayerSelectedForStats)
+  // const otherPlayerSelected = useAppSelector((state) => state.userPathStore.OtherPlayerSelectedForStats)
 
   const [playerData, setPlayerData] = useState<IAttributes>();
   
@@ -46,27 +46,14 @@ export default function StatsView(data : any) {
     const arr = Array.from(game.otherPlayers.keys());
     for(let i=0; i < arr.length; i++) {
       const otherPlayer = game.otherPlayers.get(arr[i])
-      if (data.data) {
-        if (otherPlayer?.wallet_address === store.getState().web3store.userAddress) {
-          pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
-          pdata.health = otherPlayer.gameObject?.extra_data?.health;
-          pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
-          pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
-          pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
-          pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
-          pdata.nickName = otherPlayer.nick_name;
-        }
-      } else {
-        console.log("debug_stats else -- ", )
-        if (otherPlayerSelected === `${otherPlayer?.gameObject?.wallet_address}_${otherPlayer?.gameObject?.minted_id}` && !isNullOrUndefined(otherPlayer)) {
-          pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
-          pdata.health = otherPlayer.gameObject?.extra_data?.health;
-          pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
-          pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
-          pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
-          pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
-          pdata.nickName = otherPlayer.nick_name;
-        }
+      if (otherPlayer?.wallet_address === store.getState().web3store.userAddress) {
+        pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
+        pdata.health = otherPlayer.gameObject?.extra_data?.health;
+        pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
+        pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
+        pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
+        pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
+        pdata.nickName = otherPlayer.nick_name;
       }
     }
     console.log("debug_stats 22", arr, data, pdata)

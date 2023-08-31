@@ -57,6 +57,8 @@ export interface IOtherPlayer {
   drinkStarted?: boolean,
   drinking?: boolean,
 
+  showBrewDropFrame?: boolean,
+
   dead?: boolean,
   deadStarted?: boolean,
 
@@ -78,6 +80,7 @@ export interface IOtherPlayer {
 
 export class OtherPlayer extends BasePlayer {
   private playContainerBody: Phaser.Physics.Arcade.Body
+  myWalletAddress = '';
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -98,6 +101,9 @@ export class OtherPlayer extends BasePlayer {
     console.log("otherplayer_create ", otherPlayer, max_health, max_stamina )
     super(scene, x, y, texture, id, otherPlayer, socketConnection,nick_name, wallet_address, minted_id, max_health, max_stamina, extra_data)
     this.playContainerBody = this.playerContainer.body as Phaser.Physics.Arcade.Body
+    if (wallet_address) {
+      this.myWalletAddress = wallet_address;
+    }
   }
 
   DestroyGameObject() {
@@ -144,7 +150,7 @@ export class OtherPlayer extends BasePlayer {
   }
 
   update() {
-    if (!this.game.lobbySocketConnected && store.getState().web3store.userAddress === this.playerAllData.user_wallet_address) {
+    if (!this.game.lobbySocketConnected && store.getState().web3store.userAddress === this.myWalletAddress) {
       console.log("not connected. with game server.")
       if (store.getState().userPathStore.websocketConnectedTime === 0 ) {
         store.dispatch(ChangeWebSocketConnectedTime(new Date().getTime()))

@@ -593,4 +593,4 @@ export const GameLogicABI = [{
 ]
 
 
-export const gamelogic_contract_address = "0x7C2A0b5aAd6b3c0db9EFdcF75367325471D8f1f8"
+export const gamelogic_contract_address = "0xa7A66A9A90c2B8f4b58B04bB617231BD9d7Da44c"

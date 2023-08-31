@@ -10,6 +10,8 @@ import { convertWBTCToBigIntWithDecimlas, getBalances } from "../../utils/web3_u
 import SuccessSnackBarHelper from "../../landing-page/SuccessSnackBarHelper";
 import ErrSnackBarHelper from "../../landing-page/ErrSnackBarHelper";
 import { fetchPlayerWalletInfo, redeemPlayerBalance, updateWalletBalanceWithWeb3 } from "../../hooks/ApiCaller";
+import { isNullOrUndefined } from "util";
+import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNotificationBool, SetSuccessNotificationMessage } from "../../stores/NotificationStore";
 
 
 const ProgressBarWrapper = styled.div`
@@ -121,19 +123,33 @@ export function ATMView() {
     setAddMoneyState("Removing from wallet")
 
     const done = await redeemPlayerBalance(convertWBTCToBigIntWithDecimlas(amount).toString())
-    if (done && done.done) {
-      setSnackBarOpen(true)
-      setSuccessSnackBarMessage("Updating Balance")
+    console.log("debug_redeem ", done)
+    if (!isNullOrUndefined(done) && done.done) {
+      // setSnackBarOpen(true)
+      // setSuccessSnackBarMessage("Updating Balance")
+
+      store.dispatch(SetSuccessNotificationBool(true))
+      store.dispatch(SetSuccessNotificationMessage("Updating Balance"))
+
       const check = await fetchPlayerWalletInfo();
       if (check) {
         setSuccessSnackBarMessage("Updated Balance")
+        store.dispatch(SetSuccessNotificationMessage("Updated Balance"))
       } else {
-        setSnackBarOpen(false)
-        setErrSnackBarOpen(true)
+        // setSnackBarOpen(false)
+        // setErrSnackBarOpen(true)
+
+        store.dispatch(SetFailureNotificationBool(true))
+        store.dispatch(SetFailureNotificationMessage("Error"))
       }
     } else {
-      setErrSnackBarOpen(true)
-      setErrSnackBarMessage(done?.error)
+      console.log("debug_redeem ", "here")
+      console.log("debug_redeem ", done?.error.reason)
+      // setErrSnackBarOpen(true)
+      // setErrSnackBarMessage(done?.error)
+
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage(done?.error.reason))
     }
     setAmount(0)
     await getBalances(store.getState().web3store.userAddress)
@@ -146,7 +162,7 @@ export function ATMView() {
       {
         openAtmView && 
         <div>
-          <SuccessSnackBarHelper 
+          {/* <SuccessSnackBarHelper 
             open= {snackBarOpen}
             message={successSnackBarMessage}
             handleClose={handleClose}
@@ -155,7 +171,7 @@ export function ATMView() {
             open= {errsnackBarOpen}
             message={errSnackBarMessage}
             handleClose={errSnackBarHandleClose}
-          />
+          /> */}
           
           <Backdrop>
             <AtmViewBox 

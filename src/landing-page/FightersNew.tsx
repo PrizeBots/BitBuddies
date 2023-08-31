@@ -905,7 +905,7 @@ function NewFighters() {
                   <input
                     id="nick_name"
                     type="text"
-                    placeholder='up to 10 letters'
+                    placeholder='up to 12 letters'
                     value={formNickNameame}
                     onChange={(e) => {
                       setFormNickName(e.target.value);
