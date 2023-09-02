@@ -17,6 +17,7 @@ interface IAttributes {
   stamina? : number,
   health?: number,
   nickName?: string,
+  all_aps?: any;
 }
 
 const ColoredH1 = styled.div`
@@ -52,6 +53,7 @@ export default function OtherStatsView(data : any) {
       pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
       pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
       pdata.nickName = otherPlayer.nick_name;
+      pdata.all_aps = otherPlayer.all_aps;
     }
   }
 
@@ -100,7 +102,7 @@ export default function OtherStatsView(data : any) {
   //   // console.log("debug_stats setting player data", )
   // }, [])
 
-  // console.log("debug_stats " ,playerData )
+  console.log("debug_stats " ,pdata )
   
   return(
     <div>
@@ -119,29 +121,40 @@ export default function OtherStatsView(data : any) {
               backgroundColor: 'black'
             }}>
               {
-                !isNullOrUndefined(pdata) ?
-                              <tbody>
+                (!isNullOrUndefined(pdata) && !isNullOrUndefined(pdata.all_aps)) ?
+               <tbody>
                 <tr key={uuidv4()}>
+                  <td>AP</td>
+                  <td></td>
+                  <td>Value</td>
+                </tr>
+                <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.defense}</td>
                   <td>Defense</td>
                   <td>{pdata.defense}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.punchpower}</td>
                   <td>Punch</td>
                   <td>{pdata.punchpower}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.kickpower}</td>
                   <td>Kick</td>
                   <td>{pdata.kickpower}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.speed}</td>
                   <td>Speed</td>
                   <td>{pdata.speed}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.health}</td>
                   <td>Health</td>
                   <td>{pdata.health}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{pdata?.all_aps.stamina}</td>
                   <td>Stamina</td>
                   <td>{pdata.stamina}</td>
                 </tr>

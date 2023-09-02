@@ -14,6 +14,7 @@ interface IWebsiteStateStore {
   selected_roomId: string,
   selected_server_url: string,
   region: string,
+  leaderboardOpen: boolean,
 }
 
 const initialState: IWebsiteStateStore = {
@@ -22,7 +23,8 @@ const initialState: IWebsiteStateStore = {
   serversInfo: [],
   selected_roomId: "",
   selected_server_url: "",
-  region: "Washington_DC"
+  region: "Washington_DC",
+  leaderboardOpen: false,
 }
 
 export const websiteStateInfoStore = createSlice({
@@ -54,12 +56,17 @@ export const websiteStateInfoStore = createSlice({
     SetSelectedRegionofGameServer: (state: { region: string; }, action: PayloadAction<string>) => {
       state.region = action.payload;
     },
+
+
+    SetLeaderBoardOpen: (state: { leaderboardOpen: boolean; }, action: PayloadAction<boolean>) => {
+      state.leaderboardOpen = action.payload;
+    },
   },
 })
 
 export const { SetGameLoadingState, SetShowGameServersList, 
   SetSelectedRegionofGameServer,
-  SetGameServersData, SetSelectedRoomId, SetSelectedGameServerURL } =
+  SetGameServersData, SetSelectedRoomId, SetSelectedGameServerURL, SetLeaderBoardOpen } =
   websiteStateInfoStore.actions
 
 export default websiteStateInfoStore.reducer

@@ -17,6 +17,7 @@ interface IAttributes {
   stamina? : number,
   health?: number,
   nickName?: string,
+  all_aps?: any;
 }
 
 const ColoredH1 = styled.div`
@@ -36,10 +37,30 @@ const ColoredH1 = styled.div`
 `
 
 export default function MyStatsView(data : any) {
+  // const game = phaserGame.scene.keys.game as Game;
+  // // const otherPlayerSelected = useAppSelector((state) => state.userPathStore.OtherPlayerSelectedForStats)
+
+  // const [playerData, setPlayerData] = useState<IAttributes>();
+
   const game = phaserGame.scene.keys.game as Game;
   // const otherPlayerSelected = useAppSelector((state) => state.userPathStore.OtherPlayerSelectedForStats)
 
   const [playerData, setPlayerData] = useState<IAttributes>();
+  // const pdata: IAttributes = {}
+  // const arr = Array.from(game.otherPlayers.keys());
+  // for(let i=0; i < arr.length; i++) {
+  //   const otherPlayer = game.otherPlayers.get(arr[i])
+  //   if (otherPlayer?.wallet_address === store.getState().web3store.userAddress) {
+  //     pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
+  //     pdata.health = otherPlayer.gameObject?.extra_data?.health;
+  //     pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
+  //     pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
+  //     pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
+  //     pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
+  //     pdata.nickName = otherPlayer.nick_name;
+  //     pdata.all_aps = otherPlayer.all_aps;
+  //   }
+  // }
   
   useEffect(() => {
     const pdata: IAttributes = {}
@@ -54,14 +75,15 @@ export default function MyStatsView(data : any) {
         pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
         pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
         pdata.nickName = otherPlayer.nick_name;
+        pdata.all_aps = otherPlayer.all_aps;
       }
     }
-    console.log("debug_stats 22", arr, data, pdata)
+    // console.log("debug_stats 22", arr, data, pdata)
     setPlayerData(pdata);
     // console.log("debug_stats setting player data", )
   }, [])
 
-  // console.log("debug_stats " ,playerData )
+  console.log("debug_stats " ,playerData )
   
   return(
     <div>
@@ -71,7 +93,7 @@ export default function MyStatsView(data : any) {
             <ColoredH1>
 
             <h2>
-              {playerData?.nickName}
+              {!isNullOrUndefined(playerData) && !isNullOrUndefined(playerData?.all_aps) && Object.keys(playerData).length > 0  && playerData?.nickName}
             </h2>
             </ColoredH1>
             
@@ -80,33 +102,45 @@ export default function MyStatsView(data : any) {
               backgroundColor: 'black'
             }}>
               {
-                !isNullOrUndefined(playerData) ?
-                              <tbody>
+                (!isNullOrUndefined(playerData) && Object.keys(playerData).length > 0 ) ?
+              <tbody>
                 <tr key={uuidv4()}>
+                  <td>AP</td>
+                  <td></td>
+                  <td>Value</td>
+                </tr>
+                <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.defense}</td>
                   <td>Defense</td>
                   <td>{playerData.defense}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.punchpower}</td>
                   <td>Punch</td>
                   <td>{playerData.punchpower}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.kickpower}</td>
                   <td>Kick</td>
                   <td>{playerData.kickpower}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.speed}</td>
                   <td>Speed</td>
                   <td>{playerData.speed}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.health}</td>
                   <td>Health</td>
                   <td>{playerData.health}</td>
                 </tr>
                 <tr key={uuidv4()}>
+                  <td>{playerData?.all_aps.stamina}</td>
                   <td>Stamina</td>
                   <td>{playerData.stamina}</td>
                 </tr>
-              </tbody>:
+              </tbody>
+              :
               <>
                 
               </>

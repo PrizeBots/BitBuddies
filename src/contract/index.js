@@ -234,7 +234,7 @@ export async function checkAllowance(owner) {
     },
   };
   const _allowance = await Moralis.executeFunction(sendOptions);
-  console.log("_allowance --> ", _allowance, owner);
+  console.log("debug_AddMoneyToWallet _allowance --> ", _allowance, gamelogic_contract_address, owner);
   return _allowance;
 }
 
@@ -470,7 +470,7 @@ export async function getWBTCDecimals(account) {
 }
 
 export async function depositMoneyToWalletV2(_amount) {
-  console.log("in depositMoneyToWalletV2 ", _amount)
+  console.log("debug_AddMoneyToWalletin depositMoneyToWalletV2 ", _amount)
   const ethers = Moralis.web3Library; // get ethers.js library
   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
   const gasPrice = await web3Provider.getGasPrice();
@@ -484,9 +484,9 @@ export async function depositMoneyToWalletV2(_amount) {
         gasPrice: 2 * gasPrice,
       });
     await transaction.wait();
-    console.log("--------------------------------");
+    console.log("debug_AddMoneyToWalletin--------------------------------");
   } catch (err) {
-    console.log("err in depositMoneyToWalletV2 ", err)
+    console.log("debug_AddMoneyToWalletin err in depositMoneyToWalletV2 ", err)
     return false;
   }
   return true;

@@ -18,6 +18,7 @@ import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
 import DocumentMeta from 'react-document-meta';
 import { ListGameServers } from "./utils/game_server_utils";
 import { fetchPlayerWalletInfo } from "./hooks/ApiCaller";
+import Leaderboard from "./landing-page/Leaderboard";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -100,7 +101,7 @@ function App() {
       }
       counter = counter + 1;
       LoopApiCaller();
-    }, 20000);
+    }, 30000);
   };
 
   useEffect(() => {
@@ -148,6 +149,7 @@ function App() {
       
       <Backdrop>
         <BrowserRouter>
+          <Leaderboard />
           <React.Suspense fallback={loading()}>
             {ValidUser ? (
               <Routes>
@@ -156,6 +158,7 @@ function App() {
                 {/* <Route path="roadmap" element={<Landing name="roadmap" />} /> */}
                 <Route path="game" element={<Landing name="game" />} />
                 <Route path="mint" element={<Landing name="mint" />} />
+                <Route path="leaderboard" element={<Landing name="leaderboard" />} />
                 <Route path="login" element={<Landing name="login" />} />
                 {/* <Route path="presale" element={<Landing name="presale" />} /> */}
                 {/* <Route

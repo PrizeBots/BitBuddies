@@ -328,6 +328,9 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 function NewFighters() {
   const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
   const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
+  const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
+  const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
+  
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
   console.log("--------total_data-------", bitFightersTotalData)
   // console.log("--------total_data2-------", bitFighterNFTData)
@@ -360,13 +363,9 @@ function NewFighters() {
   //   }
   // }
 
-  const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
-
   const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
 
   const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
-
-  const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
 
   console.log("current path 333 ", gameStarted)
 

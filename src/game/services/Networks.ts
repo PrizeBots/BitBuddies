@@ -128,6 +128,7 @@ export default class Network {
                       speed: _details.speed,
                       stamina: _details.stamina,
                       health: _details.health,
+                      all_aps: _details.all_aps,
                     })
                     const otherPlayer = this.game.otherPlayers.get(_details.walletAddress + "_" + _details.minted_id)
 
@@ -154,6 +155,7 @@ export default class Network {
                           speed: otherPlayer.speed,
                           stamina: otherPlayer.stamina,
                           health: otherPlayer.stamina,
+                          all_aps: otherPlayer.all_aps,
                         }
                       );
                       otherPlayer.gameObject.currHealth = _details.health;
@@ -192,6 +194,8 @@ export default class Network {
                     speed: _details.speed,
                     stamina: _details.stamina,
                     health: _details.health,
+
+                    all_aps: _details.all_aps,
                   })
                   this.game.load.start();
                   console.log("adding other player live_players_init", this.game.otherPlayers)
@@ -753,6 +757,7 @@ export default class Network {
         }
 
         if (obj.event === "brew_used") {
+          this.game.bootstrap.play_can_open_sound()
           this.game.otherPlayers.forEach(_player => {
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
               _player.drinkStarted = true;
@@ -893,6 +898,7 @@ export default class Network {
                   speed: otherPlayer.speed,
                   stamina: otherPlayer.stamina,
                   health: otherPlayer.stamina,
+                  all_aps: otherPlayer.all_aps,
                 }
               );
               otherPlayer.sprite = otherPlayer.gameObject.sprite;

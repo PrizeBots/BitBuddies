@@ -13,6 +13,7 @@ export default class Bootstrap extends Phaser.Scene {
   dr_bits_success_sound!: Phaser.Sound.BaseSound
   button_hover_sound!: Phaser.Sound.BaseSound
   button_down_sound!: Phaser.Sound.BaseSound
+  can_open_sound!: Phaser.Sound.BaseSound
 
   constructor() {
     super('bootstrap')
@@ -67,11 +68,27 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.audio("err_music", "bitfgihter_assets/sounds/err_sound.mp3")
     this.load.audio("punch1-music", "bitfgihter_assets/sounds/punch01.mp3")
     this.load.audio("punch2-music", "bitfgihter_assets/sounds/punch02.mp3")
-    this.load.audio("fight-music", "bitfgihter_assets/sounds/fight-track.mp3")
+
+    // this.load.audio("fight-music", "bitfgihter_assets/sounds/fight-track.mp3")
+    
+    this.load.audio("fight-music-1", "bitfgihter_assets/sounds/new_fight_tracks/Ayumi.mp3")
+    this.load.audio("fight-music-2", "bitfgihter_assets/sounds/new_fight_tracks/BullDancer.mp3")
+    this.load.audio("fight-music-3", "bitfgihter_assets/sounds/new_fight_tracks/Deeper.mp3")
+    this.load.audio("fight-music-4", "bitfgihter_assets/sounds/new_fight_tracks/Destined.mp3")
+    this.load.audio("fight-music-5", "bitfgihter_assets/sounds/new_fight_tracks/Detroit.mp3")
+    this.load.audio("fight-music-6", "bitfgihter_assets/sounds/new_fight_tracks/Haiba.mp3")
+    this.load.audio("fight-music-7", "bitfgihter_assets/sounds/new_fight_tracks/Maji_Break.mp3")
+    this.load.audio("fight-music-8", "bitfgihter_assets/sounds/new_fight_tracks/penguins_on_ice.mp3")
+    this.load.audio("fight-music-9", "bitfgihter_assets/sounds/new_fight_tracks/run_with_me.mp3")
+    this.load.audio("fight-music-10", "bitfgihter_assets/sounds/new_fight_tracks/Wolfpack.mp3")
+
+
     this.load.audio("boop-music", "bitfgihter_assets/sounds/boop01.mp3")
     this.load.audio('fight-start-music', "bitfgihter_assets/sounds/fight_start_sound.mp3")
     this.load.audio('snap-sound', "bitfgihter_assets/sounds/snap01.mp3")
     this.load.audio('button-press-sound', "bitfgihter_assets/sounds/button01.mp3")
+
+    this.load.audio('can-open-sound', "bitfgihter_assets/sounds/brewCanOpen.mp3")
 
     this.load.audio('dr_bits_success_sound', "bitfgihter_assets/sounds/Success.mp3")
 
@@ -137,6 +154,10 @@ export default class Bootstrap extends Phaser.Scene {
     this.button_press_sound.play({loop: false})
   }
 
+  play_can_open_sound() {
+    this.can_open_sound.play({loop: false})
+  }
+
 
   create() {
     this.launchBackground(BackgroundMode.NIGHT)
@@ -144,6 +165,8 @@ export default class Bootstrap extends Phaser.Scene {
     this.err_music = this.sound.add('button_hover');
     this.snap_sound = this.sound.add('snap-sound');
     this.button_press_sound = this.sound.add('button-press-sound')
+
+    this.can_open_sound = this.sound.add('can-open-sound', {volume: 0.6})
 
     this.dr_bits_success_sound = this.sound.add('dr_bits_success_sound')
     // this.button_hover_sound = this.sound.add('button_hover', {volume: 0.4})

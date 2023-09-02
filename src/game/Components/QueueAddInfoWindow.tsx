@@ -55,7 +55,7 @@ const Backdrop2 = styled.div`
 export function QueueAddInfoWindow() {
   const [amount, setAmount] = useState(0);
   const [amountInString, setAmountInString] = useState("")
-  const ANTE = 10;
+  const ANTE = 50;
   
   const hitFightMachine = useAppSelector((state) => state.userActionsDataStore.hitFightMachine)
   const selectFightMenu = useAppSelector((state) => state.userActionsDataStore.selectedFightButton)

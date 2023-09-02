@@ -315,7 +315,7 @@ export const loginAndAuthenticatePlayer = async (userAddress: string, minted_id:
 }
 
 export const updateWalletBalanceWithWeb3 = async () => {
-  console.log("--updateWalletBalanceWithWeb3--", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
+  console.log("debug_AddMoneyToWalletin--updateWalletBalanceWithWeb3--", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
   if (store.getState().authStore.player_auth_token === "") {
     console.log("nil user auth token in updateWalletBalanceWithWeb3");
     return

@@ -71,6 +71,7 @@ export interface IOtherPlayer {
   speed?: number,
   stamina? : number,
   health?: number,
+  all_aps?: any,
 
   // // new animations
   // // gassed + lift-off + fall

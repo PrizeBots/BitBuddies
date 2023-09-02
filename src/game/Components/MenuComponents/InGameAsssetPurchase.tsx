@@ -65,12 +65,12 @@ export default function InGameAssetPurchase() {
   const [quantity, setQuantity] = useState(1);
   // const game = phaserGame.scene.keys.game as Game
 
-  const closeFunction = () => {
-    // store.dispatch(BrewMachinePunched(false))
-    dispatch(TurnMouseClickOff(false))
-  }
+  // const closeFunction = () => {
+  //   // store.dispatch(BrewMachinePunched(false))
+  //   dispatch(TurnMouseClickOff(false))
+  // }
 
-  const ref = useDetectClickOutside({ onTriggered: closeFunction });
+  // const ref = useDetectClickOutside({ onTriggered: closeFunction });
   
   const AssetBuyer = async () => {
     setTransactionStarted(true)
@@ -117,6 +117,13 @@ export default function InGameAssetPurchase() {
     }, 1000)
     
   }
+
+  const closeFunction = () => {
+    // store.dispatch(BrewMachinePunched(false))
+    dispatch(TurnMouseClickOff(false))
+  }
+
+  const ref = useDetectClickOutside({ onTriggered: closeFunction });
 
   return(
     <div 

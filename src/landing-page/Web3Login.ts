@@ -207,11 +207,11 @@ export async function Web3Login() {
 
   // update nfts infos
   await updateBitfightersMintedCountAndTotal()
-  await updatePresaleMintedCount()
-  await updateOneKClubMintedCount()
+  // await updatePresaleMintedCount()
+  // await updateOneKClubMintedCount()
 
-  await updateDripPresaleMintedCount()
-  await FetchDripPresaleInfoMintedByUser()
+  // await updateDripPresaleMintedCount()
+  // await FetchDripPresaleInfoMintedByUser()
 
 
 

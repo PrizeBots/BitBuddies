@@ -108,6 +108,7 @@ export interface INFTDataOfConnections {
   max_health: number,
   profile_image: string;
   stunned: boolean;
+  all_aps?:any;
 
   movementAbility?: string;
 }

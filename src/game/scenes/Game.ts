@@ -85,7 +85,7 @@ export default class Game extends Phaser.Scene {
   err_music!: Phaser.Sound.BaseSound;
   bootstrap: Bootstrap;
 
-  fight_music!: Phaser.Sound.BaseSound
+  fight_music: Array<Phaser.Sound.BaseSound> = []
   punch_music_1!: Phaser.Sound.BaseSound
   punch_music_2!: Phaser.Sound.BaseSound
   boop_music!: Phaser.Sound.BaseSound
@@ -195,7 +195,26 @@ export default class Game extends Phaser.Scene {
   }
 
   playFightMusic() {
-    if (!this.fight_music.isPlaying) this.fight_music.play({loop: true})
+    let isplaying = false;
+    let isplayingIndex = -1;
+    for(let i=0; i< this.fight_music.length; i++) {
+      // this.fight_music[i].stop()
+      if (this.fight_music[i].isPlaying) {
+        isplaying = true
+        isplayingIndex = i
+        break
+      }
+      
+    }
+    if (!isplaying) {
+      const random = Math.floor(Math.random() * this.fight_music.length)
+      this.fight_music[random].play({loop: true})
+    } 
+    // else {
+    //   // this.fight_music[isplayingIndex].play({loop: true})
+    // }
+    
+    // if (!this.fight_music.isPlaying) this.fight_music.play({loop: true})
   }
 
   playPunchMusic() {
@@ -215,7 +234,10 @@ export default class Game extends Phaser.Scene {
   }
 
   stopFightMusic() {
-    this.fight_music.stop()
+    for(let i=0; i< this.fight_music.length; i++) {
+      this.fight_music[i].stop()
+    }
+    // this.fight_music.stop()
   }
 
   playBoopMusic() {
@@ -236,7 +258,10 @@ export default class Game extends Phaser.Scene {
   async create(data: {data: any, key: string}) {
     // this.input.setPollAlways();
     this.err_music = this.sound.add('err_music');
-    this.fight_music = this.sound.add('fight-music', {volume: 0.4});
+    for(let i=0; i< 10; i++) {
+      this.fight_music[i] = this.sound.add(`fight-music-${i+1}`, {volume: 0.4});
+    }
+    // this.fight_music = this.sound.add('fight-music', {volume: 0.4});
     this.punch_music_1 = this.sound.add('punch1-music', {volume: 0.4});
     this.punch_music_2 = this.sound.add('punch2-music', {volume: 0.4});
     this.fight_start_music = this.sound.add('fight-start-music');
@@ -271,10 +296,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    // this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
+    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
@@ -421,7 +446,7 @@ export default class Game extends Phaser.Scene {
     if (this.frameTime > 30) {  
       this.frameTime = 0;
     } else {
-      console.log("not updating ", this.frameTime)
+      // console.log("not updating ", this.frameTime)
       return;
     }
 

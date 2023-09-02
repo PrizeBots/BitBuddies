@@ -71,6 +71,7 @@ import { gamelogic_contract_address } from "../../../contract/gamelogic_constant
 import { fetchAllNFTsFromDbEntries } from "../../../hooks/FetchNFT";
 import { DripFighterInfo, setNFTDetails, setTotalNFTData } from "../../../stores/BitFighters";
 import { SetMintGameQuantity, SetMintGameStarted } from "../../../stores/PlayerData";
+import { Link } from "react-router-dom";
 
 const ModalWrapper = styled.div`
 `
@@ -115,6 +116,55 @@ const ModalBoxWrapper = styled(Box)`
   }
 `
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+const ButtonView = styled(Button)`
+  span {
+    color: aliceblue;
+    // font-family: Monospace;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+  }
+
+  // background-color: #e60808;
+  background-color: #9c341a;
+
+  &:hover {
+    background-color: #852d17;
+  }
+
+
+  width: 300px;
+  height: 60px;
+`;
+
+const Title = styled.h1`
+  font-size: 28px;
+  color: #eee;
+  text-align: center;
+  margin: 50px;
+  // margin-top: 20px;
+
+  font-family:'Cooper Black', sans-serif;
+`
+
+const Content = styled.div`
+  position: relative;
+  // background-color:#2d2a2a;
+  left: 50%;
+  top: 50%;
+
+  display: flex;
+  flex-direction: column;
+  // gap: 20px;
+  // margin: 50px 0;
+  align-items: center;
+  justify-content: center;
+
+  transform: translate(-50%, -50%);
+`
+
 const ProgressBarWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -134,6 +184,12 @@ const ProgressBar = styled(LinearProgress)`
 
 function MintCard() {
   const dispatch = useDispatch();
+
+  const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
+  const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
+  const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
+  const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
+
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   const presaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mc.mp4"
   const dripPresaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/presaleData/Drip_Fighter_Pre_Sale_Mint_Card.mp4"
@@ -164,9 +220,6 @@ function MintCard() {
 
   const [videoToPlay, setVideoToPlay] = useState(presaleMintVideoURL)
   const [openModal, setOpenModal] = useState(false);
-  const loggedInUserWalletAddress = useAppSelector(
-    (state) => state.web3store.userAddress
-  );
 
   const mintGameStarted = useAppSelector(
     (state) => state.playerDataStore.mintGameStarted
@@ -229,9 +282,9 @@ function MintCard() {
   const [isRefCode, setIsRefCode] = useState(false);
   const [isDrip, setIsDrip] = useState(0);
 
-  const [bitfightersRefAddr, setBitfightersRefAdd] = useState("")
+  const [bitfightersRefAddr, setBitfightersRefAdd] = useState(ethers.constants.AddressZero)
   const [bitfightersRefBoxMintCard, setBitfightersRefBoxMintCard] = useState(0);
-  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(1);
+  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(10);
   const [bitfighterUseMintCardCheckBox, setBitfighterUseMintCardCheckBox] = useState(false);
 
   const [dripfightersRefAddr, setDripfightersRefAdd] = useState("")
@@ -511,10 +564,10 @@ function MintCard() {
     );
 
     // store.dispatch(SetMintGameStarted(true))
-    // store.dispatch(SetMintGameQuantity(30))
+    // store.dispatch(SetMintGameQuantity(10))
     
     // bootstrap.launchMintingGame({
-    //   quantity: 30
+    //   quantity: 10
     // })
     // return
 
@@ -633,6 +686,7 @@ function MintCard() {
         setErrorState(minted.message + "\n" + minted.error_data.message)
         dispatch(setCardState(PageStates.FailedState))
         initializeBitfightersMintVars();
+        setMintingState("");
         return;
       } else {
 
@@ -666,6 +720,7 @@ function MintCard() {
       dispatch(setCardState(PageStates.Bitfighter))
       initializeBitfightersMintVars();
     }, 1000)
+    setMintingState("");
   };
 
   const DripBitfightersMint = async () => {
@@ -2211,7 +2266,63 @@ function MintCard() {
   return (
     <div>
       <NotificationMessageHelper />
-      {CustomUI}
+      {
+          
+        (!bitfightersLoadedBool && !mintGameStarted)?
+        <Content>
+          <Title>Loading...</Title>
+        </Content>:
+        (bitFighterNFTData.length >0  && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool && !mintGameStarted)?
+        <Content>
+            <Title>  :) Bit Fighters detected in this wallet. </Title>
+            <Link 
+              className="primary" 
+              to="/game" 
+            >
+              <ButtonView variant="contained">
+                <span>
+                  Go to Game
+                </span>
+              </ButtonView>
+            </Link>
+
+            {/* <ButtonView
+                variant="outlined"
+                color="secondary"
+                onClick={async () => {
+                  bitfightersMint()
+                }}
+                style={{
+                  width: '350px'
+                }}
+              >
+                <span>
+              Get your Bit Fighters
+            </span>
+          </ButtonView> */}
+        </Content>
+        : 
+        (!mintGameStarted && mintingState=== "")?
+            <ButtonView
+                // variant="outlined"
+                // color="secondary"
+                onClick={async () => {
+                  bitfightersMint()
+                }}
+                style={{
+                  width: '350px'
+                }}
+              >
+                <span>
+              Get your Bit Fighters
+            </span>
+          </ButtonView>:
+          (!mintGameStarted && mintingState!== "")?
+          <>
+            <CircularProgress />
+          </>
+          : <></>
+      }
     </div>
   );
 }

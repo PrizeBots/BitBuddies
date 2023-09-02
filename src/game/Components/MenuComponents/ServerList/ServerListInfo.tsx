@@ -75,7 +75,7 @@ export function ServerListInfo() {
 
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
 
-  console.log("-=-- selected_player---", selectedPlayer)
+  // console.log("-=-- selected_player---", selectedPlayer)
   // const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
 

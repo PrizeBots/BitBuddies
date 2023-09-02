@@ -229,9 +229,9 @@ export default class MitingGame extends Phaser.Scene {
     this.Opensprite.displayHeight = height ;
     this.Opensprite.displayWidth = width ;
 
-    const leftText = this.add.text( spriteX- 50, spriteY - height/2 - 120 , `Left: ${store.getState().playerDataStore.mintingGameNftQuantity}`, { fontFamily: '"Cooper Black", sans-serif', fontSize: '40px' });
+    const leftText = this.add.text( spriteX- 100, spriteY - height/2 - 120 , `Remaining: ${store.getState().playerDataStore.mintingGameNftQuantity}`, { fontFamily: '"Cooper Black", sans-serif', fontSize: '40px' });
     // this.add.text( spriteX - 200, spriteY - height/2 - 60 , `Please Click the Machine to fetch Players`, { fontFamily: '"Cooper Black", sans-serif', fontSize: '20px' });
-    this.notifText = this.add.text( spriteX - 50, spriteY - height/2 - 60 , `Click to Begin`, { fontFamily: '"Cooper Black", sans-serif', fontSize: '20px' });
+    this.notifText = this.add.text( spriteX - 60, spriteY - height/2 - 60 , `Click to Begin`, { fontFamily: '"Cooper Black", sans-serif', fontSize: '20px' });
     
 
     this.Opensprite.play("first_frame_idle");
@@ -347,9 +347,9 @@ export default class MitingGame extends Phaser.Scene {
           if (this.quantity === 0) {
             this.notifText.text = "Go To Game"
             leftText.text  = ""
-            this.notifText.setInteractive().setOrigin(0.5)
+            this.notifText.setInteractive()
               .setPadding(20)
-              .setStyle({ backgroundColor: '#b02b21' })
+              .setStyle({ backgroundColor: '#9c341a'})
 
             this.notifText.on("pointerdown", () => {
               //
@@ -394,7 +394,7 @@ export default class MitingGame extends Phaser.Scene {
           tempSprite?.setDepth(7)
           tempSprite?.setVisible(true)
       
-          leftText.text = `Left: ${this.quantity}`
+          leftText.text = `Remaining: ${this.quantity}`
           leftText.update()
           this.canEject = true
           this.third_stage_idle = false
@@ -466,11 +466,11 @@ export default class MitingGame extends Phaser.Scene {
 const lastRandomX = [-10000];
 const lastRandomY = [-10000];
 function generateRandomXAndY(): {randomX: number, randomY: number} {
-  const randomX = Math.sign(Math.random() - 0.5) *  Math.random() * 900
+  const randomX = Math.sign(Math.random() - 0.5) *  Math.random() * 800
   const randomY = Math.sign(Math.random() - 0.5) * Math.random()* 100 + 300;
   for (let i =0; i < lastRandomX.length; i++) {
     // console.log("debug----- ", randomX ,lastRandomX[i], Math.abs(randomX - lastRandomX[i]) < 60)
-    if (Math.abs(randomX - lastRandomX[i]) < 30 ) {
+    if (Math.abs(randomX - lastRandomX[i]) < 50 ) {
       console.log("debug.. ", Math.abs(randomX - lastRandomX[i]))
       return generateRandomXAndY()
     }

@@ -7,7 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import styled from "styled-components";
 import Fab from "@mui/material/Fab";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import { MenuBook, YouTube } from "@mui/icons-material";
+import { MenuBook, Telegram, YouTube } from "@mui/icons-material";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import store from "../stores";
 import { setNFTLoadedBool } from "../stores/BitFighters";
@@ -19,7 +19,9 @@ import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 // import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 // import Badge from '@mui/material/Badge';
 import { getEllipsisTxt } from "../utils";
-import { ChangeShowMenuBox } from "../stores/UserWebsiteStore";
+import { ChangeShowMenuBox, ChangeShowQueueBox } from "../stores/UserWebsiteStore";
+import CompetitionTime from "./CompetitionTime";
+import { SetLeaderBoardOpen } from "../stores/WebsiteStateStore";
 
 const appId = process.env.REACT_APP_MORALIS_APP_ID;
 const serverUrl = process.env.REACT_APP_MORALIS_SERVER_URL;
@@ -88,12 +90,35 @@ function Header() {
     (state) => state.playerDataStore.gameStarted
   );
 
-  console.log(
-    "selected_player_info",
-    Object.keys(selectedPlayer).length,
-    gameStarted
-  );
-  console.log("current history path -- ", HistoryPath);
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  // const deadline = "September, 3, 2023";
+  const deadline = new Date(2023,8,3,23,59,0);
+
+  const getTime = () => {
+    const time = deadline.getTime() - Date.now();
+
+    // setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
+    setHours(Math.floor((time / (1000 * 60 * 60))));
+    setMinutes(Math.floor((time / 1000 / 60) % 60));
+    setSeconds(Math.floor((time / 1000) % 60));
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => getTime(), 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // console.log(
+  //   "selected_player_info",
+  //   Object.keys(selectedPlayer).length,
+  //   gameStarted
+  // );
+  // console.log("current history path -- ", HistoryPath);
   let moralisButtonUI: JSX.Element = <></>;
 
   const ethersLogin = async () => {
@@ -166,7 +191,7 @@ function Header() {
   }, []);
 
   if (userAddress !== "") {
-    console.log("here again.... ");
+    // console.log("here again.... ");
 
     moralisButtonUI = (
       <div
@@ -185,6 +210,7 @@ function Header() {
                 onClick={() => {
                   console.log("clicking on profile pic ", ShowMenuBoxRedux);
                   store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
+                  store.dispatch(ChangeShowQueueBox(false));
                 }}
               >
                 <img
@@ -393,10 +419,29 @@ function Header() {
               </Link>
             </li>
 
-            <li className="nav-item" key={uuidv4()}>
-              <Link className="nav-link" to="/leaderboard">
+            <li className="nav-item" key={uuidv4()} >
+              <Link 
+                className="nav-link" 
+                to="/leaderboard" 
+                onClick={
+                  event => {
+                    event.preventDefault()
+                    // do something
+                    store.dispatch(SetLeaderBoardOpen(true))
+                  }}
+              >
                 <div className="cooper-black-tab">Leaderboard</div>
               </Link>
+            </li>
+
+            <li className="nav-item" key={uuidv4()}>
+              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+                <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
+              </Link>
+
+              {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+                <div className="cooper-black-tab"><CompetitionTime /></div>
+              </Link> */}
             </li>
 
             {HistoryPath === "gamePlay" ? (
@@ -503,6 +548,27 @@ function Header() {
                 </li>
 
                 <li key={6}>
+                  <div
+                    style={{
+                      width: 10,
+                    }}
+                  ></div>
+                </li>
+
+                <li className="nav-item" key={uuidv4()}>
+                  <Tooltip title="Follow Us on Telegram">
+                    {/* <div style={{ color: "#eee" }}> */}
+                      <a
+                        href="https://t.me/+ThxhkzeHFNA3Mjdh"
+                        target="_blank"
+                      >
+                        <Telegram color="primary" />
+                      </a>
+                    {/* </div> */}
+                  </Tooltip>
+                </li>
+
+                <li key={uuidv4()}>
                   <div
                     style={{
                       width: 10,

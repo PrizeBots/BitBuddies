@@ -81,10 +81,10 @@ export default function Footer() {
       {added_to_queue_pool && 
       <Wrapper>
         <span>
-          We are finding the best match for you.
+          Finding you an opponent..
         </span>
         <span role="img" aria-label="emoji">
-          Please wait some time &#128516;
+          Please wait. Thank you. &#128516;
         </span>
         <div className="close-icon" onClick={() => {
           //

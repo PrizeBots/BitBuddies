@@ -1021,4 +1021,4 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0x5d1fFC605348158e1c4098E08C52Bb1aEca75D21"
+export const bitfighter_contract_adress = "0xcC4BaE57cd08c597A52AA9935C3Be121B7Cb3535"

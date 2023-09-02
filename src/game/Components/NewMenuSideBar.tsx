@@ -265,6 +265,7 @@ export default function NewMenuSideBar() {
                         color="secondary"
                         onClick={() => {
                           store.dispatch(ChangeShowQueueBox(true))
+                          store.dispatch(ChangeShowStatsView(false))
                         }}
                       >
                         Game

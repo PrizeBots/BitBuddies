@@ -44,7 +44,7 @@ export function parseWBTCBalance(balance: string) {
 
 
 export function parseWBTCBalanceV2(balance: string) {
-  console.log("-----parseWBTCBalanceV2 ", balance)
+  // console.log("-----parseWBTCBalanceV2 ", balance)
   if (isNullOrUndefined(balance) || balance === "") {
     return "0"
   }
@@ -56,7 +56,7 @@ export function parseWBTCBalanceV2(balance: string) {
 }
 
 export function parseWBTCBalanceV3(balance: number| undefined) {
-  console.log("-----parseWBTCBalanceV3 ", balance)
+  // console.log("-----parseWBTCBalanceV3 ", balance)
   if (isNullOrUndefined(balance)) {
     return "0"
   }

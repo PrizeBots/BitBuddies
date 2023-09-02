@@ -177,7 +177,7 @@ export default function WinnersReceipt() {
 
   // showWinnersCardBool = true
   const closeDialogMenu = () => {
-    console.log("quit happened .. ")
+    // console.log("quit happened .. ")
     dispatch(ShowWinnerCardAtFightEnd(false))
     fetchPlayerWalletInfo()
   }
@@ -214,8 +214,8 @@ export default function WinnersReceipt() {
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 1000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 1000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 5000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 5000) } bits </h4>
                   }
                 </div>
                 
@@ -223,8 +223,8 @@ export default function WinnersReceipt() {
                 <div>
                   {
                     (store.getState().web3store.userAddress !== store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 1000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 1000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 5000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 5000) } bits </h4>
                   }
                 </div>
 

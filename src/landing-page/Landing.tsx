@@ -18,6 +18,7 @@ import MintCardsPage from "./MintCardsPage/MintCardsPage";
 import { SetGlobalRefCode } from "../stores/MintCardStateStore";
 import { isNullOrUndefined } from "util";
 import NewFighters from "./FightersNew";
+import Leaderboard from "./Leaderboard";
 // import MintPage3 from './MintPage3';
 
 const Backdrop = styled.div`
@@ -50,7 +51,7 @@ const Landing = (props: any) => {
       location.pathname === "/home" ||
       location.pathname === "/" ||
       location.pathname === "/mint" ||
-      location.pathname === "/leaderboard" ||
+      // location.pathname === "/leaderboard" ||
       location.pathname === "/presale"
     )
   ) {
@@ -135,9 +136,22 @@ const Landing = (props: any) => {
       }
       
       View = <MintCardsPage />;
-    } else {
+    } 
+    // else if (location.pathname.includes("/leaderboard")) {
+    //   View = (
+    //     <div>
+    //       <Leaderboard />
+    //       {/* <h1 style={{
+    //         color: 'aliceblue'
+    //       }}>Page Under Construction</h1> */}
+    //     </div>
+    //   );
+    // } 
+    else {
       View = (
-        <div>
+        <div style={{
+            color: 'aliceblue'
+          }}>
           <h1>404 Page does not exist</h1>
         </div>
       );

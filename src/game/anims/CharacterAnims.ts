@@ -330,8 +330,16 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
         key,
         frame: 'drink003.png'
       },
+      {
+        key,
+        frame: 'drink003.png'
+      },
+      {
+        key,
+        frame: 'drink003.png'
+      },
     ],
-    duration: 1000,
+    duration: 1500,
     repeat: 0
   })
 
@@ -596,7 +604,7 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
 
       
     ],
-    duration: 4000,
+    duration: 2000,
     repeat: 0
   })
 

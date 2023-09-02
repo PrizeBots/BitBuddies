@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { LinearProgress } from "@mui/material"
 // import { OpenAtmView } from "../../stores/UserActions";
 import { useState } from "react";
-import { depositMoneyToWalletV2 } from "../../contract";
+import { approveWBTC2, checkAllowance, depositMoneyToWalletV2 } from "../../contract";
 import store from "../../stores";
 import AtmViewBox from "./MenuComponents/AtmViewBox";
 import { convertWBTCToBigIntWithDecimlas, getBalances } from "../../utils/web3_utils";
@@ -12,6 +12,11 @@ import ErrSnackBarHelper from "../../landing-page/ErrSnackBarHelper";
 import { fetchPlayerWalletInfo, redeemPlayerBalance, updateWalletBalanceWithWeb3 } from "../../hooks/ApiCaller";
 import { isNullOrUndefined } from "util";
 import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNotificationBool, SetSuccessNotificationMessage } from "../../stores/NotificationStore";
+import { ethers } from "ethers";
+import { gamelogic_contract_address } from "../../contract/gamelogic_constants";
+import { setCardState } from "../../stores/MintCardStateStore";
+import { TurnMouseClickOff } from "../../stores/UserActions";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 
 const ProgressBarWrapper = styled.div`
@@ -77,13 +82,42 @@ export function ATMView() {
   }
 
   const AddMoneyToWallet = async () => {
-    console.log("amount ", amount)
+    console.log("debug_AddMoneyToWallet amount ", amount)
     if (amount <= 0) {
       return
     }
     setaddToQueueBool(true)
     setAddMoneyState("Adding to wallet")
+
+    const allowance = await checkAllowance(
+      store.getState().web3store.userAddress
+    );
+    console.log("debug_AddMoneyToWallet allowance -- >", allowance.toString());
+
+    if (
+      ethers.BigNumber.from("10000000000").gte(
+        ethers.BigNumber.from(allowance.toString())
+      )
+    ) {
+      console.log("debug_AddMoneyToWallet less allowance");
+      // setMintingState("Approval in Progress");
+      if (
+        !(await approveWBTC2(
+          gamelogic_contract_address,
+          ethers.BigNumber.from("10000000000")
+        ))
+      ) {
+        console.log("debug_AddMoneyToWallet failed to approve");
+        // setErrorState("Approval Failed")
+        // dispatch(setCardState(PageStates.FailedState))
+        // bootstrap.play_err_sound();
+        // initializeBitfightersMintVars();
+        return;
+      }
+    }
+    
     const done = await depositMoneyToWalletV2(convertWBTCToBigIntWithDecimlas(amount))
+    console.log("debug_AddMoneyToWallet done ", done)
     if (done) {
       // crypto success.
       // validate in api service and update db
@@ -157,11 +191,26 @@ export function ATMView() {
     setAddMoneyState("")
   }
 
+  const closeFunction = () => {
+    // store.dispatch(BrewMachinePunched(false))
+    dispatch(TurnMouseClickOff(false))
+  }
+
+  const ref = useDetectClickOutside({ onTriggered: closeFunction });
+
   return(
     <div className="atm-box" >
       {
         openAtmView && 
-        <div>
+        <div
+        ref={ref}
+          onMouseOver={() => {
+            dispatch(TurnMouseClickOff(true))
+          }}
+          onMouseOut={() =>{ 
+            dispatch(TurnMouseClickOff(false))
+          }}
+        >
           {/* <SuccessSnackBarHelper 
             open= {snackBarOpen}
             message={successSnackBarMessage}
