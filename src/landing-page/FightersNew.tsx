@@ -11,7 +11,7 @@ import Chat from '../game/Components/Chat';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Utils from './Utils';
 import { v4 as uuidv4 } from 'uuid';
-import { SetCurrentGamePlayer, SetGameStarted, setNickName } from '../stores/PlayerData';
+import { SetCurrentGamePlayer, setNickName } from '../stores/PlayerData';
 import { IPlayerData } from '../game/characters/IPlayer';
 import { PlayersInfo } from '../game/Components/PlayersInfo';
 import { SendingFriendRequest } from '../game/Components/SendingFriendRequest';
@@ -45,6 +45,7 @@ import { registerBitfighter } from '../contract';
 import { fetchAllNFTsFromDbEntries } from '../hooks/FetchNFT';
 import { setTotalNFTData, setNFTDetails } from '../stores/BitFighters';
 import Footer from './Footer';
+import NewWinnersReceipt from '../game/Components/MenuComponents/NewWinnersReceipt';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -332,7 +333,7 @@ function NewFighters() {
   const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
   
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
-  console.log("--------total_data-------", bitFightersTotalData)
+  // console.log("--------total_data-------", bitFightersTotalData)
   // console.log("--------total_data2-------", bitFighterNFTData)
 
   const selectedPlayer = useAppSelector(
@@ -367,7 +368,7 @@ function NewFighters() {
 
   const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
 
-  console.log("current path 333 ", gameStarted)
+  // console.log("current path 333 ", gameStarted)
 
   const [formNickNameame, setFormNickName] = useState("")
   const [formLuckyNumber, setFormLuckyNumber] = useState(1)
@@ -425,31 +426,31 @@ function NewFighters() {
     // console.log("game start -> ", playerSelected)
   }
 
-  const startGame = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+  // const startGame = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  //   event.preventDefault();
     
-    // if (bodyHtml) {
-    //   bodyHtml.style.zoom = "80%";
-    //   // bodyHtml.style.webkitTransform = "rotate(90deg)";
-    // }
-    // navigate("/game", { replace: true });
-    const playerAuthToken = await loginAndAuthenticatePlayer(playerSelected!.user_wallet_address, playerSelected!.minted_id);
-    if (!isNullOrUndefined(playerAuthToken)) {
-      store.dispatch(setPlayerAuthToken(playerAuthToken))
-      dispatch(SetGameStarted(true));
+  //   // if (bodyHtml) {
+  //   //   bodyHtml.style.zoom = "80%";
+  //   //   // bodyHtml.style.webkitTransform = "rotate(90deg)";
+  //   // }
+  //   // navigate("/game", { replace: true });
+  //   const playerAuthToken = await loginAndAuthenticatePlayer(playerSelected!.user_wallet_address, playerSelected!.minted_id);
+  //   if (!isNullOrUndefined(playerAuthToken)) {
+  //     store.dispatch(setPlayerAuthToken(playerAuthToken))
+  //     dispatch(SetGameStarted(true));
 
-      store.dispatch(SetSelectedGameServerURL(REACT_APP_LOBBY_WEBSOCKET_SERVER));
+  //     store.dispatch(SetSelectedGameServerURL(REACT_APP_LOBBY_WEBSOCKET_SERVER));
       
-      // dispatch(SetCurrentGamePlayer(playerSelected))
+  //     // dispatch(SetCurrentGamePlayer(playerSelected))
 
-      // dispatch(setNickName(playerSelected!.nick_name))
-      // const bodyHtml = document.querySelector('html');
-      // console.log("bodyhtml ", bodyHtml);
-      store.dispatch(SetGameLoadingState(true))
-      bootstrap.launchGame(playerSelected)
-    }
+  //     // dispatch(setNickName(playerSelected!.nick_name))
+  //     // const bodyHtml = document.querySelector('html');
+  //     // console.log("bodyhtml ", bodyHtml);
+  //     store.dispatch(SetGameLoadingState(true))
+  //     bootstrap.launchGame(playerSelected)
+  //   }
     
-  }
+  // }
 
   const registerFormValidate = async () => {
     setRegisterProcessRunning(true)
@@ -548,12 +549,12 @@ function NewFighters() {
     // boxWidth = 400;
     // noBitFighter = true;
   } else {
+    console.log("changing current path")
     if (!gameStarted) {
       store.dispatch(SetShowGameServersList(true));
     } else {
       store.dispatch(SetShowGameServersList(false));
     }
-    
   }
 
   if (gameStarted) {
@@ -566,16 +567,17 @@ function NewFighters() {
       <InventoryView />
       <EquipView />
       <BroadCastCombiner2 />
-      <InGameAssetPurchase />
       <ATMView />
+      <InGameAssetPurchase />
       <BroadcastingAnnouncement />
-      <RegisterNow />
-      <RegisterNewUserInGame />
+      {/* <RegisterNow /> */}
+      {/* <RegisterNewUserInGame /> */}
       <ControlsInfo />
       <Chat />
       <PlayersInfo />
       <QueueAddInfoWindow />
-      <WinnersReceipt />
+      {/* <WinnersReceipt /> */}
+      <NewWinnersReceipt />
       <SendingFriendRequest />
       <Footer />
     </>

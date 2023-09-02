@@ -65,7 +65,7 @@ export default class KeyControls {
             if (
               (new Date().getTime() - this.keys.keyD.time_last_pressed) < 300
             && (new Date().getTime() - this.keys.keyD.time_last_lifted) < 300) {
-              console.log("double pressed..d")
+              // console.log("double pressed..d")
               this.keys.keyD.double_pressed = true
             }
           }
@@ -87,7 +87,7 @@ export default class KeyControls {
             if (
               (new Date().getTime() - this.keys.keyA.time_last_pressed) < 300
             && (new Date().getTime() - this.keys.keyA.time_last_lifted) < 300) {
-              console.log("double pressed..a")
+              // console.log("double pressed..a")
               this.keys.keyA.double_pressed = true
             }
           }

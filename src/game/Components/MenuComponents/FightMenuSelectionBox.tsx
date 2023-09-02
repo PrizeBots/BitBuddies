@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Box, Button } from "@mui/material"
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { SelectFightInFightMachineMenu, TurnMouseClickOff } from '../../../stores/UserActions';
+import { SelectFightInFightMachineMenu, SetMouseClickControlFightMachine, TurnMouseClickOff } from '../../../stores/UserActions';
 import store from '../../../stores';
 import { ChangeShowMenuBox, ChangeShowQueueBox } from '../../../stores/UserWebsiteStore';
 
@@ -103,15 +103,29 @@ export default function FightMenuSelectionBox(data: any) {
   const ref = useDetectClickOutside({ onTriggered: data.closeFunction });
   const dispatch = useAppDispatch()
 
+  const closeFunction = () => {
+    console.log("debug_mouse in close fn fight selectinog box")
+    // dispatch(TurnMouseClickOff(false))
+    dispatch(SetMouseClickControlFightMachine(false))
+  }
+
   return(
-    <div ref={ref}>
+    <div>
       <Wrapper 
+        ref={ref}
+        // onMouseOver={() => {
+        //   dispatch(TurnMouseClickOff(true))
+        // }}
+        // onMouseOut={() =>{ 
+        //   dispatch(TurnMouseClickOff(false))
+        // }}
+
         onMouseOver={() => {
-          dispatch(TurnMouseClickOff(true))
-        }}
-        onMouseOut={() =>{ 
-          dispatch(TurnMouseClickOff(false))
-        }}
+              dispatch(SetMouseClickControlFightMachine(true))
+            }}
+            onMouseOut={() =>{ 
+              dispatch(SetMouseClickControlFightMachine(false))
+            }}
       >
         <FriendRequestBox2>
 

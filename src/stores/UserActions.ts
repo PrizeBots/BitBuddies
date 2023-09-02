@@ -79,6 +79,13 @@ interface UserActionData {
   turnMouseClickOff: boolean,
   gameTurnOffMouse: boolean,
 
+  // give all UI a different mouse control
+  mouseClickControlHeader: boolean,
+  mouseClickControlATM: boolean,
+  mouseClickControlFightMachine: boolean,
+  mouseClickControlChat: boolean,
+  mouseClickControlProfileWindow: boolean,
+
   // curent player is fighting
   currentPlayerFighting: boolean,
   currentOtherPlayerFighting: string,
@@ -215,6 +222,13 @@ const initialState: UserActionData = {
     total_bet: 0,
     selected_player: "",
   },
+
+
+  mouseClickControlHeader: false,
+  mouseClickControlATM: false,
+  mouseClickControlFightMachine: false,
+  mouseClickControlChat: false,
+  mouseClickControlProfileWindow: false
 }
 
 export const userActionData = createSlice({
@@ -421,6 +435,35 @@ export const userActionData = createSlice({
       state.bettingOnPlayerData = action.payload;
     },
 
+
+
+
+  //   mouseClickControlHeader: false,
+  // mouseClickControlATM: false,
+  // mouseClickControlFightMachine: false,
+  // mouseClickControlChat: false,
+  // mouseClickControlProfileWindow: false
+
+    SetMouseClickControlHeader: (state: { mouseClickControlHeader: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlHeader = action.payload;
+    },
+
+    SetMouseClickControlATM: (state: { mouseClickControlATM: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlATM = action.payload;
+    },
+
+    SetMouseClickControlFightMachine: (state: { mouseClickControlFightMachine: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlFightMachine = action.payload;
+    },
+
+    SetMouseClickControlChat: (state: { mouseClickControlChat: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlChat = action.payload;
+    },
+
+    SetMouseClickControlProfileWindow: (state: { mouseClickControlProfileWindow: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlProfileWindow = action.payload;
+    },
+
   },
 })
 
@@ -437,7 +480,9 @@ export const {
   FightPreStart, ClearFighterInfo, ShowBrewEjectAnimationFromServer,
   ShowGotBacktHitSprite, ShowDownSprite, ShowStunnedSprite, ShowChatWindow, SetFocussedOnChat,
   ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, GameTurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
-  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew, SelectFightInFightMachineMenu
+  OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew, SelectFightInFightMachineMenu,
+
+  SetMouseClickControlHeader, SetMouseClickControlATM, SetMouseClickControlFightMachine, SetMouseClickControlChat, SetMouseClickControlProfileWindow
   // SetFightInfo 
 } = userActionData.actions
 

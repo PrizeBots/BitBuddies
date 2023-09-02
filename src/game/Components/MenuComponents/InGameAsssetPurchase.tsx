@@ -102,7 +102,7 @@ export default function InGameAssetPurchase() {
         store.dispatch(SetSuccessNotificationBool(true))
         store.dispatch(SetSuccessNotificationMessage(`${quantity} BREWs have been purchased`))
         bootstrap.play_err_sound()
-        fetchPlayerWalletInfo();
+        fetchPlayerWalletInfo(false, "ingameassetprchase");
       }, 500)
     } else {
       setTimeout(() => {

@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks"
 import styled from 'styled-components'
 import { LinearProgress } from "@mui/material"
 import Utils from "../../landing-page/Utils";
-import { HitFightMachine, SelectFightInFightMachineMenu, TurnMouseClickOff } from "../../stores/UserActions";
+import { HitFightMachine, SelectFightInFightMachineMenu, SetMouseClickControlATM, SetMouseClickControlFightMachine, TurnMouseClickOff } from "../../stores/UserActions";
 import { useState } from "react";
 import store from "../../stores";
 import AddToQueueBox from "./MenuComponents/AddToQueueBox";
@@ -15,6 +15,7 @@ import { updateBetInfOfPlayer } from "../../utils/fight_utils";
 import { SetFailureNotificationBool, SetFailureNotificationMessage } from "../../stores/NotificationStore";
 import { isNullOrUndefined } from "util";
 import FightMenuSelectionBox from "./MenuComponents/FightMenuSelectionBox";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 
 const ProgressBarWrapper = styled.div`
@@ -180,15 +181,30 @@ export function QueueAddInfoWindow() {
     dispatch(TurnMouseClickOff(false))
   }
 
+  // const closeFunction = () => {
+  //   console.log("debug_mouse in close fn queue add info window")
+  //   // dispatch(TurnMouseClickOff(false))
+  //   dispatch(SetMouseClickControlFightMachine(false))
+  // }
+
+  // const ref = useDetectClickOutside({ onTriggered: closeFunction });
+
   return(
     <>
     {
       selectFightMenu ?
           <Backdrop 
+          // ref={ref}
             className="queue-menu"
             style={{
               height: `${height - 100}px`,
             }}
+            // onMouseOver={() => {
+            //   dispatch(SetMouseClickControlFightMachine(true))
+            // }}
+            // onMouseOut={() =>{ 
+            //   dispatch(SetMouseClickControlFightMachine(false))
+            // }}
           >
             <AddToQueueBox 
               closeFunction={closeDialogMenu} 

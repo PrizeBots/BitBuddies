@@ -3,6 +3,7 @@ import store from "../stores";
 import { SetChangeInBalance, SetChangeInBalanceBool, SetWeb2CreditBalance } from "../stores/Web3StoreBalances";
 import { SetAssetsInAssetManager } from "../stores/AssetStore";
 import { SetP1, SetP1SelfBet, SetP1TotalBet, SetP1WinPot, SetP2, SetP2SelfBet, SetP2TotalBet, SetP2WinPot } from "../stores/FightsStore";
+import { SetLeaderBoardData } from "../stores/WebsiteStateStore";
 
 let REACT_APP_BASE_API_ANAKIN_URL = "";
 console.log("----", process.env.REACT_APP_DEV_ENV)
@@ -333,7 +334,7 @@ export const updateWalletBalanceWithWeb3 = async () => {
   return true;
 }
 
-export const fetchPlayerWalletInfo = async (login=false) => {
+export const fetchPlayerWalletInfo = async (login=false, randomdata = "") => {
   // console.log("----", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
   if (store.getState().authStore.player_auth_token === "") {
     console.log("nil user auth token in fetchPlayerWalletInfo");
@@ -350,7 +351,7 @@ export const fetchPlayerWalletInfo = async (login=false) => {
     return false;
   }
   const output = await result.json();
-  console.log("--- fetchPlayerWalletInfo balance", output.data);
+  console.log("--- fetchPlayerWalletInfo balance", randomdata);
 
   const currentBalance = store.getState().web3BalanceStore.web2CreditBalance;
   if (login) {
@@ -370,7 +371,7 @@ export const fetchPlayerWalletInfo = async (login=false) => {
   setTimeout(() => {
     store.dispatch(SetChangeInBalanceBool(false));
   }, 5000 )
-  console.log("changed balance fetchPlayerWalletInfo --", changedString);
+  // console.log("changed balance fetchPlayerWalletInfo --", changedString);
   store.dispatch(SetWeb2CreditBalance(output.data["web2_balance"]));
   return true;
 }
@@ -722,7 +723,7 @@ export const randomGenarateDripPreSaleV2 = async (userAddress: string, quantity:
 
 
 export const ListGameServersApiCall = async (userAddress: string, region: string) => {
-  console.log("ListGameServersApiCall clicked..", userAddress)
+  // console.log("ListGameServersApiCall clicked..", userAddress)
   if (userAddress === "") {
     console.log("nill user address");
     return
@@ -858,4 +859,22 @@ export const postUserSignedMessage = async (userAddress: string, message: string
     throw "Error in Posting Signature"
   }
   
+}
+
+
+export const FetchLeaderBoard = async () => {
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/leaderboard/fetch/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  if (result.status !== 200) {
+    console.log("fetch leaderboard -- not 200")
+    return null;
+  }
+  const output = await result.json();
+  console.log("fetch leaderboard -- ", output)
+  store.dispatch(SetLeaderBoardData(output.data))
+  // return output.data;
 }

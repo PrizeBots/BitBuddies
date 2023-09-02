@@ -9,7 +9,7 @@ import QueueList from './MenuComponents/QueueList'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import store from '../../stores'
 import { ChangeShowGangView, ChangeShowQueueBox, ChangeShowStatsView } from '../../stores/UserWebsiteStore'
-import { TurnMouseClickOff } from '../../stores/UserActions'
+import { SetMouseClickControlProfileWindow, TurnMouseClickOff } from '../../stores/UserActions'
 import { getEllipsisTxt } from '../../utils';
 import { setNFTLoadedBool } from '../../stores/BitFighters';
 import { LogOut } from '../../stores/Web3Store';
@@ -226,11 +226,12 @@ export default function NewMenuSideBar() {
         <Backdrop
         >
             {ShowMenuBoxRedux && ((
-                <Wrapper onMouseOver={() => {
-                    dispatch(TurnMouseClickOff(true))
+                <Wrapper 
+                  onMouseOver={() => {
+                    dispatch(SetMouseClickControlProfileWindow(true))
                   }}
                   onMouseOut={() => {
-                    dispatch(TurnMouseClickOff(false))
+                    dispatch(SetMouseClickControlProfileWindow(false))
                   }}>
                   <TextWrapper>Connected Wallet 
                     <span 

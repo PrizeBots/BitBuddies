@@ -12,7 +12,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import store from "../stores";
 import { setNFTLoadedBool } from "../stores/BitFighters";
 import { Web3Login } from "./Web3Login";
-import { TurnMouseClickOff } from "../stores/UserActions";
+import { SetMouseClickControlHeader, SetMouseClickControlProfileWindow, TurnMouseClickOff } from "../stores/UserActions";
 import { v4 as uuidv4 } from "uuid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
@@ -107,19 +107,19 @@ function Header() {
     setSeconds(Math.floor((time / 1000) % 60));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => getTime(), 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => getTime(), 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // console.log(
   //   "selected_player_info",
   //   Object.keys(selectedPlayer).length,
   //   gameStarted
   // );
-  // console.log("current history path -- ", HistoryPath);
-  let moralisButtonUI: JSX.Element = <></>;
+  console.log("current history path -- ", HistoryPath);
+  // let moralisButtonUI: JSX.Element = <></>;
 
   const ethersLogin = async () => {
     console.log("button pressed ethersLogin");
@@ -190,187 +190,186 @@ function Header() {
     loopFunction();
   }, []);
 
-  if (userAddress !== "") {
-    // console.log("here again.... ");
+  // if (userAddress !== "") {
+  //   // console.log("here again.... ");
 
-    moralisButtonUI = (
-      <div
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "flex-end",
-          justifyContent: "center",
-        }}
-      >
-        {HistoryPath === "gamePlay" ? (
-          <li className="nav-item navbar-left dropdown" key={uuidv4()}>
-            <div>
-              <a
-                href="#"
-                onClick={() => {
-                  console.log("clicking on profile pic ", ShowMenuBoxRedux);
-                  store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
-                  store.dispatch(ChangeShowQueueBox(false));
-                }}
-              >
-                <img
-                  src={selectedPlayer.data.profile_image}
-                  className="rounded-circle"
-                  alt="."
-                  height="30"
-                  width="40"
-                  style={{
-                    marginTop: "-10px",
-                  }}
-                ></img>
-                <ArrowDropDownIcon color="action"></ArrowDropDownIcon>
-              </a>
-            </div>
+  //   moralisButtonUI = (
+  //     <div
+  //       style={{
+  //         flex: 1,
+  //         flexDirection: "row",
+  //         alignItems: "flex-end",
+  //         justifyContent: "center",
+  //       }}
+  //     >
+  //       {HistoryPath === "gamePlay" ? (
+  //         <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+  //           <div>
+  //             <a
+  //               href="#"
+  //               onClick={() => {
+  //                 console.log("clicking on profile pic ", ShowMenuBoxRedux);
+  //                 store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
+  //                 store.dispatch(ChangeShowQueueBox(false));
+  //                 // store.dispatch(SetMouseClickControlProfileWindow(!store.getState().userActionsDataStore.mouseClickControlProfileWindow));
+  //               }}
+  //             >
+  //               <img
+  //                 src={selectedPlayer.data.profile_image}
+  //                 className="rounded-circle"
+  //                 alt="."
+  //                 height="30"
+  //                 width="40"
+  //                 style={{
+  //                   marginTop: "-10px",
+  //                 }}
+  //               ></img>
+  //               <ArrowDropDownIcon color="action"></ArrowDropDownIcon>
+  //             </a>
+  //           </div>
 
-            {/* <a 
-              href="#" 
-              onClick={() => {
-                console.log("clicking on profile pic ", ShowMenuBoxRedux)
-                store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux))
-              }}
-            >
-            {
-              bitFightersTotalData.length > 0 && bitFightersTotalData[0].data && bitFightersTotalData[0].data.profile_image?
-              <img 
-                src={bitFightersTotalData[0].data.profile_image}
-                className="rounded-circle" 
-                alt="Cinque Terre" 
-                height="30" 
-                width="40"
-                style={{
-              marginTop:'-10px'
-            }}
-              ></img>:
-              <img 
-                src="bitfgihter_assets/paris.jpeg" 
-                className="rounded-circle" 
-                alt="Cinque Terre" 
-                height="30" 
-                width="30"
-              ></img>
-            }
-            <ArrowDropDownIcon color='action' ></ArrowDropDownIcon>
-            </a> */}
-          </li>
-        ) : (
-          <li className="nav-item navbar-left dropdown" key={uuidv4()}>
-            <a
-              className="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-            >
-              {bitFightersTotalData.length > 0 &&
-              bitFightersTotalData[0].data &&
-              bitFightersTotalData[0].data.profile_image ? (
-                <img
-                  src={bitFightersTotalData[0].data.profile_image}
-                  className="rounded-circle"
-                  alt="Cinque Terre"
-                  height="30"
-                  width="40"
-                  style={{
-                    marginTop: "-10px",
-                  }}
-                ></img>
-              ) : (
-                <img
-                  src="bitfgihter_assets/paris.jpeg"
-                  className="rounded-circle"
-                  alt="Cinque Terre"
-                  height="30"
-                  width="30"
-                ></img>
-              )}
-            </a>
-            <ul
-              className="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdown"
-            >
-              <li>
-                <a className="dropdown-item" href="#">
-                  {" "}
-                  Connected Wallet{" "}
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#" key={2}>
-                  <span style={{ color: "red" }}>
-                    {getEllipsisTxt(userAddress)}
-                  </span>{" "}
-                </a>
-              </li>
+  //           {/* <a 
+  //             href="#" 
+  //             onClick={() => {
+  //               console.log("clicking on profile pic ", ShowMenuBoxRedux)
+  //               store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux))
+  //             }}
+  //           >
+  //           {
+  //             bitFightersTotalData.length > 0 && bitFightersTotalData[0].data && bitFightersTotalData[0].data.profile_image?
+  //             <img 
+  //               src={bitFightersTotalData[0].data.profile_image}
+  //               className="rounded-circle" 
+  //               alt="Cinque Terre" 
+  //               height="30" 
+  //               width="40"
+  //               style={{
+  //             marginTop:'-10px'
+  //           }}
+  //             ></img>:
+  //             <img 
+  //               src="bitfgihter_assets/paris.jpeg" 
+  //               className="rounded-circle" 
+  //               alt="Cinque Terre" 
+  //               height="30" 
+  //               width="30"
+  //             ></img>
+  //           }
+  //           <ArrowDropDownIcon color='action' ></ArrowDropDownIcon>
+  //           </a> */}
+  //         </li>
+  //       ) : (
+  //         <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+  //           <a
+  //             className="nav-link dropdown-toggle"
+  //             href="#"
+  //             id="navbarDropdown"
+  //             role="button"
+  //             data-bs-toggle="dropdown"
+  //           >
+  //             {bitFightersTotalData.length > 0 &&
+  //             bitFightersTotalData[0].data &&
+  //             bitFightersTotalData[0].data.profile_image ? (
+  //               <img
+  //                 src={bitFightersTotalData[0].data.profile_image}
+  //                 className="rounded-circle"
+  //                 alt="Cinque Terre"
+  //                 height="30"
+  //                 width="40"
+  //                 style={{
+  //                   marginTop: "-10px",
+  //                 }}
+  //               ></img>
+  //             ) : (
+  //               <img
+  //                 src="bitfgihter_assets/paris.jpeg"
+  //                 className="rounded-circle"
+  //                 alt="Cinque Terre"
+  //                 height="30"
+  //                 width="30"
+  //               ></img>
+  //             )}
+  //           </a>
+  //           <ul
+  //             className="dropdown-menu dropdown-menu-end"
+  //             aria-labelledby="navbarDropdown"
+  //           >
+  //             <li>
+  //               <a className="dropdown-item" href="#">
+  //                 {" "}
+  //                 Connected Wallet{" "}
+  //               </a>
+  //             </li>
+  //             <li>
+  //               <a className="dropdown-item" href="#" key={2}>
+  //                 <span style={{ color: "red" }}>
+  //                   {getEllipsisTxt(userAddress)}
+  //                 </span>{" "}
+  //               </a>
+  //             </li>
 
-              {/* <li key={uuidv4()}>
-                  <div
-                    style={{
-                      width: 20,
-                    }}
-                  ></div>
-                </li>
+  //             {/* <li key={uuidv4()}>
+  //                 <div
+  //                   style={{
+  //                     width: 20,
+  //                   }}
+  //                 ></div>
+  //               </li>
 
-                <li style={{ textAlign: "center" }} key={uuidv4()}>
-                  <button
-                    type="button"
-                    className="btn btn-outline-danger"
-                    onClick={() => web3LogOut()}
-                  >
-                    LogOut
-                  </button>
-                </li> */}
+  //               <li style={{ textAlign: "center" }} key={uuidv4()}>
+  //                 <button
+  //                   type="button"
+  //                   className="btn btn-outline-danger"
+  //                   onClick={() => web3LogOut()}
+  //                 >
+  //                   LogOut
+  //                 </button>
+  //               </li> */}
 
               
 
-              {/* <li key={3}>
-                <hr></hr>
-              </li> */}
-              {/* <li key={uuidv4()}><NewMenuSideBar /></li> */}
-              {/* <li><a className="dropdown-item" href="#"> {getRoundedString(wbtcBalance)} <span style={{ color: "red", fontSize: '16px'}}> wBTC </span>    </a></li>
-            <li><a className="dropdown-item" href="#"> {getRoundedString(maticBalance)} <span style={{ color: "red", fontSize: '16px'}}> Matic </span> </a></li> */}
-              {/* <li key={7}><hr></hr></li> */}
-              {/* <li style={{ textAlign: "center" }}>
-                <button
-                  type="button"
-                  className="btn btn-outline-danger"
-                  onClick={() => web3LogOut()}
-                >
-                  LogOut
-                </button>
-              </li> */}
-            </ul>
-          </li>
-        )}
-      </div>
-    );
-  } else {
-    moralisButtonUI = (
-      <>
-        <button
-          type="button"
-          className="btn btn-outline-info"
-          onClick={() => Web3Login()}
-        >
-          Connect
-        </button>
-      </>
-    );
-  }
+  //             {/* <li key={3}>
+  //               <hr></hr>
+  //             </li> */}
+  //             {/* <li key={uuidv4()}><NewMenuSideBar /></li> */}
+  //             {/* <li><a className="dropdown-item" href="#"> {getRoundedString(wbtcBalance)} <span style={{ color: "red", fontSize: '16px'}}> wBTC </span>    </a></li>
+  //           <li><a className="dropdown-item" href="#"> {getRoundedString(maticBalance)} <span style={{ color: "red", fontSize: '16px'}}> Matic </span> </a></li> */}
+  //             {/* <li key={7}><hr></hr></li> */}
+  //             {/* <li style={{ textAlign: "center" }}>
+  //               <button
+  //                 type="button"
+  //                 className="btn btn-outline-danger"
+  //                 onClick={() => web3LogOut()}
+  //               >
+  //                 LogOut
+  //               </button>
+  //             </li> */}
+  //           </ul>
+  //         </li>
+  //       )}
+  //     </div>
+  //   );
+  // } else {
+  //   moralisButtonUI = (
+  //     <>
+  //       <button
+  //         type="button"
+  //         className="btn btn-outline-info"
+  //         onClick={() => Web3Login()}
+  //       >
+  //         Connect
+  //       </button>
+  //     </>
+  //   );
+  // }
 
   return (
     <div
       onMouseOver={() => {
-        // console.log(" mouse over .. in header ")
-        dispatch(TurnMouseClickOff(true));
+        dispatch(SetMouseClickControlHeader(true));
       }}
       onMouseOut={() => {
-        // console.log(" mouse out .. in header ")
-        dispatch(TurnMouseClickOff(false));
+        dispatch(SetMouseClickControlHeader(false));
       }}
     >
       <nav
@@ -401,17 +400,6 @@ function Header() {
               </Link>
             </li>
 
-            {/* <li className="nav-item" key={uuidv4()}>
-              <Link className="nav-link" to="/presale">
-                <div className="cooper-black-tab">Testing</div>
-              </Link>
-            </li> */}
-
-            {/* <li className="nav-item" key={uuidv4()}>
-              <Link className="nav-link" to="/mint">
-                <div className="cooper-black-tab">Mint</div>
-              </Link>
-            </li> */}
 
             <li className="nav-item" key={uuidv4()}>
               <Link className="nav-link" to="/mint">
@@ -426,7 +414,6 @@ function Header() {
                 onClick={
                   event => {
                     event.preventDefault()
-                    // do something
                     store.dispatch(SetLeaderBoardOpen(true))
                   }}
               >
@@ -435,13 +422,13 @@ function Header() {
             </li>
 
             <li className="nav-item" key={uuidv4()}>
-              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
-                <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
-              </Link>
-
               {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
-                <div className="cooper-black-tab"><CompetitionTime /></div>
+                <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
               </Link> */}
+
+              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+                <div className="cooper-black-tab"><CompetitionTime /></div>
+              </Link>
             </li>
 
             {HistoryPath === "gamePlay" ? (
@@ -557,14 +544,12 @@ function Header() {
 
                 <li className="nav-item" key={uuidv4()}>
                   <Tooltip title="Follow Us on Telegram">
-                    {/* <div style={{ color: "#eee" }}> */}
                       <a
                         href="https://t.me/+ThxhkzeHFNA3Mjdh"
                         target="_blank"
                       >
                         <Telegram color="primary" />
                       </a>
-                    {/* </div> */}
                   </Tooltip>
                 </li>
 
@@ -657,18 +642,114 @@ function Header() {
                 </li>
               
 
-                {moralisButtonUI ? moralisButtonUI : <>Cool</>}
+                {/* {moralisButtonUI ? moralisButtonUI : <>Cool</>} */}
+
+                  <>
+                {
+                  userAddress !== ""?
+                  <div
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {HistoryPath === "gamePlay" ? (
+                      <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+                        <div>
+                          <a
+                            href="#"
+                            onClick={() => {
+                              console.log("clicking on profile pic ", ShowMenuBoxRedux);
+                              store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
+                              store.dispatch(ChangeShowQueueBox(false));
+                            }}
+                          >
+                            <img
+                              src={selectedPlayer.data.profile_image}
+                              className="rounded-circle"
+                              alt="."
+                              height="30"
+                              width="40"
+                              style={{
+                                marginTop: "-10px",
+                              }}
+                            ></img>
+                            <ArrowDropDownIcon color="action"></ArrowDropDownIcon>
+                          </a>
+                        </div>
+                      </li>
+                    ) : (
+                      <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+                        <a
+                          className="nav-link dropdown-toggle"
+                          href="#"
+                          id="navbarDropdown"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                        >
+                          {bitFightersTotalData.length > 0 &&
+                          bitFightersTotalData[0].data &&
+                          bitFightersTotalData[0].data.profile_image ? (
+                            <img
+                              src={bitFightersTotalData[0].data.profile_image}
+                              className="rounded-circle"
+                              alt="Cinque Terre"
+                              height="30"
+                              width="40"
+                              style={{
+                                marginTop: "-10px",
+                              }}
+                            ></img>
+                          ) : (
+                            <img
+                              src="bitfgihter_assets/paris.jpeg"
+                              className="rounded-circle"
+                              alt="Cinque Terre"
+                              height="30"
+                              width="30"
+                            ></img>
+                          )}
+                        </a>
+                        <ul
+                          className="dropdown-menu dropdown-menu-end"
+                          aria-labelledby="navbarDropdown"
+                          onClick={event => event.preventDefault()}
+                        >
+                          <li onClick={event => event.preventDefault()}>
+                            <a className="dropdown-item" href="#">
+                              {" "}
+                              Connected Wallet{" "}
+                            </a>
+                          </li>
+                          <li onClick={event => event.preventDefault()}>
+                            <a className="dropdown-item" href="#" key={2}>
+                              <span style={{ color: "red" }}>
+                                {getEllipsisTxt(userAddress)}
+                              </span>{" "}
+                            </a>
+                          </li>
+
+                        </ul>
+                      </li>
+                    )}
+                  </div>:
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-outline-info"
+                      onClick={() => Web3Login()}
+                    >
+                      Connect
+                    </button>
+                  </>
+                }
+                </>
+
                 {
                   userAddress !== "" ? 
                   <div>
-
-                    {/* <li key={10}>
-                      <div
-                        style={{
-                          width: 50,
-                        }}
-                      ></div>
-                    </li> */}
 
                     <li style={{ textAlign: "center", marginLeft: '50px' }}>
                       <button

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Box } from "@mui/material"
+import { Box, Modal } from "@mui/material"
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { TurnMouseClickOff } from '../../../stores/UserActions';
 import { fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
@@ -9,18 +9,59 @@ import store from '../../../stores';
 import { isNullOrUndefined } from 'util';
 import { useDetectClickOutside } from "react-detect-click-outside";
 
+const ModalWrapper = styled.div`
+`
+
+
+const ModalBoxWrapper = styled(Box)`
+  background: #111B28;
+  border: 10px solid #000000;
+  border-radius: 10px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-left: 35%;
+  margin-top: 5%;
+  // transform: 'translate(-50%, -50%)',
+
+  button {
+    margin: 20px;
+    border: 4px solid #000000;
+    border-radius: 5px;
+  }
+
+  h2 {
+    font-family:'Cooper Black', sans-serif;
+    font-style: bold;
+    font-size: 40px;
+    color: aliceblue;
+    line-height: 75%;
+  }
+
+  h3 {
+    font-family:'Cooper Black', sans-serif;
+    font-style: bold;
+    font-size: 30px;
+    color: grey;
+    line-height: 75%;
+    padding-bottom: 10px;
+  }
+`
 
 const Wrapper = styled.div`
   padding: 50px;
 `
 
 const CustomBox = styled(Box)`
-  width: 100%;
-  overflow: auto;
-  opacity: 0.9;
-  background: #2c2c2c;
-  border: 10px solid #000000;
-  border-radius: 10px;
+  // width: 100%;
+  // overflow: auto;
+  // opacity: 0.9;
+  // background: #2c2c2c;
+  // border: 10px solid #000000;
+  // border-radius: 10px;
   // padding: 20px;
 
 
@@ -110,7 +151,7 @@ let p1_self_bet = 0;
 let p2_self_bet = 0;
 
 
-export default function WinnersReceipt() {
+export default function NewWinnersReceipt() {
 
   const showWinnersCardBool = useAppSelector((state) => state.userPathStore.showWinnerCardAtFightEnd);
   const fight_winner = useAppSelector((state) => state.fightInfoStore.fight_winner)
@@ -182,19 +223,24 @@ export default function WinnersReceipt() {
     // fetchPlayerWalletInfo(false, "winner receipt ")
   }
 
+  const handleModalClose = () => {
+    console.log("handle modal close in winrecipt..")
+    dispatch(ShowWinnerCardAtFightEnd(false))
+    fetchPlayerWalletInfo(false, "winner receipt ")
+    // store.dispatch(SetLeaderBoardOpen(false))
+  };
+
   const ref = useDetectClickOutside({ onTriggered: closeDialogMenu });
   const dispatch = useAppDispatch();
   return(
-    <div ref={ref}>
-      {showWinnersCardBool && <Backdrop onMouseOver={() => {
-            dispatch(TurnMouseClickOff(true))
-          }}
-          onMouseOut={() =>{ 
-            dispatch(TurnMouseClickOff(false))
-          }}
-          onClick={() => {closeDialogMenu()}}
-          >
-            
+    <ModalWrapper>
+      <Modal
+        open={showWinnersCardBool}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+      <ModalBoxWrapper>
         <Wrapper>
           <CustomBox>
               <Header>
@@ -277,7 +323,8 @@ export default function WinnersReceipt() {
             
           </CustomBox>
         </Wrapper>
-      </Backdrop>}
-    </div>
+      </ModalBoxWrapper>
+      </Modal>
+    </ModalWrapper>
   )
 }

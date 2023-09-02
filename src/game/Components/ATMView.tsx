@@ -15,7 +15,7 @@ import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNo
 import { ethers } from "ethers";
 import { gamelogic_contract_address } from "../../contract/gamelogic_constants";
 import { setCardState } from "../../stores/MintCardStateStore";
-import { TurnMouseClickOff } from "../../stores/UserActions";
+import { SetMouseClickControlATM, TurnMouseClickOff } from "../../stores/UserActions";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 
@@ -192,6 +192,8 @@ export function ATMView() {
   }
 
   const closeFunction = () => {
+
+    console.log("debug_mouse in close fn atmview")
     // store.dispatch(BrewMachinePunched(false))
     dispatch(TurnMouseClickOff(false))
   }
@@ -205,10 +207,10 @@ export function ATMView() {
         <div
         ref={ref}
           onMouseOver={() => {
-            dispatch(TurnMouseClickOff(true))
+            dispatch(SetMouseClickControlATM(true))
           }}
           onMouseOut={() =>{ 
-            dispatch(TurnMouseClickOff(false))
+            dispatch(SetMouseClickControlATM(false))
           }}
         >
           {/* <SuccessSnackBarHelper 

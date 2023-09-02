@@ -35,7 +35,7 @@ function CompetitionTime() {
       alignContent: 'center'
     }}>
       <div style={{
-        color: 'white',
+        // color: 'white',
       }}> 
       <div className="cooper-black-tab">
         Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}

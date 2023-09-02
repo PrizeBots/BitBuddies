@@ -7,6 +7,12 @@ export interface ServersInfo {
   region: string,
 }
 
+export interface LeaderBoardData {
+  user_wallet_address: string,
+  web2_balance: number,
+  num_fights: number,
+}
+
 interface IWebsiteStateStore {
   gameLoading: boolean;
   showGameServersList: boolean;
@@ -15,6 +21,7 @@ interface IWebsiteStateStore {
   selected_server_url: string,
   region: string,
   leaderboardOpen: boolean,
+  leaderboardData: Array<LeaderBoardData>,
 }
 
 const initialState: IWebsiteStateStore = {
@@ -25,6 +32,7 @@ const initialState: IWebsiteStateStore = {
   selected_server_url: "",
   region: "Washington_DC",
   leaderboardOpen: false,
+  leaderboardData: [],
 }
 
 export const websiteStateInfoStore = createSlice({
@@ -61,12 +69,16 @@ export const websiteStateInfoStore = createSlice({
     SetLeaderBoardOpen: (state: { leaderboardOpen: boolean; }, action: PayloadAction<boolean>) => {
       state.leaderboardOpen = action.payload;
     },
+
+    SetLeaderBoardData: (state: { leaderboardData: Array<LeaderBoardData>; }, action: PayloadAction<Array<LeaderBoardData>>) => {
+      state.leaderboardData = action.payload;
+    },
   },
 })
 
 export const { SetGameLoadingState, SetShowGameServersList, 
   SetSelectedRegionofGameServer,
-  SetGameServersData, SetSelectedRoomId, SetSelectedGameServerURL, SetLeaderBoardOpen } =
+  SetGameServersData, SetSelectedRoomId, SetSelectedGameServerURL, SetLeaderBoardOpen, SetLeaderBoardData } =
   websiteStateInfoStore.actions
 
 export default websiteStateInfoStore.reducer

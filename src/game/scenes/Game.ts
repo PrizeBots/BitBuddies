@@ -296,10 +296,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
+    // this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
@@ -455,14 +455,27 @@ export default class Game extends Phaser.Scene {
     
     // console.log(worldPoint, this.radiatorRect)
     // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, this.mousePressed, pointer.leftButtonDown())
-    // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, store.getState().userActionsDataStore.gameTurnOffMouse)
+
+    // console.log("debug_mouse-------",
+    //   store.getState().userActionsDataStore.turnMouseClickOff, 
+    //   store.getState().userActionsDataStore.mouseClickControlHeader,
+    //   store.getState().userActionsDataStore.mouseClickControlATM,
+    //   store.getState().userActionsDataStore.mouseClickControlFightMachine,
+    //   store.getState().userActionsDataStore.mouseClickControlProfileWindow,
+    //   store.getState().userActionsDataStore.mouseClickControlChat,
+    // )
     
     if (
       // this.input.keyboard.enabled 
       // // && this.input.keyboard.isActive() 
       // && this.input.mouse.enabled 
       // && 
-      !store.getState().userActionsDataStore.turnMouseClickOff
+      !store.getState().userActionsDataStore.turnMouseClickOff &&
+      !store.getState().userActionsDataStore.mouseClickControlHeader &&
+      !store.getState().userActionsDataStore.mouseClickControlATM &&
+      !store.getState().userActionsDataStore.mouseClickControlFightMachine &&
+      !store.getState().userActionsDataStore.mouseClickControlProfileWindow &&
+      !store.getState().userActionsDataStore.mouseClickControlChat
     ) {
       if (pointer.rightButtonDown() && !this.mousePressed){
         this.mousePressed = true
@@ -843,8 +856,18 @@ export default class Game extends Phaser.Scene {
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
           // console.log("other_players_loop")
-
-          if (_player.gotHit) {
+          if (_player.gameObject.gassed_lift_off_fall) {
+            _player.gameObject.gassed_lift_off_fall = false
+            _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
+            .once('animationcomplete', () => {
+              if (_player.gameObject) {
+                _player.gameObject.gassed_lift_off_fallen = false;
+                _player.gameObject.sprite.stop()
+                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+              }
+            })
+          } 
+          else if (_player.gotHit) {
             _player.gameObject.sprite.play("gotHit-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               _player.gotHit = false
@@ -883,17 +906,17 @@ export default class Game extends Phaser.Scene {
               }
             })
           }
-          else if (_player.gameObject.gassed_lift_off_fall) {
-            _player.gameObject.gassed_lift_off_fall = false
-            _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
-            .once('animationcomplete', () => {
-              if (_player.gameObject) {
-                _player.gameObject.gassed_lift_off_fallen = false;
-                _player.gameObject.sprite.stop()
-                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
-              }
-            })
-          } 
+          // else if (_player.gameObject.gassed_lift_off_fall) {
+          //   _player.gameObject.gassed_lift_off_fall = false
+          //   _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
+          //   .once('animationcomplete', () => {
+          //     if (_player.gameObject) {
+          //       _player.gameObject.gassed_lift_off_fallen = false;
+          //       _player.gameObject.sprite.stop()
+          //       _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+          //     }
+          //   })
+          // } 
           // else if (_player.gameObject.gassed_lift_off_fallen) {
           //   //
           //   console.log("debug_fallen")

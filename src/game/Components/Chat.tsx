@@ -10,6 +10,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import CloseIcon from '@mui/icons-material/Close'
 // import 'emoji-mart/css/emoji-mart.css'
 // import { Picker } from 'emoji-mart'
+import Picker from '@emoji-mart/react'
 
 import phaserGame from '../../PhaserGame'
 import Game from '../scenes/Game'
@@ -17,8 +18,9 @@ import { Alert, Snackbar } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import store from '../../stores'
 import { v4 as uuidv4 } from 'uuid';
-import { SetFocussedOnChat, ShowChatWindow, TurnMouseClickOff } from '../../stores/UserActions'
+import { SetFocussedOnChat, SetMouseClickControlChat, ShowChatWindow, TurnMouseClickOff } from '../../stores/UserActions'
 import { IChatObject, MessageType } from '../../stores/ChatStore'
+// import { Picker } from 'emoji-mart'
 
 const Backdrop = styled.div`
   position: fixed;
@@ -360,12 +362,20 @@ export default function Chat() {
       <Backdrop>
         
           {showChatWindow ? (
-            <Wrapper onMouseOver={() => {
-      dispatch(TurnMouseClickOff(true))
-    }}
-    onMouseOut={() => {
-      dispatch(TurnMouseClickOff(false))
-    }}>
+            <Wrapper 
+    //         onMouseOver={() => {
+    //   dispatch(TurnMouseClickOff(true))
+    // }}
+    // onMouseOut={() => {
+    //   dispatch(TurnMouseClickOff(false))
+    // }}
+            onMouseOver={() => {
+              dispatch(SetMouseClickControlChat(true))
+            }}
+            onMouseOut={() => {
+              dispatch(SetMouseClickControlChat(false))
+            }}
+            >
 
               <ChatHeader>
                 <h3>Chat</h3>
@@ -392,19 +402,34 @@ export default function Chat() {
                 ))}
                 <div ref={messagesEndRef} />
                 {showEmojiPicker && (
-                  <EmojiPickerWrapper>
-                    {/* <Picker
+                  <EmojiPickerWrapper
+                    onMouseOver={() => {
+              dispatch(SetMouseClickControlChat(true))
+            }}
+            onMouseOut={() => {
+              dispatch(SetMouseClickControlChat(false))
+            }}
+                  >
+                    <Picker
                       theme="dark"
                       showSkinTones={false}
                       showPreview={false}
-                      onSelect={(emoji: any) => {
+                      // onSelect={(emoji: any) => {
+                      //   console.log("emoji selected -- ", emoji)
+                      //   setInputValue(inputValue + emoji.native)
+                      //   setShowEmojiPicker(!showEmojiPicker)
+                      //   // setFocused(true)
+                      //   dispatch(SetFocussedOnChat(true))
+                      // }}
+                      onEmojiSelect={(emoji: any) => {
+                        // console.log("emoji selected -- ", emoji)
                         setInputValue(inputValue + emoji.native)
                         setShowEmojiPicker(!showEmojiPicker)
                         // setFocused(true)
                         dispatch(SetFocussedOnChat(true))
                       }}
                       exclude={['recent', 'flags']}
-                    /> */}
+                    />
                   </EmojiPickerWrapper>
                 )}
               </ChatBox>

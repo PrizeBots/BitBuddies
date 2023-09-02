@@ -290,6 +290,8 @@ export async function PhoneWeb3Login() {
     store.dispatch(ChangeLoggerMessage("Please install MetaMask!"))
   }
 
+  // FetchLeaderBoard()
+
 
   // if (window.ethereum) {
   //   console.log("window.eth found ")

@@ -143,6 +143,7 @@ export const UserWebsiteStoreSlice = createSlice({
   initialState,
   reducers: {
     ChangePath: (state: { path: string; },  action: PayloadAction<string>) => {
+      console.log("changing current path -- ")
       state.path = action.payload;
     },
     ChangeAuthTOken: (state: { auth_token: string; },  action: PayloadAction<string>) => {

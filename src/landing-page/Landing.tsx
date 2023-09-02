@@ -18,8 +18,6 @@ import MintCardsPage from "./MintCardsPage/MintCardsPage";
 import { SetGlobalRefCode } from "../stores/MintCardStateStore";
 import { isNullOrUndefined } from "util";
 import NewFighters from "./FightersNew";
-import Leaderboard from "./Leaderboard";
-// import MintPage3 from './MintPage3';
 
 const Backdrop = styled.div`
   position: absolute;
@@ -92,15 +90,6 @@ const Landing = (props: any) => {
       View = <Home />;
       dispatch(SetGameStarted(false));
     } 
-    // else if (location.pathname === "/mint") {
-    //   console.log("debug.. -", location.pathname);
-    //   View = <OldMintPage />;
-    //   dispatch(SetGameStarted(false));
-    // } else if (location.pathname === "/presale") {
-    //   console.log("debug.. -", location.pathname);
-    //   View = <MintPage />;
-    //   dispatch(SetGameStarted(false));
-    // } 
     else if (location.pathname.includes("/login")) {
       // console.log("debug.. -", location.pathname);
       View = <Web2LoginPage />;

@@ -1,6 +1,6 @@
 import phaserGame from "../../../PhaserGame";
 import store from "../../../stores";
-import { BrewMachinePunched, GameTurnMouseClickOff, OpenAtmView, SelectFightInFightMachineMenu, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
+import { BrewMachinePunched, GameTurnMouseClickOff, OpenAtmView, SelectFightInFightMachineMenu, SetMouseClickControlATM, SetMouseClickControlFightMachine, ShowBrewEjectAnimation, ShowBrewEjectAnimationFromServer, ShowMagnetMoveBrew, TurnMouseClickOff } from "../../../stores/UserActions";
 import { HitFightMachine } from "../../../stores/UserActions";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../../../stores/UserWebsiteStore";
 import Boundary, { Rect, calculateRect, calculateRectReverse } from "../../Components/Boundary";
@@ -231,6 +231,7 @@ export class HQ {
         
       } else {
         store.dispatch(OpenAtmView(false));
+        store.dispatch(SetMouseClickControlATM(false))
         // store.dispatch(TurnMouseClickOff(false))
       }
 
@@ -258,7 +259,7 @@ export class HQ {
         
       } else {
         store.dispatch(BrewMachinePunched(false))
-        // store.dispatch(TurnMouseClickOff(false))
+        // store.dispatch(MouseClic(false))
       }
 
       // console.log("-collision_with--",((tempMyPlayer.gameObject.sprite.x > this.game.fightMachineOverlapRectReverse.leftX &&tempMyPlayer.gameObject.sprite.x < this.game.fightMachineOverlapRectReverse.leftX + this.game.fightMachineOverlapRectReverse.width )
@@ -313,6 +314,7 @@ export class HQ {
         this.game.fightMachineOverlapText.setDepth(-1);
         store.dispatch(HitFightMachine(false));
         store.dispatch(SelectFightInFightMachineMenu(false))
+        store.dispatch(SetMouseClickControlFightMachine(false))
       }
     }
 

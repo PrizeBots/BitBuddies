@@ -17,7 +17,7 @@ import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
 // import { FetchFightInfo } from './hooks/ApiCaller';
 import DocumentMeta from 'react-document-meta';
 import { ListGameServers } from "./utils/game_server_utils";
-import { fetchPlayerWalletInfo } from "./hooks/ApiCaller";
+import { FetchLeaderBoard, fetchPlayerWalletInfo } from "./hooks/ApiCaller";
 import Leaderboard from "./landing-page/Leaderboard";
 
 const Backdrop = styled.div`
@@ -84,24 +84,36 @@ function App() {
   };
 
   let counter = 0;
+  let fetchWalletCounter = 0;
   const LoopApiCaller = () => {
     setTimeout(() => {
       // FetchFightInfo(store.getState().fightInfoStore.current_fight_id)
       // TODO: call update for all of the fight ids in queuue
-      LoopAllFightsAndUpdate();
-      console.log("debug_game_state ", gameStarted)
-      if (counter >0) {
+      
+      // console.log("debug_game_state ", gameStarted, counter)
+      if (counter >10) {
         if (!gameStarted) {
           if (localStorage.getItem("game_state")=== "start") {
             ListGameServers(gameServerReginoSelected)
           }
         }
-        fetchPlayerWalletInfo()
-        counter = -1
+        LoopAllFightsAndUpdate();
+
+        counter = -1;
       }
+      
       counter = counter + 1;
+
+
+      if (fetchWalletCounter > 20) {
+        // fetchPlayerWalletInfo(false, "app.tsx");
+        fetchWalletCounter = -1;
+      }
+      fetchWalletCounter = fetchWalletCounter + 1;
+
+
       LoopApiCaller();
-    }, 30000);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -121,6 +133,7 @@ function App() {
 
     // getGeoInfo();
     LoopApiCaller();
+    FetchLeaderBoard();
 
     // else if (!isNullOrUndefined(localStorage.getItem("web2_email_address")) && localStorage.getItem("web2_email_address") !== "" ) {
     //   console.log("web2 email exist login...")

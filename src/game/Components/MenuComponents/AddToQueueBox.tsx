@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Box, Button } from "@mui/material"
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { TurnMouseClickOff } from '../../../stores/UserActions';
+import { SetMouseClickControlFightMachine, TurnMouseClickOff } from '../../../stores/UserActions';
 
 
 
@@ -60,11 +60,11 @@ export default function AddToQueueBox(data: IQueueOptions) {
     <div ref={ref}>
       <Wrapper 
         onMouseOver={() => {
-          dispatch(TurnMouseClickOff(true))
-        }}
-        onMouseOut={() =>{ 
-          dispatch(TurnMouseClickOff(false))
-        }}
+              dispatch(SetMouseClickControlFightMachine(true))
+            }}
+            onMouseOut={() =>{ 
+              dispatch(SetMouseClickControlFightMachine(false))
+            }}
       >
         <FriendRequestBox>
           <h2>Genesis HQ - Tier 5</h2>

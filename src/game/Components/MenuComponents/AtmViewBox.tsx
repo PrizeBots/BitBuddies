@@ -77,17 +77,17 @@ export default function AtmViewBox(data: IQueueOptions) {
   const web2_credit_balance = useAppSelector((state) => state.web3BalanceStore.web2CreditBalance);
 
 
-  const ref = useDetectClickOutside({ onTriggered: data.closeFunction });
-  const dispatch = useAppDispatch();
+  // const ref = useDetectClickOutside({ onTriggered: data.closeFunction });
+  // const dispatch = useAppDispatch();
   return(
-    <div ref={ref}>
+    <div>
       <Wrapper 
-        onMouseOver={() => {
-          dispatch(TurnMouseClickOff(true))
-        }}
-        onMouseOut={() =>{ 
-          dispatch(TurnMouseClickOff(false))
-        }}
+        // onMouseOver={() => {
+        //   dispatch(TurnMouseClickOff(true))
+        // }}
+        // onMouseOut={() =>{ 
+        //   dispatch(TurnMouseClickOff(false))
+        // }}
       >
         <ATMBOX>
           <h2>
