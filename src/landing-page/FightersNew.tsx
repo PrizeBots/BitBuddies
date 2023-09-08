@@ -46,6 +46,7 @@ import { fetchAllNFTsFromDbEntries } from '../hooks/FetchNFT';
 import { setTotalNFTData, setNFTDetails } from '../stores/BitFighters';
 import Footer from './Footer';
 import NewWinnersReceipt from '../game/Components/MenuComponents/NewWinnersReceipt';
+import FightersNewCenterPart from './FightersNewCenterPart';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -331,6 +332,7 @@ function NewFighters() {
   const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
   const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
   const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
+  const userAddress = useAppSelector((state) => state.web3store.userAddress);
   
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
   // console.log("--------total_data-------", bitFightersTotalData)
@@ -388,19 +390,21 @@ function NewFighters() {
   // let boxWidth = 500;
   // let carouselUI = null;
   // let NewUI = null;
-  let totalUI = null;
+  // let totalUI: JSX.Element = <></>;
+  // const [totalUI, setTotalUI] = useState<JSX.Element>(<></>);
+  // let totalUI = null;
   // let animationView = <>Animation View</>;
   // let animationUI = null;
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-  const handleClose = () => {
-    setSnackBarOpen(false);
-  };
+  // const handleClose = () => {
+  //   setSnackBarOpen(false);
+  // };
 
-  const [openModal, setOpenModal] = useState(false);
-  const handleModalClose = () => {
-    setOpenModal(false);
-  };
+  // const [openModal, setOpenModal] = useState(false);
+  // const handleModalClose = () => {
+  //   setOpenModal(false);
+  // };
   
   const handlePlayerSelection = async (data:IPlayerData) => {
     console.log("--player selected.. data ", data)
@@ -520,7 +524,17 @@ function NewFighters() {
       // store.dispatch(SetShowGameServersList(true));
     }
 
-    console.log("--------- in fightersnew -- ", selectedPlayer)
+    if (!gameStarted && userAddress !== "") {
+      setTimeout(() => {
+        store.dispatch(SetShowGameServersList(true));
+      }, 1000)
+      
+    } else {
+      store.dispatch(SetShowGameServersList(false));
+    }
+
+
+    // console.log("--------- in fightersnew -- ", selectedPlayer)
 
     // if (selectedPlayer)
     
@@ -549,432 +563,432 @@ function NewFighters() {
     // boxWidth = 400;
     // noBitFighter = true;
   } else {
-    console.log("changing current path")
-    if (!gameStarted) {
-      store.dispatch(SetShowGameServersList(true));
-    } else {
-      store.dispatch(SetShowGameServersList(false));
-    }
+    // console.log("changing current path")
+    // if (!gameStarted) {
+    //   store.dispatch(SetShowGameServersList(true));
+    // } else {
+    //   store.dispatch(SetShowGameServersList(false));
+    // }
   }
 
-  if (gameStarted) {
-    totalUI = <>
-      <NotificationMessageHelper />
-      <>
-        {ProfilemenuClicked && <NewMenuSideBar />}
-      </>
+  // if (gameStarted) {
+  //   totalUI = <>
+  //     <NotificationMessageHelper />
+  //     <>
+  //       {ProfilemenuClicked && <NewMenuSideBar />}
+  //     </>
       
-      <InventoryView />
-      <EquipView />
-      <BroadCastCombiner2 />
-      <ATMView />
-      <InGameAssetPurchase />
-      <BroadcastingAnnouncement />
-      {/* <RegisterNow /> */}
-      {/* <RegisterNewUserInGame /> */}
-      <ControlsInfo />
-      <Chat />
-      <PlayersInfo />
-      <QueueAddInfoWindow />
-      {/* <WinnersReceipt /> */}
-      <NewWinnersReceipt />
-      <SendingFriendRequest />
-      <Footer />
-    </>
-  } else {
-    totalUI = 
-    <div style={{
-      display: 'flex',
-      flexDirection: 'row',
-      marginTop: '5%'
-    }}>
-      {
-        (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool)?
-        <Content>
-            <Title>  :( No Bit Fighters detected in this wallet. </Title>
-            <Link 
-              className="primary" 
-              to="/mint" 
-            >
-              <ButtonView variant="contained">
-                <span>
-                  Mint BitFighters
-                </span>
-              </ButtonView>
-            </Link>
-        </Content>
-         :
-        (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool)?
-        <Content>
-          <Title> Loading.. </Title>
-        </Content>:
-        (loggedInUserWalletAddress === "")?
-        <Content>
-          <Title> Checking for Bitfighters </Title>
-        </Content>
-          :
-        <>
-          {/* <BoxWrapper sx={{ flexGrow: 1 }} >
+  //     <InventoryView />
+  //     <EquipView />
+  //     <BroadCastCombiner2 />
+  //     <ATMView />
+  //     <InGameAssetPurchase />
+  //     <BroadcastingAnnouncement />
+  //     {/* <RegisterNow /> */}
+  //     {/* <RegisterNewUserInGame /> */}
+  //     <ControlsInfo />
+  //     <Chat />
+  //     <PlayersInfo />
+  //     <QueueAddInfoWindow />
+  //     {/* <WinnersReceipt /> */}
+  //     <NewWinnersReceipt />
+  //     <SendingFriendRequest />
+  //     <Footer />
+  //   </>
+  // } else {
+  //   totalUI = 
+  //   <div style={{
+  //     display: 'flex',
+  //     flexDirection: 'row',
+  //     marginTop: '5%'
+  //   }}>
+  //     {
+  //       (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool)?
+  //       <Content>
+  //           <Title>  :( No Bit Fighters detected in this wallet. </Title>
+  //           <Link 
+  //             className="primary" 
+  //             to="/mint" 
+  //           >
+  //             <ButtonView variant="contained">
+  //               <span>
+  //                 Mint BitFighters
+  //               </span>
+  //             </ButtonView>
+  //           </Link>
+  //       </Content>
+  //        :
+  //       (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool)?
+  //       <Content>
+  //         <Title> Loading.. </Title>
+  //       </Content>:
+  //       (loggedInUserWalletAddress === "")?
+  //       <Content>
+  //         <Title> Checking for Bitfighters </Title>
+  //       </Content>
+  //         :
+  //       <>
+  //         {/* <BoxWrapper sx={{ flexGrow: 1 }} >
 
 
-            <ImageList 
-              cols={4} 
-              gap={0}
-              rowHeight={164}
-            >
-              {bitFightersTotalData.map((data) => (
-                <ImageListItem key={uuidv4()} style={{
-                  border: '2px solid #bababa'
-                }}>
-                  <HtmlTooltip title={
-                    <React.Fragment>
-                        {
-                          data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-                            return(
-                              attr.trait_type === "defense"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/diamond_icon.png" 
-                                  alt="." />
-                                <h5> Defense : {attr.value} </h5>
-                              </AttributeInfo>
+  //           <ImageList 
+  //             cols={4} 
+  //             gap={0}
+  //             rowHeight={164}
+  //           >
+  //             {bitFightersTotalData.map((data) => (
+  //               <ImageListItem key={uuidv4()} style={{
+  //                 border: '2px solid #bababa'
+  //               }}>
+  //                 <HtmlTooltip title={
+  //                   <React.Fragment>
+  //                       {
+  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+  //                           return(
+  //                             attr.trait_type === "defense"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Defense : {attr.value} </h5>
+  //                             </AttributeInfo>
                               
-                              :
-                              attr.trait_type === "health"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/heart_icon.png" 
-                                  alt="." />
-                                <h5> Health : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "kick"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/kick_icon.png" 
-                                  alt="." />
-                                <h5> Kick : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "punch"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/punch_icon.png" 
-                                  alt="." />
-                                <h5> Punch : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "speed"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/flash_icon.png" 
-                                  alt="." />
-                                <h5> Speed : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "stamina"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/water_drop_icon.png" 
-                                  alt="." />
-                                <h5> Stamina : {attr.value} </h5>
-                              </AttributeInfo>:
-                            <></>
-                          )
+  //                             :
+  //                             attr.trait_type === "health"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Health : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "kick"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Kick : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "punch"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Punch : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "speed"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Speed : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "stamina"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Stamina : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                           <></>
+  //                         )
                           
-                          })) 
-                        }
-                    </React.Fragment>
-                  }>
-                    <ImageListItem key={uuidv4()}>
-                      <img
-                        src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-                        srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                        // src={`${data.data.first_frame_image}`}
-                        alt={"Hero"}
-                        loading="lazy"
-                        style={{
-                          // margin: '20px',
-                          // aspectRatio: `${15/16}`,
-                          // backgroundColor: 'red'
-                        }}
-                        onClick={() => {
-                          handlePlayerSelection(data)
-                        }}
-                      />
-                    </ImageListItem>
-                  </HtmlTooltip>
-                </ImageListItem>
-              ))}
-            </ImageList>
-          </BoxWrapper> */}
+  //                         })) 
+  //                       }
+  //                   </React.Fragment>
+  //                 }>
+  //                   <ImageListItem key={uuidv4()}>
+  //                     <img
+  //                       src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+  //                       srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+  //                       // src={`${data.data.first_frame_image}`}
+  //                       alt={"Hero"}
+  //                       loading="lazy"
+  //                       style={{
+  //                         // margin: '20px',
+  //                         // aspectRatio: `${15/16}`,
+  //                         // backgroundColor: 'red'
+  //                       }}
+  //                       onClick={() => {
+  //                         handlePlayerSelection(data)
+  //                       }}
+  //                     />
+  //                   </ImageListItem>
+  //                 </HtmlTooltip>
+  //               </ImageListItem>
+  //             ))}
+  //           </ImageList>
+  //         </BoxWrapper> */}
 
-          {/* <ImageList 
-              cols={5} 
-              gap={0}
-              sx={{
-                width: `36vw`,
-                height: `80vh`
-              }}
-            >
-              {bitFightersTotalData.map((data: any) => (
-                <ImageListItem key={uuidv4()} style={{
-                  border: '2px solid #bababa'
-                }}>
-                  <HtmlTooltip title={
-                    <React.Fragment>
-                        {
-                          data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-                            return(
-                              attr.trait_type === "defense"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/diamond_icon.png" 
-                                  alt="." />
-                                <h5> Defense : {attr.value} </h5>
-                              </AttributeInfo>
-                              :
-                              attr.trait_type === "health"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/heart_icon.png" 
-                                  alt="." />
-                                <h5> Health : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "kick"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/kick_icon.png" 
-                                  alt="." />
-                                <h5> Kick : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "punch"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/punch_icon.png" 
-                                  alt="." />
-                                <h5> Punch : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "speed"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/flash_icon.png" 
-                                  alt="." />
-                                <h5> Speed : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "stamina"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/water_drop_icon.png" 
-                                  alt="." />
-                                <h5> Stamina : {attr.value} </h5>
-                              </AttributeInfo>:
-                            <></>
-                          )
+  //         {/* <ImageList 
+  //             cols={5} 
+  //             gap={0}
+  //             sx={{
+  //               width: `36vw`,
+  //               height: `80vh`
+  //             }}
+  //           >
+  //             {bitFightersTotalData.map((data: any) => (
+  //               <ImageListItem key={uuidv4()} style={{
+  //                 border: '2px solid #bababa'
+  //               }}>
+  //                 <HtmlTooltip title={
+  //                   <React.Fragment>
+  //                       {
+  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+  //                           return(
+  //                             attr.trait_type === "defense"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Defense : {attr.value} </h5>
+  //                             </AttributeInfo>
+  //                             :
+  //                             attr.trait_type === "health"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Health : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "kick"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Kick : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "punch"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Punch : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "speed"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Speed : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "stamina"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Stamina : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                           <></>
+  //                         )
                           
-                          })) 
-                        }
-                    </React.Fragment>
-                  }>
-                    <ListImageView>
-                      <h1>
-                        {data?.nick_name !== ""? data?.nick_name: "?"}
-                      </h1>
-                      <ImageListItem key={uuidv4()}>
-                        <img
-                          src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-                          srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                          alt={"Hero"}
-                          loading="lazy"
-                          onClick={() => {
-                            handlePlayerSelection(data)
-                          }}
-                        />
-                      </ImageListItem>
-                    </ListImageView>
-                  </HtmlTooltip>
-                </ImageListItem>
-              ))}
-          </ImageList> */}
+  //                         })) 
+  //                       }
+  //                   </React.Fragment>
+  //                 }>
+  //                   <ListImageView>
+  //                     <h1>
+  //                       {data?.nick_name !== ""? data?.nick_name: "?"}
+  //                     </h1>
+  //                     <ImageListItem key={uuidv4()}>
+  //                       <img
+  //                         src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+  //                         srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+  //                         alt={"Hero"}
+  //                         loading="lazy"
+  //                         onClick={() => {
+  //                           handlePlayerSelection(data)
+  //                         }}
+  //                       />
+  //                     </ImageListItem>
+  //                   </ListImageView>
+  //                 </HtmlTooltip>
+  //               </ImageListItem>
+  //             ))}
+  //         </ImageList> */}
 
-          <BoxWrapper sx={{ flexGrow: 1}}>
-            <Grid container spacing={0}>
+  //         <BoxWrapper sx={{ flexGrow: 1}}>
+  //           <Grid container spacing={0}>
 
-              {bitFightersTotalData.map((data) => (
-                <Grid key={uuidv4()} item xs={3} style={{
-                  border: '2px solid #bababa'
-                }}>
-                  <HtmlTooltip title={
-                    <React.Fragment>
-                        {
-                          data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-                            return(
-                              attr.trait_type === "defense"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/diamond_icon.png" 
-                                  alt="." />
-                                <h5> Defense : {attr.value} </h5>
-                              </AttributeInfo>
+  //             {bitFightersTotalData.map((data) => (
+  //               <Grid key={uuidv4()} item xs={3} style={{
+  //                 border: '2px solid #bababa'
+  //               }}>
+  //                 <HtmlTooltip title={
+  //                   <React.Fragment>
+  //                       {
+  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+  //                           return(
+  //                             attr.trait_type === "defense"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Defense : {attr.value} </h5>
+  //                             </AttributeInfo>
                               
-                              :
-                              attr.trait_type === "health"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/heart_icon.png" 
-                                  alt="." />
-                                <h5> Health : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "kick"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/kick_icon.png" 
-                                  alt="." />
-                                <h5> Kick : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "punch"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/punch_icon.png" 
-                                  alt="." />
-                                <h5> Punch : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "speed"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/flash_icon.png" 
-                                  alt="." />
-                                <h5> Speed : {attr.value} </h5>
-                              </AttributeInfo>:
-                              attr.trait_type === "stamina"?
-                              <AttributeInfo>
-                                <img 
-                                  src="bitfgihter_assets/icons/water_drop_icon.png" 
-                                  alt="." />
-                                <h5> Stamina : {attr.value} </h5>
-                              </AttributeInfo>:
-                            <></>
-                          )
+  //                             :
+  //                             attr.trait_type === "health"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Health : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "kick"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Kick : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "punch"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Punch : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "speed"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Speed : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                             attr.trait_type === "stamina"?
+  //                             <AttributeInfo>
+  //                               <img 
+  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
+  //                                 alt="." />
+  //                               <h5> Stamina : {attr.value} </h5>
+  //                             </AttributeInfo>:
+  //                           <></>
+  //                         )
                           
-                          })) 
-                        }
-                    </React.Fragment>
-                  }>
-                    <Grid key={uuidv4()}>
-                      <ListImageView>
-                      <h1>
-                        {data?.nick_name !== ""? data?.nick_name: "?"}
-                      </h1>
+  //                         })) 
+  //                       }
+  //                   </React.Fragment>
+  //                 }>
+  //                   <Grid key={uuidv4()}>
+  //                     <ListImageView>
+  //                     <h1>
+  //                       {data?.nick_name !== ""? data?.nick_name: "?"}
+  //                     </h1>
 
-                      {/* <h1 style={{
-                        position:'relative',
-                        left: `-50px`,
-                      }}>
-                        {data.data.total_ap}
-                      </h1> */}
-                      <img
-                        // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-                        // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                        src={`${data.data.first_frame_image}`}
-                        alt={"Hero"}
-                        loading="lazy"
-                        style={{
-                          marginBottom: '20px',
-                          // marginTop: '-10px'
-                          // aspectRatio: `${15/16}`,
-                          // backgroundColor: 'red'
-                        }}
-                        onClick={() => {
-                          handlePlayerSelection(data)
-                        }}
-                      />
-                      </ListImageView>
-                    </Grid>
-                  </HtmlTooltip>
-                </Grid>
-              ))}
-            </Grid>
-          </BoxWrapper>
+  //                     {/* <h1 style={{
+  //                       position:'relative',
+  //                       left: `-50px`,
+  //                     }}>
+  //                       {data.data.total_ap}
+  //                     </h1> */}
+  //                     <img
+  //                       // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+  //                       // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+  //                       src={`${data.data.first_frame_image}`}
+  //                       alt={"Hero"}
+  //                       loading="lazy"
+  //                       style={{
+  //                         marginBottom: '20px',
+  //                         // marginTop: '-10px'
+  //                         // aspectRatio: `${15/16}`,
+  //                         // backgroundColor: 'red'
+  //                       }}
+  //                       onClick={() => {
+  //                         handlePlayerSelection(data)
+  //                       }}
+  //                     />
+  //                     </ListImageView>
+  //                   </Grid>
+  //                 </HtmlTooltip>
+  //               </Grid>
+  //             ))}
+  //           </Grid>
+  //         </BoxWrapper>
 
-          <BoxWrapper2>
-            {
-              (cardSelected !== "" && selectedPlayer.nick_name === "")?
-                <FixedForm>
-                  <h2>
-                    Register your Fighter
-                  </h2>
+  //         <BoxWrapper2>
+  //           {
+  //             (cardSelected !== "" && selectedPlayer.nick_name === "")?
+  //               <FixedForm>
+  //                 <h2>
+  //                   Register your Fighter
+  //                 </h2>
 
-                  <label htmlFor="nick_name" style={{
-                    marginTop: '20px'
-                  }}> Name: </label>
-                  <input
-                    id="nick_name"
-                    type="text"
-                    placeholder='up to 12 letters'
-                    value={formNickNameame}
-                    onChange={(e) => {
-                      setFormNickName(e.target.value);
-                    }}
-                    required
-                  />
-                  <br />
+  //                 <label htmlFor="nick_name" style={{
+  //                   marginTop: '20px'
+  //                 }}> Name: </label>
+  //                 <input
+  //                   id="nick_name"
+  //                   type="text"
+  //                   placeholder='up to 12 letters'
+  //                   value={formNickNameame}
+  //                   onChange={(e) => {
+  //                     setFormNickName(e.target.value);
+  //                   }}
+  //                   required
+  //                 />
+  //                 <br />
 
-                  <label htmlFor="lucky_number" style={{
-                    marginTop: '20px'
-                  }}> Lucky #: </label>
-                  <input
-                    id="lucky_number"
-                    type="text"
-                    placeholder='(1-100)'
-                    onChange={(e) => {
-                      setFormLuckyNumber(parseInt(e.target.value));
-                    }}
-                    required
-                  />
+  //                 <label htmlFor="lucky_number" style={{
+  //                   marginTop: '20px'
+  //                 }}> Lucky #: </label>
+  //                 <input
+  //                   id="lucky_number"
+  //                   type="text"
+  //                   placeholder='(1-100)'
+  //                   onChange={(e) => {
+  //                     setFormLuckyNumber(parseInt(e.target.value));
+  //                   }}
+  //                   required
+  //                 />
 
-                  { !registerProcessRunning? 
-                  <ButtonView style={{marginTop: '40px'}}
-                    onClick={() => {
-                      registerFormValidate()
-                    }}
-                    >
-                       <span>
-                        Submit!
-                    </span>
-                  </ButtonView>: 
-                  <ButtonView style={{marginTop: '40px'}}>
-                    <span>
-                      <CircularProgress />
-                    </span>
-                  </ButtonView>
+  //                 { !registerProcessRunning? 
+  //                 <ButtonView style={{marginTop: '40px'}}
+  //                   onClick={() => {
+  //                     registerFormValidate()
+  //                   }}
+  //                   >
+  //                      <span>
+  //                       Submit!
+  //                   </span>
+  //                 </ButtonView>: 
+  //                 <ButtonView style={{marginTop: '40px'}}>
+  //                   <span>
+  //                     <CircularProgress />
+  //                   </span>
+  //                 </ButtonView>
                   
                   
-                  }
-                </FixedForm>
-              :<></>
-            }
-            {
-              cardSelected !== ""?
-              <ImageView>
-                <h1>
-                  {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
-                </h1>
-                <img
-                  className="imageSelector"
-                  src={cardSelected}
-                  alt={"Hello"}
-                  loading="lazy"
-                  style={{
-                    height: (500).toString()+'px',
-                    width: (300).toString()+'px',
-                  }}
-                  key={uuidv4()}
-                />
-              </ImageView>
-                :<> </>
-            }
-          </BoxWrapper2>
-        </>
-      }
-    </div>
+  //                 }
+  //               </FixedForm>
+  //             :<></>
+  //           }
+  //           {
+  //             cardSelected !== ""?
+  //             <ImageView>
+  //               <h1>
+  //                 {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+  //               </h1>
+  //               <img
+  //                 className="imageSelector"
+  //                 src={cardSelected}
+  //                 alt={"Hello"}
+  //                 loading="lazy"
+  //                 style={{
+  //                   height: (500).toString()+'px',
+  //                   width: (300).toString()+'px',
+  //                 }}
+  //                 key={uuidv4()}
+  //               />
+  //             </ImageView>
+  //               :<> </>
+  //           }
+  //         </BoxWrapper2>
+  //       </>
+  //     }
+  //   </div>
     
-  }
+  // }
 
   return(
     <div>
@@ -984,8 +998,247 @@ function NewFighters() {
       {/* {!gameStarted ? totalUI: animationUI} */}
       {/* {(!playerSelectedBool || gameStarted)? totalUI: animationUI} */}
 
-      {totalUI}
+      {/* {totalUI} */}
       {/* {(!playerSelectedBool || gameStarted)? totalUI: animationUI} */}
+
+      {gameStarted?
+        <>
+        <NotificationMessageHelper />
+        <>
+          {ProfilemenuClicked && <NewMenuSideBar />}
+        </>
+        
+        <InventoryView />
+        <EquipView />
+        <BroadCastCombiner2 />
+        <ATMView />
+        <InGameAssetPurchase />
+        <BroadcastingAnnouncement />
+        {/* <RegisterNow /> */}
+        {/* <RegisterNewUserInGame /> */}
+        <ControlsInfo />
+        <Chat />
+        <PlayersInfo />
+        <QueueAddInfoWindow />
+        <NewWinnersReceipt />
+        <SendingFriendRequest />
+        <Footer />
+      </>:
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: '5%'
+      }}>
+        {
+          (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool)?
+          <Content>
+              <Title>  :( No Bit Fighters detected in this wallet. </Title>
+              <Link 
+                className="primary" 
+                to="/mint" 
+              >
+                <ButtonView variant="contained">
+                  <span>
+                    Mint BitFighters
+                  </span>
+                </ButtonView>
+              </Link>
+          </Content>
+          :
+          (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool)?
+          <Content>
+            <Title> Loading.. </Title>
+          </Content>:
+          (loggedInUserWalletAddress === "")?
+          <Content>
+            <Title> Checking for Bitfighters </Title>
+          </Content>
+            :
+          <>
+            <BoxWrapper sx={{ flexGrow: 1}}>
+              <Grid container spacing={0}>
+
+                {bitFightersTotalData.map((data) => (
+                  <Grid key={uuidv4()} item xs={3} style={{
+                    border: '2px solid #bababa'
+                  }}>
+                    <HtmlTooltip title={
+                      <React.Fragment>
+                          {
+                            data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
+                              return(
+                                attr.trait_type === "defense"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/diamond_icon.png" 
+                                    alt="." />
+                                  <h5> Defense : {attr.value} </h5>
+                                </AttributeInfo>
+                                
+                                :
+                                attr.trait_type === "health"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/heart_icon.png" 
+                                    alt="." />
+                                  <h5> Health : {attr.value} </h5>
+                                </AttributeInfo>:
+                                attr.trait_type === "kick"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/kick_icon.png" 
+                                    alt="." />
+                                  <h5> Kick : {attr.value} </h5>
+                                </AttributeInfo>:
+                                attr.trait_type === "punch"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/punch_icon.png" 
+                                    alt="." />
+                                  <h5> Punch : {attr.value} </h5>
+                                </AttributeInfo>:
+                                attr.trait_type === "speed"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/flash_icon.png" 
+                                    alt="." />
+                                  <h5> Speed : {attr.value} </h5>
+                                </AttributeInfo>:
+                                attr.trait_type === "stamina"?
+                                <AttributeInfo>
+                                  <img 
+                                    src="bitfgihter_assets/icons/water_drop_icon.png" 
+                                    alt="." />
+                                  <h5> Stamina : {attr.value} </h5>
+                                </AttributeInfo>:
+                              <></>
+                            )
+                            
+                            })) 
+                          }
+                      </React.Fragment>
+                    }>
+                      <Grid key={uuidv4()}>
+                        <ListImageView>
+                        <h1>
+                          {data?.nick_name !== ""? data?.nick_name: "?"}
+                        </h1>
+
+                        {/* <h1 style={{
+                          position:'relative',
+                          left: `-50px`,
+                        }}>
+                          {data.data.total_ap}
+                        </h1> */}
+                        <img
+                          // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
+                          // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                          src={`${data.data.first_frame_image}`}
+                          alt={"Hero"}
+                          loading="lazy"
+                          style={{
+                            marginBottom: '20px',
+                            // marginTop: '-10px'
+                            // aspectRatio: `${15/16}`,
+                            // backgroundColor: 'red'
+                          }}
+                          onClick={() => {
+                            handlePlayerSelection(data)
+                          }}
+                        />
+                        </ListImageView>
+                      </Grid>
+                    </HtmlTooltip>
+                  </Grid>
+                ))}
+              </Grid>
+            </BoxWrapper>
+
+            {/* <FightersNewCenterPart /> */}
+
+            <BoxWrapper2>
+              {
+                (cardSelected !== "" && selectedPlayer.nick_name === "")?
+                  <FixedForm>
+                    <h2>
+                      Register your Fighter
+                    </h2>
+
+                    <label htmlFor="nick_name" style={{
+                      marginTop: '20px'
+                    }}> Name: </label>
+                    <input
+                      id="nick_name"
+                      type="text"
+                      placeholder='up to 12 letters'
+                      value={formNickNameame}
+                      onChange={(e) => {
+                        setFormNickName(e.target.value);
+                      }}
+                      required
+                    />
+                    <br />
+
+                    <label htmlFor="lucky_number" style={{
+                      marginTop: '20px'
+                    }}> Lucky #: </label>
+                    <input
+                      id="lucky_number"
+                      type="text"
+                      placeholder='(1-100)'
+                      onChange={(e) => {
+                        setFormLuckyNumber(parseInt(e.target.value));
+                      }}
+                      required
+                    />
+
+                    { !registerProcessRunning? 
+                    <ButtonView style={{marginTop: '40px'}}
+                      onClick={() => {
+                        registerFormValidate()
+                      }}
+                      >
+                        <span>
+                          Submit!
+                      </span>
+                    </ButtonView>: 
+                    <ButtonView style={{marginTop: '40px'}}>
+                      <span>
+                        <CircularProgress />
+                      </span>
+                    </ButtonView>
+                    
+                    
+                    }
+                  </FixedForm>
+                :<></>
+              }
+              {
+                cardSelected !== ""?
+                <ImageView>
+                  <h1>
+                    {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+                  </h1>
+                  <img
+                    className="imageSelector"
+                    src={cardSelected}
+                    alt={"Hello"}
+                    loading="lazy"
+                    style={{
+                      height: (500).toString()+'px',
+                      width: (300).toString()+'px',
+                    }}
+                    key={uuidv4()}
+                  />
+                </ImageView>
+                  :<> </>
+              }
+            </BoxWrapper2>
+          </>
+        }
+      </div>
+
+      }
     </div>
   )
 }

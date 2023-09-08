@@ -544,7 +544,10 @@ export const purchaseAssets = async (quantity: number, asset_name: string) => {
   const output = await result.json();
   if (result.status !== 200) {
     console.log("error in adding assets ", output)
-    return false;
+    return {
+      success: false,
+      error: output.error
+    };
   }
   await fetchPlayerAssets()
   // const output = await result.json();
@@ -552,7 +555,10 @@ export const purchaseAssets = async (quantity: number, asset_name: string) => {
   
 
   // store.dispatch(SetAssetsInAssetManager(output.data));
-  return true;
+  return  {
+    success: true,
+    error: ""
+  };
 }
 
 export const useAssetsApi = async ( asset_name: string) => {
@@ -722,13 +728,13 @@ export const randomGenarateDripPreSaleV2 = async (userAddress: string, quantity:
 }
 
 
-export const ListGameServersApiCall = async (userAddress: string, region: string) => {
+export const ListGameServersApiCall = async (userAddress: string, region: string, create = "create") => {
   // console.log("ListGameServersApiCall clicked..", userAddress)
   if (userAddress === "") {
     console.log("nill user address");
     return
   }
-  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/server/list/${region}/`, {
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/server/list/${region}/${create}/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

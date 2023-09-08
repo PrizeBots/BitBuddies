@@ -14,7 +14,7 @@ import { fetchPlayerWalletInfo, purchaseAssets } from '../../../hooks/ApiCaller'
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 30%;
+  top: 25%;
   left: 40%;
   // padding: 16px;
 `
@@ -95,7 +95,7 @@ export default function InGameAssetPurchase() {
       return;
     }
     const result = await purchaseAssets(quantity, "brew")
-    if (result) {
+    if (result?.success) {
       console.log(" brew asset bought ..")
       setTimeout(() => {
         dispatch(ShowBrewEjectAnimation(true))
@@ -107,7 +107,7 @@ export default function InGameAssetPurchase() {
     } else {
       setTimeout(() => {
         store.dispatch(SetFailureNotificationBool(true))
-        store.dispatch(SetFailureNotificationMessage("INSUFFICIENT FUNDS"))
+        store.dispatch(SetFailureNotificationMessage(result?.error))
         bootstrap.play_err_sound()
       }, 200);
     }

@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "util";
 import phaserGame from "../../PhaserGame";
 import store from "../../stores";
 import { SetFocussedOnChat, ShowChatWindow } from "../../stores/UserActions";
@@ -39,6 +40,11 @@ export default class KeyControls {
       },
       keyBlock: {
         pressed: false,
+      },
+      keyQ: {
+        pressed: false,
+        time_last_pressed: 1,
+        time_last_lifted: 1,
       },
       lastKey:"",
     };
@@ -175,16 +181,16 @@ export default class KeyControls {
             //   event: "equip_brew",
             //   walletAddress: store.getState().web3store.userAddress,
             // }))
-          this.game.otherPlayers.forEach((_otherplayer) => {
-            if (_otherplayer.wallet_address === store.getState().web3store.userAddress && _otherplayer.gameObject) {
-              if (_otherplayer.gameObject.gassed_lift_off_fallen) {
-                _otherplayer.gameObject.gassed_lift_off_fallen = false
-              } else {
-                _otherplayer.gameObject.gassed_lift_off_fall = true
-                _otherplayer.gameObject.gassed_lift_off_fallen = true
-              }
-            }
-          })
+          // this.game.otherPlayers.forEach((_otherplayer) => {
+          //   if (_otherplayer.wallet_address === store.getState().web3store.userAddress && _otherplayer.gameObject) {
+          //     if (_otherplayer.gameObject.gassed_lift_off_fallen) {
+          //       _otherplayer.gameObject.gassed_lift_off_fallen = false
+          //     } else {
+          //       _otherplayer.gameObject.gassed_lift_off_fall = true
+          //       _otherplayer.gameObject.gassed_lift_off_fallen = true
+          //     }
+          //   }
+          // })
           // store.dispatch(ShowDeadSprite(true))
           break
         case 'KeyR': {
@@ -199,19 +205,47 @@ export default class KeyControls {
           break
         }
         case 'KeyQ': {
-          console.log("Q pressed..");
+          // console.log("Q pressed..", store.getState().assetStore.equippedBrewCount );
+          
+          if (this.keys.keyQ.time_last_lifted && this.keys.keyQ.time_last_lifted > 10 ) {
+            if (new Date().getTime() - this.keys.keyQ.time_last_lifted > 500) {
+              this.keys.keyQ.pressed = true
+            }
+          }
+
+          
+          
+
+          // if (!this.keys.keyQ.pressed) {
+          //   this.keys.keyQ.pressed = true
+          // }
+          //   console.log("Q pressed..", this.keys.keyQ.time_last_pressed, new Date().getTime() - this.keys.keyQ.time_last_pressed );
+            // if (new Date().getTime() - this.keys.keyQ.time_last_pressed > 400) {
+            //   this.keys.keyQ.pressed = true
+            //   this.keys.keyQ.time_last_pressed = new Date().getTime()
+            // }
+          // }
+
+
           if (store.getState().assetStore.equippedBrewCount > 0) {
             const temp = this.game.otherPlayers.get(store.getState().web3store.player_id)
             if (temp?.gameObject) {
               this.game.lobbySocketConnection.send(JSON.stringify({
                 event: "equip_brew",
                 walletAddress: store.getState().web3store.userAddress,
+                minted_id: temp.minted_id,
               }))
-
-              // temp.hasBrewInHand = true
-              // store.dispatch(SetEquippedBrewCount(0))
+              this.game.bootstrap.play_can_open_sound()
             }
           }
+          // const temp = this.game.otherPlayers.get(store.getState().web3store.player_id)
+          // if (temp?.gameObject) {
+          //   if (temp.hasBrewInHand) {
+          //     this.keys.keyQ.pressed = true
+          //     this.keys.keyQ.time_last_pressed = new Date().getTime()
+          //   }
+          // }
+          
           
           break;
         }
@@ -237,6 +271,10 @@ export default class KeyControls {
           break
         case 'ShiftLeft':
           this.keys.leftShift.pressed = false
+          break
+        case 'KeyQ':
+          this.keys.keyQ.pressed = false
+          this.keys.keyQ.time_last_lifted = new Date().getTime()
           break
         case 'KeyD':
           this.onKeysChange = true

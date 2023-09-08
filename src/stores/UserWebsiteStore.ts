@@ -99,6 +99,8 @@ interface UserWebsiteStore {
   playersBetInfo: Array<BetData>;
 
   showWinnerCardAtFightEnd: boolean;
+
+  movementAbilityPlayer: boolean;
 }
 
 const initialState: UserWebsiteStore = {
@@ -135,7 +137,8 @@ const initialState: UserWebsiteStore = {
   showWinnerCardAtFightEnd: false,
 
   ShowStatsView: false,
-  OtherPlayerSelectedForStats: ""
+  OtherPlayerSelectedForStats: "",
+  movementAbilityPlayer: true,
 }
 
 export const UserWebsiteStoreSlice = createSlice({
@@ -250,6 +253,11 @@ export const UserWebsiteStoreSlice = createSlice({
     },
 
 
+    SetMovementAbilityOfPlayer: (state: {movementAbilityPlayer: boolean;}, action: PayloadAction<boolean>) => {
+      state.movementAbilityPlayer = action.payload;
+    },
+
+
   },
 })
 
@@ -264,7 +272,7 @@ export const { ChangePath, ChangeAuthTOken, ChangeUserData,
   ChangeValidUserState, ChangeMaticBalance, ChangeBitsBalance,
   ChangewbtcBalance, 
   ChangeMetaMaskInstalled, ChangeShowControls, ChangeWebSocketConnectedTime, ChangeLoggerMessage, ChangeShowGangView,  ChangeShowStatsView, SelectOtherPlayerForStats,
-  ChangeRegisterShowInGame, ChangeProfileWindowView, AddPlayersBetInfo, ShowWinnerCardAtFightEnd} =
+  ChangeRegisterShowInGame, ChangeProfileWindowView, AddPlayersBetInfo, ShowWinnerCardAtFightEnd, SetMovementAbilityOfPlayer} =
   UserWebsiteStoreSlice.actions
 
 export default UserWebsiteStoreSlice.reducer

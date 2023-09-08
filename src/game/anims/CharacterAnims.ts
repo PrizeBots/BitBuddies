@@ -446,7 +446,7 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
     key: 'brew-dropped-'+ key,
     frames: [{
         key,
-        frame: 'destroy000.png'
+        frame: 'dropBrew000.png'
       },
     ],
     duration: 500,

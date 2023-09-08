@@ -56,18 +56,18 @@ const isMetaMaskInstalled = () => {
 
 function Header() {
   const userAddress = useAppSelector((state) => state.web3store.userAddress);
-  const maticBalance = useAppSelector(
-    (state) => state.userPathStore.maticBalance
-  );
+  // const maticBalance = useAppSelector(
+  //   (state) => state.userPathStore.maticBalance
+  // );
   const HistoryPath = useAppSelector((state) => state.userPathStore.path);
-  const wbtcBalance = useAppSelector(
-    (state) => state.userPathStore.wbtcBalance
-  );
-  const metaMaskInstalled = useAppSelector(
-    (state) => state.userPathStore.metaMaskInstalled
-  );
+  // const wbtcBalance = useAppSelector(
+  //   (state) => state.userPathStore.wbtcBalance
+  // );
+  // const metaMaskInstalled = useAppSelector(
+  //   (state) => state.userPathStore.metaMaskInstalled
+  // );
   const dispatch = useAppDispatch();
-  const [countOfNotification, setCountOfNotification] = useState(0);
+  // const [countOfNotification, setCountOfNotification] = useState(0);
   const bitFightersTotalData = useAppSelector(
     (state) => state.bitFighters.totalNFTData
   );
@@ -86,9 +86,9 @@ function Header() {
   const selectedPlayer = useAppSelector(
     (state) => state.playerDataStore.current_game_player_info
   );
-  const gameStarted = useAppSelector(
-    (state) => state.playerDataStore.gameStarted
-  );
+  // const gameStarted = useAppSelector(
+  //   (state) => state.playerDataStore.gameStarted
+  // );
 
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
@@ -121,9 +121,9 @@ function Header() {
   console.log("current history path -- ", HistoryPath);
   // let moralisButtonUI: JSX.Element = <></>;
 
-  const ethersLogin = async () => {
-    console.log("button pressed ethersLogin");
-  };
+  // const ethersLogin = async () => {
+  //   console.log("button pressed ethersLogin");
+  // };
 
   const web3LogOut = async () => {
     console.log("button pressed");
@@ -426,9 +426,9 @@ function Header() {
                 <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
               </Link> */}
 
-              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+              {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
                 <div className="cooper-black-tab"><CompetitionTime /></div>
-              </Link>
+              </Link> */}
             </li>
 
             {HistoryPath === "gamePlay" ? (

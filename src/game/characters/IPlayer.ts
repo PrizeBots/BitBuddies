@@ -127,6 +127,7 @@ export interface IKeysInfo {
   keyW: IKeyAttributes,
   keyP: IKeyAttributes,
   keyK: IKeyAttributes,
+  keyQ: IKeyAttributes,
   lastKey: string,
   lastLifted?: string,
   leftShift: IKeyAttributes,

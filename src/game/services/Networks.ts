@@ -9,7 +9,7 @@ import { addToChatArray, MessageType, AddInitialToChatArray } from "../../stores
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 import { SetServerLatency, SetTotalConnections } from "../../stores/MetaInfoStore";
 import { IfightersInfo, SetFightersInfo, ShowFightConfirmationStartTime, ShowFightConfirmationBox, FightPreStart, SetCurrentPlayerFighting, ClearFighterInfo, FightContinue, FightEnd, FightStart, SetCurrentOtherPlayerFighting } from "../../stores/UserActions";
-import { ChangeCombinedQueueData, IQueueCombined, ChangeShowQueueBox, ChangeShowMenuBox, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ShowWinnerCardAtFightEnd } from "../../stores/UserWebsiteStore";
+import { ChangeCombinedQueueData, IQueueCombined, ChangeShowQueueBox, ChangeShowMenuBox, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ShowWinnerCardAtFightEnd, SetMovementAbilityOfPlayer } from "../../stores/UserWebsiteStore";
 import { getBalances } from "../../utils/web3_utils";
 import { createOtherCharacterAnimsV2 } from "../anims/CharacterAnims";
 import { BrewManager } from "../characters/BrewMananger";
@@ -230,6 +230,19 @@ export default class Network {
                   store.dispatch(SetEquippedBrewCount(0))
                   store.dispatch(SetInHandBrew(true))
                 }
+              }
+            }
+          })
+        }
+
+        if (obj.event === "semi_equip_brew") {
+          this.game.otherPlayers.forEach(_player => {
+            if (_player.gameObject) {
+              if (_player.wallet_address === obj.walletAddress) {
+                if (_player.wallet_address === store.getState().web3store.userAddress) {
+                  store.dispatch(SetEquippedBrewCount(1))
+                }
+                
               }
             }
           })
@@ -542,9 +555,22 @@ export default class Network {
                     }, 8000)
                     store.dispatch(ChangeFightAnnouncementMessageFromServer("You Win"))
                     store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+
+                    store.dispatch(SetMovementAbilityOfPlayer(false))
+
+                    setTimeout(() => {
+                      store.dispatch(SetMovementAbilityOfPlayer(true))
+                    }, 3000)
+
                   } else {
                     store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
                     store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+
+                    store.dispatch(SetMovementAbilityOfPlayer(false))
+
+                    setTimeout(() => {
+                      store.dispatch(SetMovementAbilityOfPlayer(true))
+                    }, 3000)
                   }
                 }
               }
@@ -757,7 +783,7 @@ export default class Network {
         }
 
         if (obj.event === "brew_used") {
-          this.game.bootstrap.play_can_open_sound()
+          // this.game.bootstrap.play_can_open_sound()
           this.game.otherPlayers.forEach(_player => {
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
               _player.drinkStarted = true;
@@ -790,6 +816,7 @@ export default class Network {
           this.game.otherPlayers.forEach(_player => {
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
               _player.showBrewDropFrame = true;
+              // _player.drinkStarted = false;
             }
           })
         }

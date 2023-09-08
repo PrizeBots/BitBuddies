@@ -112,9 +112,24 @@ export function Inventory() {
       store.dispatch(SetFailureNotificationBool(true))
       store.dispatch(SetFailureNotificationMessage("Not Allowed"))
     } else {
+      // store.dispatch(SetEquippedBrewCount(1))
       const res = await useAssetsApi("brew")
       if (res) {
         store.dispatch(SetEquippedBrewCount(1))
+        // send an message to 
+        const temp = game.otherPlayers.get(store.getState().web3store.player_id)
+        if (temp?.gameObject) {
+          game.lobbySocketConnection.send(JSON.stringify({
+            event: "semi_equip_brew",
+            walletAddress: store.getState().web3store.userAddress,
+            minted_id: temp.minted_id,
+          }))
+        }
+        // game.lobbySocketConnection.send(JSON.stringify({
+        //   event: "equip_brew",
+        //   walletAddress: store.getState().web3store.userAddress,
+        //   minted_id: temp.minted_id,
+        // }))
       } else {
         setTimeout(() => {
           store.dispatch(SetFailureNotificationBool(true))

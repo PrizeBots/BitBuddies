@@ -123,7 +123,7 @@ interface QueueWindowInfo {
   total_bet: number,
 }
 
-export default function QueueList() {
+export default function QueueListV2() {
   const [betWindowOpen, setBetWindowOpen] = useState(false);
   const fightersInfo = useAppSelector((state) => state.userActionsDataStore.fightersInfo)
   // delete User from queue
@@ -213,318 +213,6 @@ export default function QueueList() {
       alert(data)
     }
   }
-
-
-  // const betsInfoForFightAndPlayer: Map<string, BetData> = new Map();
-  // for (let i = 0; i < combinedQueueData.length; i++) {
-  //   const tempFightId = combinedQueueData[i].fight_id;
-  //   for (let j = 0 ; j < playersBetInfo.length; j++) {
-  //     if (tempFightId === playersBetInfo[j].fight_id) {
-  //       if (combinedQueueData[i].p1_wallet === playersBetInfo[j].player_bet_on) {
-  //         betsInfoForFightAndPlayer.set(tempFightId, playersBetInfo[j]);
-  //       }
-  //       if (combinedQueueData[i].p2_wallet === playersBetInfo[j].player_bet_on) {
-  //         betsInfoForFightAndPlayer.set(tempFightId, playersBetInfo[j])
-  //       }
-  //     }
-  //   }
-  // }
-
-  // const Non_selected_player1_view = (data: IQueueCombined) => {
-  //   return (
-  //         <ImageAndTextView>
-  //           <ImageView >
-  //             {/* {(data.p1_wallet === store.getState().web3store.userAddress || data.p2_wallet === store.getState().web3store.userAddress) ?
-  //               <div style={{
-  //                 float: 'right'
-  //               }}>
-  //                 <CloseIcon
-  //                     style={{color: 'red'}} 
-  //                     onClick={() => {
-  //                       console.log("pressed close icon")
-  //                       deleteUserFromQueue()
-  //                     }}
-  //                   />
-  //               </div>:<></>} */}
-
-
-  //             <ListItemButton disableRipple>
-  //               <img
-  //                 className='hexagon-icon'
-  //                 src={data.p1_profile_image}
-  //                 alt="Hero"
-  //               />
-  //               <ListItemText
-  //                 primary={
-  //                   <span style={{
-  //                     color: "aliceblue",
-  //                   }}>
-  //                     {data.p1_nick_name}
-  //                   </span>
-  //                 } 
-  //                 // secondary={getEllipsisTxt(data.p1_wallet)} 
-  //               />
-  //             </ListItemButton>
-
-              
-
-  //           </ImageView>
-  //           <BetInfoView>
-  //             <h3>
-  //               Total Bet: <span> { parseWBTCBalanceV3(data.p1_total_bet) } </span>
-  //             </h3>
-  //             <Button 
-  //               variant="contained" 
-  //               color="secondary"
-  //               style={{
-  //                 width: '20px',
-  //                 borderRadius: '10px',
-  //                 justifyContent: 'center',
-  //                 height: '25px'
-  //               }}
-  //               onClick={() => {
-  //                 setFightIdChosen(data.fight_id)
-  //                 setPlayerChosen(data.p1_wallet)
-  //               }}
-  //             >
-  //               Bet
-  //             </Button>
-  //           </BetInfoView>
-  //         </ImageAndTextView>
-  //   )
-  // }
-
-  // const Selected_player1_view = (data: IQueueCombined) => {
-  //   return (
-  //         <ImageAndTextView>
-  //         <ImageView>
-  //           <ListItemButton>
-  //             <img
-  //               className='hexagon-icon'
-  //               src={data.p1_profile_image}
-  //               alt="Hero"
-  //             />
-  //             <ListItemText
-  //               primary={
-  //                 <span style={{
-  //                   color: "aliceblue",
-  //                 }}>
-  //                   {data.p1_nick_name}
-  //                 </span>
-  //               } 
-  //               secondary={getEllipsisTxt(data.p1_wallet)} 
-  //             />
-  //           </ListItemButton>
-  //         </ImageView>
-  //         {/* <ListItemButton> */}
-  //           <BetInfoView>
-  //             <h3>
-  //               Your Bet: 
-  //               <InputTextField
-  //                 type='number'
-  //                 fullWidth
-  //                 autoFocus={betLastEdit}
-  //                 value={betOnPlayer}
-  //                 onFocus={() => {
-  //                   setBetLastEdit(true)
-  //                 }}
-  //                 onChange={(e) => {
-  //                   console.log("writing ", e.target.value)
-  //                   if (e.target.value === "") {
-  //                     setBetOnPlayer(0)
-  //                   } else {
-  //                     setBetOnPlayer(parseInt(e.target.value))
-  //                   }
-  //                   setBetLastEdit(true)
-  //                 }}
-  //               />
-  //             </h3>
-
-  //             <h3>
-  //               Tip: 
-  //               <InputTextField
-  //                 type='number'
-  //                 fullWidth
-  //                 autoFocus={tipLastEdit}
-  //                 value={tipOnPlayer}
-  //                 onFocus={() => {
-  //                   setTipLastEdit(true)
-  //                 }}
-  //                 onChange={(e) => {
-  //                   console.log("writing ", e.target.value)
-  //                   if (e.target.value === "") {
-  //                     setTipOnPlayer(0)
-  //                   } else {
-  //                     setTipOnPlayer(parseInt(e.target.value))
-  //                   }
-  //                   setTipLastEdit(true)
-  //                 }}
-  //               />
-  //             </h3>
-  //             <h3>
-  //               Total Bet: <span> { parseWBTCBalanceV3(data.p1_total_bet) } </span>
-  //             </h3>
-  //             <div>
-  //                 {<Button 
-  //                   variant="contained" 
-  //                   color="secondary"
-  //                   style={{
-  //                     width: '20px',
-  //                     borderRadius: '10px',
-  //                     justifyContent: 'center',
-  //                     height: '25px'
-  //                   }}
-  //                   onClick={addBetToFightPlayer}
-  //                 >
-  //                   {betState}
-  //                 </Button>}
-  //             </div>
-             
-  //           </BetInfoView>
-  //         {/* </ListItemButton> */}
-
-
-
-  //         </ImageAndTextView>
-  //   )
-  // }
-
-  // const Selected_player2_view = (data: IQueueCombined) => {
-  //   return (
-  //         <ImageAndTextView>
-  //         <ImageView>
-  //           <ListItemButton>
-  //             <img
-  //               className='hexagon-icon'
-  //               src={data.p2_profile_image}
-  //               alt="Hero"
-  //             />
-  //             <ListItemText
-  //               primary={
-  //                 <span style={{
-  //                   color: "aliceblue",
-  //                 }}>
-  //                   {data.p2_nick_name}
-  //                 </span>
-  //               } 
-  //               secondary={getEllipsisTxt(data.p2_wallet)} 
-  //             />
-  //           </ListItemButton>
-  //         </ImageView>
-  //         {/* <ListItemButton> */}
-  //           <BetInfoView>
-  //             <h3>
-  //               Your Bet: 
-  //               <InputTextField
-  //                 type='number'
-  //                 fullWidth
-  //                 autoFocus={betLastEdit}
-  //                 value={betOnPlayer}
-  //                 onFocus={() => {
-  //                   setBetLastEdit(true)
-  //                 }}
-  //                 onChange={(e) => {
-  //                   console.log("writing ", e.target.value)
-  //                   if (e.target.value === "") {
-  //                     setBetOnPlayer(0)
-  //                   } else {
-  //                     setBetOnPlayer(parseInt(e.target.value))
-  //                   }
-  //                   setBetLastEdit(true)
-  //                 }}
-  //               />
-  //             </h3>
-
-  //             <h3>
-  //               Tip: 
-  //               <InputTextField
-  //                 type='number'
-  //                 fullWidth
-  //                 autoFocus={tipLastEdit}
-  //                 value={tipOnPlayer}
-  //                 onFocus={() => {
-  //                   setTipLastEdit(true)
-  //                 }}
-  //                 onChange={(e) => {
-  //                   console.log("writing ", e.target.value)
-  //                   if (e.target.value === "") {
-  //                     setTipOnPlayer(0)
-  //                   } else {
-  //                     setTipOnPlayer(parseInt(e.target.value))
-  //                   }
-  //                   setTipLastEdit(true)
-  //                 }}
-  //               />
-  //             </h3>
-  //             <h3>
-  //               Total Bet: <span> { parseWBTCBalanceV3(data.p2_total_bet) } </span>
-  //             </h3>
-  //             <Button 
-  //               variant="contained" 
-  //               color="secondary"
-  //               style={{
-  //                 width: '20px',
-  //                 borderRadius: '10px',
-  //                 justifyContent: 'center',
-  //                 height: '25px'
-  //               }}
-  //               onClick={addBetToFightPlayer}
-  //             >
-  //               {betState}
-  //             </Button>
-  //           </BetInfoView>
-  //         {/* </ListItemButton> */}
-
-  //         </ImageAndTextView>
-  //   )
-  // }
-
-  // const Non_selected_player2_view = (data: IQueueCombined) => {
-  //   return (
-  //         <ImageAndTextView>
-  //           <ImageView>
-  //             <ListItemButton>
-  //               <img
-  //                 className='hexagon-icon'
-  //                 src={data.p2_profile_image}
-  //                 alt="Hero"
-  //               />
-  //               <ListItemText
-  //                 primary={
-  //                   <span style={{
-  //                     color: "aliceblue",
-  //                   }}>
-  //                     {data.p2_nick_name}
-  //                   </span>
-  //                 } 
-  //                 secondary={getEllipsisTxt(data.p2_wallet)} 
-  //               />
-  //             </ListItemButton>
-  //           </ImageView>
-  //           <BetInfoView>
-  //             <h3>
-  //               Total Bet: <span> { parseWBTCBalanceV3(data.p2_total_bet) } </span>
-  //             </h3>
-  //             <Button 
-  //               variant="contained" 
-  //               color="secondary"
-  //               style={{
-  //                 width: '20px',
-  //                 borderRadius: '10px',
-  //                 justifyContent: 'center',
-  //                 height: '25px'
-  //               }}
-  //               onClick={() => {
-  //                 setFightIdChosen(data.fight_id)
-  //                 setPlayerChosen(data.p2_wallet)
-  //               }}
-  //             >
-  //               Bet
-  //             </Button>
-  //           </BetInfoView>
-  //         </ImageAndTextView>
-  //   )
-  // }
 
 
   const Non_selected_player_view = (data: QueueWindowInfo) => {
@@ -725,13 +413,10 @@ export default function QueueList() {
                     />
                   </ListItemButton>
 
-  // const ItemView = [];
   const FirstPlayerView: JSX.Element[] = [];
   const SecondPlayerView: JSX.Element[] = [];
-  // const PlayerNotChosenView = [];
   combinedQueueData.map((data: IQueueCombined, index) => {
     const tempQueueDetailInfo = queueDetailsInfo[data.fight_id]
-    // console.log("LoopAllFightsAndUpdate--0-", tempQueueDetailInfo)
     let p1_total_bet = 0;
     let p2_total_bet = 0;
     if (!isNullOrUndefined(tempQueueDetailInfo)) {
@@ -740,14 +425,10 @@ export default function QueueList() {
     }
     console.log("LoopAllFightsAndUpdate--0-", p1_total_bet, p2_total_bet)
     
-    // const p1_total_bet = 0;
-    // const p2_total_bet = 0;
     let TempP1HTML = <></>;
     let TempP2HTML = <></>;
-    // let combinedView = <></>;
     if (data.fight_id === fightIdChosen) {
       if (data.p1_wallet === playerChosen) {
-        // change the html
         TempP1HTML = <Selected_player_view 
           fight_id={data.fight_id} 
           wallet={data.p1_wallet} 
@@ -766,7 +447,6 @@ export default function QueueList() {
         />
       }
       if (data.p2_wallet === playerChosen) {
-        // change the html
         TempP2HTML = <Selected_player_view 
           fight_id={data.fight_id} 
           wallet={data.p2_wallet} 
@@ -785,7 +465,6 @@ export default function QueueList() {
       }
     } 
     else {
-      // if none is chosen
       TempP1HTML = 
         <Non_selected_player_view 
           fight_id={data.fight_id} 
@@ -826,23 +505,18 @@ export default function QueueList() {
                           }}>
                             <h1 style={{color: 'aliceblue' }}> {index + 1} </h1>
                         </Grid>
-                        <Grid item xs={4.5} style={{
-                          // backgroundColor: 'yellow'
-                        }}>
+                        <Grid item xs={4.5}>
                           {
                             FirstPlayerView[index]
                           }
                         </Grid>
                         <Grid item xs={2} style={{
-                          // backgroundColor: 'red',
                           alignItems: 'center',
                           display: 'flex'
                         }}>
                           { VsImageView }
                         </Grid>
-                        <Grid item xs={4.5} style={{
-                          // backgroundColor: 'yellow'
-                        }}>
+                        <Grid item xs={4.5}>
                           {
                             SecondPlayerView[index]
                           }

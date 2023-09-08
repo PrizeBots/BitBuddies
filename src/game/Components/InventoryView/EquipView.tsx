@@ -79,7 +79,7 @@ export function EquipView() {
         <Wrapper>
           <BitsView>
             <span>
-              Press Q to Equip
+              Press Q to Open
             </span>
           </BitsView>
           <div style={{

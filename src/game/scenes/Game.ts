@@ -26,7 +26,6 @@ import { getBalances } from "../../utils/web3_utils";
 import { fetchPlayerAssets, fetchPlayerWalletInfo } from "../../hooks/ApiCaller";
 import { updateBetInfOfPlayer } from "../../utils/fight_utils";
 import  { SetServerLatency } from "../../stores/MetaInfoStore";
-import { SetEquippedBrewCount, SetInHandBrew } from "../../stores/AssetStore";
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 // import { ActionManager } from "../ActionManager";
 import { v4 as uuidv4 } from 'uuid';
@@ -529,7 +528,7 @@ export default class Game extends Phaser.Scene {
       }
     }
 
-    if (this.lobbySocketConnected &&  store.getState().web3store.userAddress !== "") {
+    if (this.lobbySocketConnected &&  store.getState().web3store.userAddress !== "" && store.getState().userPathStore.movementAbilityPlayer) {
       // console.log("timeframe latency_check-- ", this.frameTime)
       // if (this.frameTime % 100 === 0) {
       //   console.log("timeframe latency_check-- ", this.frameTime)
@@ -572,7 +571,7 @@ export default class Game extends Phaser.Scene {
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
-                && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+                // && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
                 ) {
                   // console.log("sending move signal")
                   const direction = []
@@ -635,52 +634,56 @@ export default class Game extends Phaser.Scene {
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
-            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            // && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
           ) {
             // let action_id = uuidv4();
             // ActionManager.AddToActionQueue({ event: "kick", walletAddress: store.getState().web3store.userAddress }, action_id );
             // console.log("checking unequip_brew ", )
-            if (_otherplayer.hasBrewInHand && store.getState().assetStore.in_hand_brew){
-              if (!_otherplayer.kickStartTime) {
-                this.lobbySocketConnection.send(JSON.stringify({
-                  event: "unequip_brew",
-                  walletAddress: store.getState().web3store.userAddress,
-                }))
-                this.lobbySocketConnection.send(JSON.stringify({
-                  event: "brew_used",
-                  walletAddress: store.getState().web3store.userAddress,
-                }));
-              }
-              if (_otherplayer.kickStartTime) {
-                if (!_otherplayer.kickStart || _otherplayer.kickStartTime + 400 < new Date().getTime() ) {
-                  this.lobbySocketConnection.send(JSON.stringify({
-                    event: "unequip_brew",
-                    walletAddress: store.getState().web3store.userAddress,
-                  }))
-                  this.lobbySocketConnection.send(JSON.stringify({
-                    event: "brew_used",
-                    walletAddress: store.getState().web3store.userAddress,
-                  }));
-                }
-              }
+            // if (_otherplayer.hasBrewInHand && store.getState().assetStore.in_hand_brew){
+            //   if (!_otherplayer.kickStartTime) {
+            //     this.lobbySocketConnection.send(JSON.stringify({
+            //       event: "unequip_brew",
+            //       walletAddress: store.getState().web3store.userAddress,
+            //       minted_id: _otherplayer.minted_id,
+            //     }))
+            //     this.lobbySocketConnection.send(JSON.stringify({
+            //       event: "brew_used",
+            //       walletAddress: store.getState().web3store.userAddress,
+            //       minted_id: _otherplayer.minted_id,
+            //     }));
+            //   }
+            //   if (_otherplayer.kickStartTime) {
+            //     if (!_otherplayer.kickStart || _otherplayer.kickStartTime + 400 < new Date().getTime() ) {
+            //       this.lobbySocketConnection.send(JSON.stringify({
+            //         event: "unequip_brew",
+            //         walletAddress: store.getState().web3store.userAddress,
+            //         minted_id: store.getState().web3store.minted_id,
+            //       }))
+            //       this.lobbySocketConnection.send(JSON.stringify({
+            //         event: "brew_used",
+            //         walletAddress: store.getState().web3store.userAddress,
+            //         minted_id: store.getState().web3store.minted_id,
+            //       }));
+            //     }
+            //   }
               
               
-            } else {
-              if (!_otherplayer.kickStartTime) {
+            // } else {
+            if (!_otherplayer.kickStartTime) {
+              this.lobbySocketConnection.send(JSON.stringify({
+                event: "kick",
+                walletAddress: store.getState().web3store.userAddress,
+              }))
+            }
+            if (_otherplayer.kickStartTime) {
+              if (!_otherplayer.kickStart || _otherplayer.kickStartTime + 400 < new Date().getTime() ) {
                 this.lobbySocketConnection.send(JSON.stringify({
                   event: "kick",
                   walletAddress: store.getState().web3store.userAddress,
                 }))
               }
-              if (_otherplayer.kickStartTime) {
-                if (!_otherplayer.kickStart || _otherplayer.kickStartTime + 400 < new Date().getTime() ) {
-                  this.lobbySocketConnection.send(JSON.stringify({
-                    event: "kick",
-                    walletAddress: store.getState().web3store.userAddress,
-                  }))
-                }
-              }
             }
+            // }
             // _otherplayer.kickStart = true
           }
         }) 
@@ -696,7 +699,7 @@ export default class Game extends Phaser.Scene {
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
-            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            // && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
           ) {
             if (!_otherplayer.punchStartTime) {
               this.lobbySocketConnection.send(JSON.stringify({
@@ -718,6 +721,52 @@ export default class Game extends Phaser.Scene {
           }
         }) 
         
+      }
+
+      if (this.keyControls.keys.keyQ.pressed ) {
+        this.otherPlayers.forEach((_otherplayer) => {
+          if (
+            _otherplayer.wallet_address === store.getState().web3store.userAddress
+            && _otherplayer.gameObject
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'burp-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+            // && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
+          ) {
+            if (_otherplayer.hasBrewInHand && store.getState().assetStore.in_hand_brew){
+              if (!_otherplayer.kickStartTime) {
+                this.lobbySocketConnection.send(JSON.stringify({
+                  event: "unequip_brew",
+                  walletAddress: store.getState().web3store.userAddress,
+                  minted_id: _otherplayer.minted_id,
+                }))
+                this.lobbySocketConnection.send(JSON.stringify({
+                  event: "brew_used",
+                  walletAddress: store.getState().web3store.userAddress,
+                  minted_id: _otherplayer.minted_id,
+                }));
+              }
+              if (_otherplayer.kickStartTime) {
+                if (!_otherplayer.kickStart || _otherplayer.kickStartTime + 400 < new Date().getTime() ) {
+                  this.lobbySocketConnection.send(JSON.stringify({
+                    event: "unequip_brew",
+                    walletAddress: store.getState().web3store.userAddress,
+                    minted_id: store.getState().web3store.minted_id,
+                  }))
+                  this.lobbySocketConnection.send(JSON.stringify({
+                    event: "brew_used",
+                    walletAddress: store.getState().web3store.userAddress,
+                    minted_id: store.getState().web3store.minted_id,
+                  }));
+                }
+              }
+            }
+          }
+        }) 
       }
     }
     
@@ -828,7 +877,7 @@ export default class Game extends Phaser.Scene {
     // console.log(" current palyer fighting .. " , store.getState().userActionsDataStore.currentPlayerFighting)
     if (store.getState().userActionsDataStore.currentPlayerFighting) {
       store.dispatch(ChangeShowMenuBox(false))
-      store.dispatch(ShowChatWindow(false))
+      // store.dispatch(ShowChatWindow(false))
     }
 
     this.otherPlayers.forEach((_player) => {
@@ -855,7 +904,10 @@ export default class Game extends Phaser.Scene {
           && _player.gameObject?.sprite.anims 
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
-          // console.log("other_players_loop")
+          // if (_player.wallet_address === store.getState().web3store.userAddress) {
+          //   console.log("other_players_loop ", _player.showBrewDropFrame, _player.kicking, _player.punching, _player.stunnedStarted, _player.deadStarted) 
+          // }
+          
           if (_player.gameObject.gassed_lift_off_fall) {
             _player.gameObject.gassed_lift_off_fall = false
             _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
@@ -886,9 +938,11 @@ export default class Game extends Phaser.Scene {
               }
             })
           } else if (_player.showBrewDropFrame) {
+            _player.showBrewDropFrame = false
             _player.gameObject.sprite.play("brew-dropped-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               _player.showBrewDropFrame = false
+              _player.drinkStarted = false;
               if (_player.gameObject) {
                 _player.gameObject.sprite.stop()
                 _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
@@ -1012,15 +1066,34 @@ export default class Game extends Phaser.Scene {
           }
           else if ( _player.kicking && !_player.stunnedStarted && !_player.deadStarted) {
             _player.running = false
-            _player.gameObject.sprite.play("kick-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
-              // console.log("done kicking . ")
-              _player.kicking = false
-              _player.kickStart = false
-              if (_player.gameObject) {
-                _player.gameObject.sprite.stop()
-                _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
-              }
-            })
+            // _player.gameObject.sprite.play("kick-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
+            //   // console.log("done kicking . ")
+            //   _player.kicking = false
+            //   _player.kickStart = false
+            //   if (_player.gameObject) {
+            //     _player.gameObject.sprite.stop()
+            //     _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+            //   }
+            // })
+            if (_player.hasBrewInHand) {
+              _player.gameObject.sprite.play("kick-"+_player.wallet_address + "_" + _player.minted_id).once('animationcomplete', () => {
+                _player.punching = false
+                _player.punchStart = false
+                if (_player.gameObject) {
+                  _player.gameObject.sprite.stop()
+                  _player.gameObject.sprite.play("idleBrew-"+_player.wallet_address + "_" + _player.minted_id)
+                }
+              })
+            } else {
+              _player.gameObject.sprite.play("kick-"+_player.wallet_address + "_" + _player.minted_id).once('animationcomplete', () => {
+                _player.punching = false
+                _player.punchStart = false
+                if (_player.gameObject) {
+                  _player.gameObject.sprite.stop()
+                  _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
+                }
+              })
+            }
           } 
           else if (_player.punching && !_player.stunnedStarted && !_player.deadStarted) {
             _player.running = false
@@ -1087,7 +1160,7 @@ export default class Game extends Phaser.Scene {
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'dying_total_sequqnce-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'fly_as_angel-'+_player.wallet_address + "_" + _player.minted_id
-                && _player.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_player.wallet_address + "_" + _player.minted_id
+                // && _player.gameObject.sprite.anims.currentAnim.key !== 'brew-dropped-'+_player.wallet_address + "_" + _player.minted_id
               ) {
                 _player.running = false
                 _player.gameObject.sprite.stop()

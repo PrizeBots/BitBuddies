@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { useAppSelector } from '../hooks';
 import store from '../stores';
 import { LeaderBoardData, SetLeaderBoardOpen } from '../stores/WebsiteStateStore';
+import { getEllipsisTxt } from '../utils';
+import { parseWBTCBalanceV2, parseWBTCBalanceV3 } from '../utils/web3_utils';
 
 const ModalWrapper = styled.div`
 `
@@ -114,7 +116,7 @@ function Leaderboard() {
       >
       <ModalBoxWrapper>
         <h3>
-          LeaderBoard:
+          Leaderboard:
         </h3>
 
            <Mytable style={{
@@ -126,9 +128,9 @@ function Leaderboard() {
               <thead>
               <tr>
                 <td>#Rank</td>
-                <td>User Address</td>
+                <td>Player</td>
                 <td>Balance</td>
-                <td>#Fights</td>
+                {/* <td>#Fights</td> */}
               </tr>
               </thead>
 
@@ -139,9 +141,9 @@ function Leaderboard() {
                   return(
                     <tr>
                       <td>{index+1}</td>
-                      <td>{data.user_wallet_address}</td>
-                      <td>{data.web2_balance}</td>
-                      <td>{data.num_fights}</td>
+                      <td>{getEllipsisTxt(data.user_wallet_address)}</td>
+                      <td>{parseWBTCBalanceV3(data.web2_balance)}</td>
+                      {/* <td>{data.num_fights}</td> */}
                     </tr>
                   )
                 })

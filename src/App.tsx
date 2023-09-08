@@ -19,6 +19,7 @@ import DocumentMeta from 'react-document-meta';
 import { ListGameServers } from "./utils/game_server_utils";
 import { FetchLeaderBoard, fetchPlayerWalletInfo } from "./hooks/ApiCaller";
 import Leaderboard from "./landing-page/Leaderboard";
+import FightersNewCenterPart from "./landing-page/FightersNewCenterPart";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -91,10 +92,10 @@ function App() {
       // TODO: call update for all of the fight ids in queuue
       
       // console.log("debug_game_state ", gameStarted, counter)
-      if (counter >10) {
+      if (counter >20) {
         if (!gameStarted) {
           if (localStorage.getItem("game_state")=== "start") {
-            ListGameServers(gameServerReginoSelected)
+            ListGameServers(gameServerReginoSelected, "no_create")
           }
         }
         LoopAllFightsAndUpdate();
@@ -163,6 +164,7 @@ function App() {
       <Backdrop>
         <BrowserRouter>
           <Leaderboard />
+          {/* <FightersNewCenterPart /> */}
           <React.Suspense fallback={loading()}>
             {ValidUser ? (
               <Routes>

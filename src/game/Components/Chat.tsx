@@ -389,6 +389,7 @@ export default function Chat() {
                       dispatch(SetFocussedOnChat(false))
                       game.enableKeyBoard()
                       dispatch(TurnMouseClickOff(false))
+                      dispatch(SetMouseClickControlChat(false))
                     }
                   }
                   size="small"
@@ -414,6 +415,13 @@ export default function Chat() {
                       theme="dark"
                       showSkinTones={false}
                       showPreview={false}
+
+                      onMouseOver={() => {
+              dispatch(SetMouseClickControlChat(true))
+            }}
+            onMouseOut={() => {
+              dispatch(SetMouseClickControlChat(false))
+            }}
                       // onSelect={(emoji: any) => {
                       //   console.log("emoji selected -- ", emoji)
                       //   setInputValue(inputValue + emoji.native)
@@ -436,6 +444,12 @@ export default function Chat() {
               
               <InputWrapper onSubmit={handleSubmit}>
                 <InputTextField
+                  onMouseOver={() => {
+                    dispatch(SetMouseClickControlChat(true))
+                  }}
+                  onMouseOut={() => {
+                    dispatch(SetMouseClickControlChat(false))
+                  }}
                   inputRef={inputRef}
                   autoFocus={focussedOnChat}
                   fullWidth
@@ -448,6 +462,7 @@ export default function Chat() {
                       console.log("on focused focused --", focussedOnChat, showChatWindow)
                       // setFocused(true)
                       dispatch(SetFocussedOnChat(true))
+                      // dispatch(SetMouseClickControlChat(true))
                     }
                   }}
                   onBlur={() => {
@@ -456,9 +471,13 @@ export default function Chat() {
                     // setFocused(false)
                     // dispatch(SetFocussedOnChat(false))
                     // game.enableKeyBoard()
+                    dispatch(SetMouseClickControlChat(false))
                   }}
                 />
-                <IconButton aria-label="emoji" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                <IconButton aria-label="emoji" onClick={() => {
+                  setShowEmojiPicker(!showEmojiPicker)
+                  dispatch(SetMouseClickControlChat(false))
+                }}>
                   <InsertEmoticonIcon />
                 </IconButton>
               </InputWrapper>

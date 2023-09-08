@@ -2,9 +2,9 @@ import { FetchGameServerConnectionURL, ListGameServersApiCall } from "../hooks/A
 import store from "../stores";
 import { SetGameServersData, SetSelectedGameServerURL } from "../stores/WebsiteStateStore";
 
-export async function ListGameServers(region: string) {
+export async function ListGameServers(region: string, create = "create") {
   // console.log("ListGameServersApiCall")
-  const serverList = await ListGameServersApiCall(store.getState().web3store.userAddress, region)
+  const serverList = await ListGameServersApiCall(store.getState().web3store.userAddress, region, create)
   // console.log("server list -- ", serverList.data)
   store.dispatch(SetGameServersData(serverList.data));
 }
