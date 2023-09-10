@@ -47,10 +47,10 @@ export default function OtherStatsView(data : any) {
     const otherPlayer = game.otherPlayers.get(arr[i])
     if (otherPlayerSelected === `${otherPlayer?.gameObject?.wallet_address}_${otherPlayer?.gameObject?.minted_id}` && !isNullOrUndefined(otherPlayer)) {
       pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
-      pdata.health = otherPlayer.gameObject?.extra_data?.health;
+      pdata.health = otherPlayer.gameObject?.max_health;
       pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
       pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
-      pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
+      pdata.stamina = otherPlayer.gameObject?.max_stamina;
       pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
       pdata.nickName = otherPlayer.nick_name;
       pdata.all_aps = otherPlayer.all_aps;

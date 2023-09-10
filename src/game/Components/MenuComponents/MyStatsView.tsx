@@ -69,10 +69,10 @@ export default function MyStatsView(data : any) {
       const otherPlayer = game.otherPlayers.get(arr[i])
       if (otherPlayer?.wallet_address === store.getState().web3store.userAddress) {
         pdata.defense = otherPlayer.gameObject?.extra_data?.defense;
-        pdata.health = otherPlayer.gameObject?.extra_data?.health;
+        pdata.health = otherPlayer.gameObject?.max_health;
         pdata.kickpower = otherPlayer.gameObject?.extra_data?.kickpower;
         pdata.punchpower = otherPlayer.gameObject?.extra_data?.punchpower;
-        pdata.stamina = otherPlayer.gameObject?.extra_data?.stamina;
+        pdata.stamina = otherPlayer.gameObject?.max_stamina;
         pdata.speed = otherPlayer.gameObject?.extra_data?.speed;
         pdata.nickName = otherPlayer.nick_name;
         pdata.all_aps = otherPlayer.all_aps;
