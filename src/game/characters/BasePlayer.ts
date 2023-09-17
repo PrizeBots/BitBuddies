@@ -643,15 +643,16 @@ export class BasePlayer  {
     setTimeout(()=> {
       this.removeElementFromArray(randomID)
     }, 4000)
+    console.log("createNewDialogBox_handlesubmit__debug_chat--", text)
     console.log("----------- in createNewDialogBox-----------", text, this.chatBubbleActive)
-    let ntext = ""
-    if (text.length > 30) {
-      for (let i =0; i< text.length; i = i + 30) {
-        ntext += text.slice(i,i+30) + "\n"
-      }
-    } else {
-      ntext = text;
-    }
+    const ntext = text
+    // if (text.length > 30) {
+    //   for (let i =0; i< text.length; i = i + 30) {
+    //     ntext += text.slice(i,i+30) + "\n"
+    //   }
+    // } else {
+    //   ntext = text;
+    // }
 
     if (ntext === "..." && !this.chatBubbleActive) {
       this.chatBubbleActive = true

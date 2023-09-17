@@ -18,6 +18,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { updateBetInfOfPlayer } from '../../utils/fight_utils';
 import MyStatsView from './MenuComponents/MyStatsView';
 import OtherStatsView from './MenuComponents/OtherStatsView';
+import QueueListV2 from './MenuComponents/QueueListV2';
 
 
 
@@ -309,7 +310,7 @@ export default function NewMenuSideBar() {
                       <MenuBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabPanel2 value={value2} index={0}>
                           <div> 
-                            <QueueList />
+                            <QueueListV2 />
                           </div>
                         </TabPanel2>
                       </MenuBox>

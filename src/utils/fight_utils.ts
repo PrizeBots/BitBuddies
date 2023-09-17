@@ -31,15 +31,18 @@ export async function updateSingleBetInfOfPlayer(fight_id: string) {
   const data = await FetchParticularBetOfPlayer(fight_id)
   console.log("queue single bet - ", data.data)
   const result = data.data as BetData;
-  // const info: any = {}
-  // for (let  i = 0;  i < result.length; i++) {
-  //   info[result[i].fight_id] = `${result[i].bet_amount}::${result[i].player_bet_on}`;
-  // }
   const currBetsArray = store.getState().userPathStore.playersBetInfo;
-  currBetsArray.push(result)
-  // console.log("queue all data -- ", info)
+  let found = false;
+  for(let i=0; i< currBetsArray.length;i++) {
+    if (currBetsArray[i].fight_id === result.fight_id) {
+      currBetsArray[i] = result;
+      found = true
+    }
+  }
+  if (!found) {
+    currBetsArray.push(result)
+  }
   store.dispatch(AddPlayersBetInfo(currBetsArray))
-  // store.dispatch(ChangeCombinedQueueData(store.getState().userPathStore.CombinedQueueData))
 }
 
 export async function LoopAllFightsAndUpdate() {

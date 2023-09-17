@@ -7,8 +7,8 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 
 const Backdrop = styled.div`
   position: fixed;
-  width: 25%;
-  left: 20%;
+  width: 20%;
+  left: 25%;
   margin: auto;
   margin-top: 20px;
 `

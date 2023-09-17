@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface QueueDetaildInfo {
   queue_to_fight_info_map: any;
+  // bet_queue_view_map: any;
 
   added_to_queue_pool: boolean;
   queuePoolMessage: string;
@@ -11,6 +12,7 @@ interface QueueDetaildInfo {
 
 const initialState: QueueDetaildInfo = {
   queue_to_fight_info_map: {},
+  // bet_queue_view_map: {},
 
   added_to_queue_pool: false,
   queuePoolMessage: ""
@@ -28,6 +30,10 @@ export const queueInfoStore = createSlice({
     SetQueuePoolState: (state: { added_to_queue_pool: boolean; }, action: PayloadAction<boolean>) => {
       state.added_to_queue_pool = action.payload;
     },
+
+    // SetBetQueueMap: (state: { bet_queue_view_map: any; }, action: PayloadAction<any>) => {
+    //   state.bet_queue_view_map = action.payload;
+    // },
 
   },
 })

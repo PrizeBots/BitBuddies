@@ -85,6 +85,7 @@ interface UserActionData {
   mouseClickControlFightMachine: boolean,
   mouseClickControlChat: boolean,
   mouseClickControlProfileWindow: boolean,
+  mouseClickControlInventory: boolean,
 
   // curent player is fighting
   currentPlayerFighting: boolean,
@@ -228,7 +229,8 @@ const initialState: UserActionData = {
   mouseClickControlATM: false,
   mouseClickControlFightMachine: false,
   mouseClickControlChat: false,
-  mouseClickControlProfileWindow: false
+  mouseClickControlProfileWindow: false,
+  mouseClickControlInventory: false
 }
 
 export const userActionData = createSlice({
@@ -464,6 +466,10 @@ export const userActionData = createSlice({
       state.mouseClickControlProfileWindow = action.payload;
     },
 
+    SetMouseClickControlInventory: (state: { mouseClickControlInventory: boolean; }, action: PayloadAction<boolean>) => {
+      state.mouseClickControlInventory = action.payload;
+    },
+
   },
 })
 
@@ -482,7 +488,7 @@ export const {
   ShowFightMachineButtonPressed, ShowDeadSprite, TurnMouseClickOff, GameTurnMouseClickOff, SetCurrentPlayerFighting, SetCurrentOtherPlayerFighting,
   OpenAtmView, ShowBrewEjectAnimation, BrewMachinePunched, ChangeBetWindowViewState, ChangeBetingOnPlayerData, ShowMagnetMoveBrew, SelectFightInFightMachineMenu,
 
-  SetMouseClickControlHeader, SetMouseClickControlATM, SetMouseClickControlFightMachine, SetMouseClickControlChat, SetMouseClickControlProfileWindow
+  SetMouseClickControlHeader, SetMouseClickControlATM, SetMouseClickControlFightMachine, SetMouseClickControlChat, SetMouseClickControlProfileWindow, SetMouseClickControlInventory
   // SetFightInfo 
 } = userActionData.actions
 

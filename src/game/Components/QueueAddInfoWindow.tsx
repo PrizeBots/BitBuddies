@@ -11,11 +11,9 @@ import Game from "../scenes/Game";
 import Bootstrap from "../scenes/Bootstrap";
 import { convertWBTCToBigIntWithDecimlas } from "../../utils/web3_utils";
 import { EnterFightQueueApi, fetchPlayerWalletInfo } from "../../hooks/ApiCaller";
-import { updateBetInfOfPlayer } from "../../utils/fight_utils";
 import { SetFailureNotificationBool, SetFailureNotificationMessage } from "../../stores/NotificationStore";
 import { isNullOrUndefined } from "util";
 import FightMenuSelectionBox from "./MenuComponents/FightMenuSelectionBox";
-import { useDetectClickOutside } from "react-detect-click-outside";
 
 
 const ProgressBarWrapper = styled.div`
@@ -56,7 +54,7 @@ const Backdrop2 = styled.div`
 export function QueueAddInfoWindow() {
   const [amount, setAmount] = useState(0);
   const [amountInString, setAmountInString] = useState("")
-  const ANTE = 200;
+  const ANTE = 100;
   
   const hitFightMachine = useAppSelector((state) => state.userActionsDataStore.hitFightMachine)
   const selectFightMenu = useAppSelector((state) => state.userActionsDataStore.selectedFightButton)
@@ -101,7 +99,7 @@ export function QueueAddInfoWindow() {
       }))
       setaddToQueueState("Successfully Added to Queue");
       await fetchPlayerWalletInfo();
-      await updateBetInfOfPlayer()
+      // await updateBetInfOfPlayer()
       bootstrap.play_snap_sound()
       setTimeout(() => {
         setaddToQueueBool(true);

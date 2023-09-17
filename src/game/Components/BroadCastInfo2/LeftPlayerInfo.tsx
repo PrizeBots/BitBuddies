@@ -6,9 +6,10 @@ import { useState } from "react";
 
 const BackWrapper = styled.div`
   position: fixed;
-  width: 15%;
-  left: 5%;
+  width: 10%;
+  left: 17%;
   margin: auto;
+  opacity: 0.7;
   // background-color: yellow;
 `
 

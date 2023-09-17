@@ -51,7 +51,10 @@ export interface IOtherPlayer {
   max_health?: number,
 
   winningStarted?: boolean,
+  winning?: boolean;
+
   losingStarted?: boolean,
+  loosing?: boolean,
   movementAbility?: string,
 
   drinkStarted?: boolean,
@@ -283,286 +286,286 @@ export class OtherPlayer extends BasePlayer {
       } else if (this.playerStunned && this.currStamina > 11) {
         this.playerStunned = false;
       }
-      try {
-        if (otherPlayer && otherPlayer.setupDone && otherPlayer.gameObject && otherPlayer.gameObject?.sprite.anims && store.getState().web3store.userAddress === otherPlayer.wallet_address) {
-          // console.log("outside in otherPlayer. stunnedstarted", otherPlayer.moving, otherPlayer.runStart, otherPlayer.kickStart, otherPlayer.punchStart, otherPlayer.runStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted)
-          if (otherPlayer.gotHit) {
-            otherPlayer.gameObject.sprite.play("gotHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-              if (otherPlayer?.gameObject) {
-                otherPlayer.gotHit = false
-                otherPlayer?.gameObject.sprite.stop()
-                otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-              }
-            })
-          }
-          else if (otherPlayer.showEquipAnimationStarted) {
-            otherPlayer.showEquipAnimationStarted = false
-            otherPlayer.gameObject.sprite.play("equipBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-              if (otherPlayer?.gameObject) {
-                otherPlayer?.gameObject.sprite.stop()
-                otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-              }
-            })
-          }
-          else if (otherPlayer.gotBackHit) {
-            otherPlayer.gameObject.sprite.play("gotBackHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-              if (otherPlayer?.gameObject) {
-                otherPlayer.gotBackHit = false
-                otherPlayer.gameObject.sprite.stop()
-                otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-              }
-            })
-          }
-          else if (otherPlayer.drinkStarted) {
-            if (!otherPlayer.drinking) {
-              otherPlayer.drinking = true;
-              otherPlayer.gameObject.sprite.stop();
-              otherPlayer.gameObject.sprite.play("drink2-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-                if (otherPlayer?.gameObject) {
-                  otherPlayer.drinkStarted = false
-                  otherPlayer.drinking = false
-                  if (otherPlayer.gameObject){
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                  // otherPlayer.gameObject.sprite.play("burp-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-                  //   otherPlayer.drinkStarted = false
-                  //   otherPlayer.drinking = false
-                  //   if (otherPlayer.gameObject){
-                  //     otherPlayer.gameObject.sprite.stop()
-                  //     otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  //   }
-                  // })
-                }
-              })
-            }
-          }
-          else if (otherPlayer.winningStarted) {
-            otherPlayer.winningStarted = false
-            otherPlayer.gameObject.sprite.stop();
-            otherPlayer.gameObject.sprite.play("win-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
-              .once('animationcomplete', () => {
-                if (otherPlayer?.gameObject) {
-                  otherPlayer.winningStarted = false;
-                  otherPlayer.gameObject.sprite.stop()
-                  otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                }
-              })
-          } else if (otherPlayer.losingStarted) {
-            otherPlayer.losingStarted = false;
-            otherPlayer.gameObject.sprite.stop();
-            otherPlayer.gameObject.sprite.play("lose-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
-              .once('animationcomplete', () => {
-                if (otherPlayer?.gameObject) {
-                  otherPlayer.losingStarted = false;
-                  otherPlayer.gameObject.sprite.stop()
-                  otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                }
-              })
-          }
-          else if (otherPlayer.stunnedStarted) {
-            // console.log("entering in otherPlayer. stunnedstarted", otherPlayer.stunned, otherPlayer.stunnedStarted)
-            if (!otherPlayer.stunned) {
-              // console.log("entering in otherPlayer. stunned")
-              otherPlayer.running = false;
-              otherPlayer.kickStart = false;
-              otherPlayer.kicking = false;
-              otherPlayer.gotBackHit = false;
-              otherPlayer.gotHit = false;
-              otherPlayer.stunned = true;
-              otherPlayer.gameObject.sprite.stop();
-              otherPlayer.gameObject.sprite.play("stunned-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
-              .once('animationcomplete', () => {
-                // console.log("other player stunned animatino done.")
-                if (otherPlayer?.gameObject) {
-                  otherPlayer.stunned = false;
-                  otherPlayer.stunnedStarted = false;
-                  // otherPlayer.gameObject.sprite.stop()
-                  // otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                }
-              })
-            }
-          }
-          else if (otherPlayer.deadStarted) {
-            // console.log("entering in otherPlayer. stunnedstarted", otherPlayer.stunned, otherPlayer.stunnedStarted)
-            if (!otherPlayer.dead) {
-              // console.log("entering in otherPlayer. stunned")
-              otherPlayer.running = false;
-              otherPlayer.kickStart = false;
-              otherPlayer.kicking = false;
-              otherPlayer.gotBackHit = false;
-              otherPlayer.gotHit = false;
-              // otherPlayer.moving = false;
-              otherPlayer.stunned = false;
-              otherPlayer.dead = true;
-              otherPlayer.gameObject.sprite.stop();
-              otherPlayer.gameObject.sprite.play("dead-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
-              .once('animationcomplete', () => {
-                //
-              })
-            }
-          }
-          else if ( otherPlayer.kickStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted ) {
-            otherPlayer.running = false
-            otherPlayer.kickStart = false
-            if (otherPlayer.kicking) {
-              otherPlayer.kicking = false;
-              otherPlayer.gameObject.sprite.play("kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-                console.log("done kicking . ")
-                setTimeout(() => {
-                  if (otherPlayer?.gameObject) {
-                    otherPlayer.kicking = false
-                    otherPlayer.kickStart = false
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                }, 200)
-              })
-            }
+      // try {
+      //   if (otherPlayer && otherPlayer.setupDone && otherPlayer.gameObject && otherPlayer.gameObject?.sprite.anims && store.getState().web3store.userAddress === otherPlayer.wallet_address) {
+      //     // console.log("outside in otherPlayer. stunnedstarted", otherPlayer.moving, otherPlayer.runStart, otherPlayer.kickStart, otherPlayer.punchStart, otherPlayer.runStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted)
+      //     if (otherPlayer.gotHit) {
+      //       otherPlayer.gameObject.sprite.play("gotHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //         if (otherPlayer?.gameObject) {
+      //           otherPlayer.gotHit = false
+      //           otherPlayer?.gameObject.sprite.stop()
+      //           otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //         }
+      //       })
+      //     }
+      //     else if (otherPlayer.showEquipAnimationStarted) {
+      //       otherPlayer.showEquipAnimationStarted = false
+      //       otherPlayer.gameObject.sprite.play("equipBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //         if (otherPlayer?.gameObject) {
+      //           otherPlayer?.gameObject.sprite.stop()
+      //           otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //         }
+      //       })
+      //     }
+      //     else if (otherPlayer.gotBackHit) {
+      //       otherPlayer.gameObject.sprite.play("gotBackHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //         if (otherPlayer?.gameObject) {
+      //           otherPlayer.gotBackHit = false
+      //           otherPlayer.gameObject.sprite.stop()
+      //           otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //         }
+      //       })
+      //     }
+      //     else if (otherPlayer.drinkStarted) {
+      //       if (!otherPlayer.drinking) {
+      //         otherPlayer.drinking = true;
+      //         otherPlayer.gameObject.sprite.stop();
+      //         otherPlayer.gameObject.sprite.play("drink2-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //           if (otherPlayer?.gameObject) {
+      //             otherPlayer.drinkStarted = false
+      //             otherPlayer.drinking = false
+      //             if (otherPlayer.gameObject){
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //             // otherPlayer.gameObject.sprite.play("burp-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //             //   otherPlayer.drinkStarted = false
+      //             //   otherPlayer.drinking = false
+      //             //   if (otherPlayer.gameObject){
+      //             //     otherPlayer.gameObject.sprite.stop()
+      //             //     otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             //   }
+      //             // })
+      //           }
+      //         })
+      //       }
+      //     }
+      //     else if (otherPlayer.winningStarted) {
+      //       otherPlayer.winningStarted = false
+      //       otherPlayer.gameObject.sprite.stop();
+      //       otherPlayer.gameObject.sprite.play("win-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
+      //         .once('animationcomplete', () => {
+      //           if (otherPlayer?.gameObject) {
+      //             otherPlayer.winningStarted = false;
+      //             otherPlayer.gameObject.sprite.stop()
+      //             otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           }
+      //         })
+      //     } else if (otherPlayer.losingStarted) {
+      //       otherPlayer.losingStarted = false;
+      //       otherPlayer.gameObject.sprite.stop();
+      //       otherPlayer.gameObject.sprite.play("lose-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
+      //         .once('animationcomplete', () => {
+      //           if (otherPlayer?.gameObject) {
+      //             otherPlayer.losingStarted = false;
+      //             otherPlayer.gameObject.sprite.stop()
+      //             otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           }
+      //         })
+      //     }
+      //     else if (otherPlayer.stunnedStarted) {
+      //       // console.log("entering in otherPlayer. stunnedstarted", otherPlayer.stunned, otherPlayer.stunnedStarted)
+      //       if (!otherPlayer.stunned) {
+      //         // console.log("entering in otherPlayer. stunned")
+      //         otherPlayer.running = false;
+      //         otherPlayer.kickStart = false;
+      //         otherPlayer.kicking = false;
+      //         otherPlayer.gotBackHit = false;
+      //         otherPlayer.gotHit = false;
+      //         otherPlayer.stunned = true;
+      //         otherPlayer.gameObject.sprite.stop();
+      //         otherPlayer.gameObject.sprite.play("stunned-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
+      //         .once('animationcomplete', () => {
+      //           // console.log("other player stunned animatino done.")
+      //           if (otherPlayer?.gameObject) {
+      //             otherPlayer.stunned = false;
+      //             otherPlayer.stunnedStarted = false;
+      //             // otherPlayer.gameObject.sprite.stop()
+      //             // otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           }
+      //         })
+      //       }
+      //     }
+      //     else if (otherPlayer.deadStarted) {
+      //       // console.log("entering in otherPlayer. stunnedstarted", otherPlayer.stunned, otherPlayer.stunnedStarted)
+      //       if (!otherPlayer.dead) {
+      //         // console.log("entering in otherPlayer. stunned")
+      //         otherPlayer.running = false;
+      //         otherPlayer.kickStart = false;
+      //         otherPlayer.kicking = false;
+      //         otherPlayer.gotBackHit = false;
+      //         otherPlayer.gotHit = false;
+      //         // otherPlayer.moving = false;
+      //         otherPlayer.stunned = false;
+      //         otherPlayer.dead = true;
+      //         otherPlayer.gameObject.sprite.stop();
+      //         otherPlayer.gameObject.sprite.play("dead-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
+      //         .once('animationcomplete', () => {
+      //           //
+      //         })
+      //       }
+      //     }
+      //     else if ( otherPlayer.kickStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted ) {
+      //       otherPlayer.running = false
+      //       otherPlayer.kickStart = false
+      //       if (otherPlayer.kicking) {
+      //         otherPlayer.kicking = false;
+      //         otherPlayer.gameObject.sprite.play("kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //           console.log("done kicking . ")
+      //           setTimeout(() => {
+      //             if (otherPlayer?.gameObject) {
+      //               otherPlayer.kicking = false
+      //               otherPlayer.kickStart = false
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //           }, 200)
+      //         })
+      //       }
             
-          }
-          else if (otherPlayer.punching && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted) {
-            // console.log("player_state_punch --> ", otherPlayer.moving, otherPlayer.running, otherPlayer.kicking, otherPlayer.punching, otherPlayer.hasBrewInHand)
-            otherPlayer.running = false
-            if (otherPlayer.punching) {
-              otherPlayer.punching = false
-              if (otherPlayer.hasBrewInHand) {
-              otherPlayer.gameObject.sprite.play("punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id).once('animationcomplete', () => {
-                setTimeout(() => {
-                  if (otherPlayer?.gameObject) {
-                    otherPlayer.punching = false
-                    otherPlayer.punchStart = false
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                }, 100)
-              })
-            } else {
-              otherPlayer.gameObject.sprite.play("punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id).once('animationcomplete', () => {
-                setTimeout(() => {
-                  if (otherPlayer?.gameObject) {
-                    otherPlayer.punching = false
-                    otherPlayer.punchStart = false
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                }, 100)
-              })
-            }
-            }
+      //     }
+      //     else if (otherPlayer.punching && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted) {
+      //       // console.log("player_state_punch --> ", otherPlayer.moving, otherPlayer.running, otherPlayer.kicking, otherPlayer.punching, otherPlayer.hasBrewInHand)
+      //       otherPlayer.running = false
+      //       if (otherPlayer.punching) {
+      //         otherPlayer.punching = false
+      //         if (otherPlayer.hasBrewInHand) {
+      //         otherPlayer.gameObject.sprite.play("punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id).once('animationcomplete', () => {
+      //           setTimeout(() => {
+      //             if (otherPlayer?.gameObject) {
+      //               otherPlayer.punching = false
+      //               otherPlayer.punchStart = false
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //           }, 100)
+      //         })
+      //       } else {
+      //         otherPlayer.gameObject.sprite.play("punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id).once('animationcomplete', () => {
+      //           setTimeout(() => {
+      //             if (otherPlayer?.gameObject) {
+      //               otherPlayer.punching = false
+      //               otherPlayer.punchStart = false
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //           }, 100)
+      //         })
+      //       }
+      //       }
             
-          }
-          else if (otherPlayer.runStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted) {
-            // console.log("outside in here player running --- ", otherPlayer.running, otherPlayer.runStart, otherPlayer.stunnedStarted, otherPlayer.deadStarted)
-            if (
-              otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-              && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-            ) {
-              if (otherPlayer.hasBrewInHand) {
-                otherPlayer.gameObject.sprite.play("runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-                  // console.log("animation complete running .. ")
+      //     }
+      //     else if (otherPlayer.runStart && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted) {
+      //       // console.log("outside in here player running --- ", otherPlayer.running, otherPlayer.runStart, otherPlayer.stunnedStarted, otherPlayer.deadStarted)
+      //       if (
+      //         otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //         && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //       ) {
+      //         if (otherPlayer.hasBrewInHand) {
+      //           otherPlayer.gameObject.sprite.play("runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //             // console.log("animation complete running .. ")
                   
-                  if (otherPlayer?.gameObject) {
-                    otherPlayer.running = false
-                    otherPlayer.runStart = false
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                })
-              } else {
-                otherPlayer.gameObject.sprite.play("run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
-                  // console.log("animation complete running .. ")
+      //             if (otherPlayer?.gameObject) {
+      //               otherPlayer.running = false
+      //               otherPlayer.runStart = false
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //           })
+      //         } else {
+      //           otherPlayer.gameObject.sprite.play("run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id ).once('animationcomplete', () => {
+      //             // console.log("animation complete running .. ")
                   
-                  if (otherPlayer?.gameObject) {
-                    otherPlayer.running = false
-                    otherPlayer.runStart = false
-                    otherPlayer.gameObject.sprite.stop()
-                    otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                  }
-                })
-              }
-              otherPlayer.running = true;
-            }
-          }
-          else if ( otherPlayer.moving && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted && !otherPlayer.running ) {
-            // console.log("otherotherPlayer_moving ", otherPlayer.wallet_address, otherPlayer.gameObject.sprite.anims)
-            // if (otherPlayer.gameObject?.sprite.anims && otherPlayer.gameObject.sprite.anims.currentAnim) {
-              // if (isNullOrUndefined(otherPlayer.gameObject.sprite.anims.currentAnim)) {
-              //   otherPlayer.gameObject.sprite.play("walk-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-              // } 
-              if ( 
-                otherPlayer.gameObject.sprite.anims.currentAnim.key !== "kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walk-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotBackHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-              ) {
-                otherPlayer.running = false
-                otherPlayer.gameObject.sprite.stop()
-                if (otherPlayer.hasBrewInHand) {
-                  otherPlayer.gameObject.sprite.play("walkBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                } else {
-                  otherPlayer.gameObject.sprite.play("walk-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                }
-                // add smooth movement
-                // otherPlayer.gameObject.SmoothMovement()
-              }
-            // }
-          } 
-          else {
-            if (otherPlayer.gameObject?.sprite.anims && otherPlayer.gameObject.sprite.anims.currentAnim) {
-              if (otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id  
-                && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
-                && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
-                && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "gotHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotBackHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'idle-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'idleBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'drink2-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'equipBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walk-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-                && !otherPlayer.stunnedStarted
-                && !otherPlayer.deadStarted
-                // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
-              ) {
-                otherPlayer.running = false;
-                otherPlayer.moving = false;
-                otherPlayer.kicking = false;
-                otherPlayer.kickStart = false;
-                otherPlayer.punching = false;
-                otherPlayer.punchStart = false;
-                // console.log(" player_state_2 idle -- ", otherPlayer.hasBrewInHand)
-                if (otherPlayer.hasBrewInHand) {
-                  otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                } else {
-                  otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
-                }
-                // otherPlayer.gameObject?.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
-              }
-            }
-          }
-          // otherPlayer.kicking = false;
-          // otherPlayer.punching = false;
-          // otherPlayer.punchStart = false
-          // otherPlayer.kickStart = false
-          // otherPlayer.running = false;
-          otherPlayer.gotHit = false;
-          otherPlayer.gotBackHit = false;
-        }
-      } catch (err) {
-        console.log("error ", err, otherPlayer)
-      }
+      //             if (otherPlayer?.gameObject) {
+      //               otherPlayer.running = false
+      //               otherPlayer.runStart = false
+      //               otherPlayer.gameObject.sprite.stop()
+      //               otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //             }
+      //           })
+      //         }
+      //         otherPlayer.running = true;
+      //       }
+      //     }
+      //     else if ( otherPlayer.moving && !otherPlayer.stunnedStarted && !otherPlayer.deadStarted && !otherPlayer.running ) {
+      //       // console.log("otherotherPlayer_moving ", otherPlayer.wallet_address, otherPlayer.gameObject.sprite.anims)
+      //       // if (otherPlayer.gameObject?.sprite.anims && otherPlayer.gameObject.sprite.anims.currentAnim) {
+      //         // if (isNullOrUndefined(otherPlayer.gameObject.sprite.anims.currentAnim)) {
+      //         //   otherPlayer.gameObject.sprite.play("walk-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //         // } 
+      //         if ( 
+      //           otherPlayer.gameObject.sprite.anims.currentAnim.key !== "kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walk-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotBackHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //         ) {
+      //           otherPlayer.running = false
+      //           otherPlayer.gameObject.sprite.stop()
+      //           if (otherPlayer.hasBrewInHand) {
+      //             otherPlayer.gameObject.sprite.play("walkBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           } else {
+      //             otherPlayer.gameObject.sprite.play("walk-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           }
+      //           // add smooth movement
+      //           // otherPlayer.gameObject.SmoothMovement()
+      //         }
+      //       // }
+      //     } 
+      //     else {
+      //       if (otherPlayer.gameObject?.sprite.anims && otherPlayer.gameObject.sprite.anims.currentAnim) {
+      //         if (otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "kick-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id  
+      //           && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "punch-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
+      //           && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "punchBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
+      //           && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "run-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "runBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject?.sprite.anims.currentAnim.key !== "gotHit-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id 
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'gotBackHit-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'idle-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'idleBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'drink2-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'equipBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walk-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //           && !otherPlayer.stunnedStarted
+      //           && !otherPlayer.deadStarted
+      //           // && otherPlayer.gameObject.sprite.anims.currentAnim.key !== 'stunned-'+otherPlayer.wallet_address + "_" + otherPlayer.minted_id
+      //         ) {
+      //           otherPlayer.running = false;
+      //           otherPlayer.moving = false;
+      //           otherPlayer.kicking = false;
+      //           otherPlayer.kickStart = false;
+      //           otherPlayer.punching = false;
+      //           otherPlayer.punchStart = false;
+      //           // console.log(" player_state_2 idle -- ", otherPlayer.hasBrewInHand)
+      //           if (otherPlayer.hasBrewInHand) {
+      //             otherPlayer.gameObject.sprite.play("idleBrew-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           } else {
+      //             otherPlayer.gameObject.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id)
+      //           }
+      //           // otherPlayer.gameObject?.sprite.play("idle-"+otherPlayer.wallet_address + "_" + otherPlayer.minted_id )
+      //         }
+      //       }
+      //     }
+      //     // otherPlayer.kicking = false;
+      //     // otherPlayer.punching = false;
+      //     // otherPlayer.punchStart = false
+      //     // otherPlayer.kickStart = false
+      //     // otherPlayer.running = false;
+      //     otherPlayer.gotHit = false;
+      //     otherPlayer.gotBackHit = false;
+      //   }
+      // } catch (err) {
+      //   console.log("error ", err, otherPlayer)
+      // }
 
       if (this.playerStunned) {
         return

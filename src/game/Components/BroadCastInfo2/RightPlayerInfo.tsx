@@ -10,9 +10,10 @@ const BackDrop = styled.div`
 
 const BackWrapper = styled.div`
   position: fixed;
-  width: 15%;
-  left: 80%;
+  width: 10%;
+  left: 73%;
   margin: auto;
+  // opacity: 0.7;
   // background-color: yellow;
 `
 
@@ -63,6 +64,7 @@ export function RightPlayerInfo() {
                 width: `100%`,
                 backgroundColor: 'black',
                 float: 'right',
+                opacity: '0.7'
               }}>
                 <tbody>
                   <tr key={uuidv4()}>

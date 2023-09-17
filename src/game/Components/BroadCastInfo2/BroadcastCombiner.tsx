@@ -14,14 +14,14 @@ export function BroadCastCombiner2() {
   const dispatch = useAppDispatch()
   return (
     <div 
-      onMouseOver={() => {
-        // console.log(" mouse over in broadcast combiner")
-        dispatch(TurnMouseClickOff(true))
-      }}
-      onMouseOut={() =>{ 
-        // console.log(" mouse out in broadcast combiner")
-        dispatch(TurnMouseClickOff(false))
-      }}
+      // onMouseOver={() => {
+      //   // console.log(" mouse over in broadcast combiner")
+      //   dispatch(TurnMouseClickOff(true))
+      // }}
+      // onMouseOut={() =>{ 
+      //   // console.log(" mouse out in broadcast combiner")
+      //   dispatch(TurnMouseClickOff(false))
+      // }}
     >
     { (fightersInfo.preFightStarted) && 
       <div>

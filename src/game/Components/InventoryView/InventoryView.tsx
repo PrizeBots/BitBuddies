@@ -2,21 +2,26 @@
 
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { TurnMouseClickOff } from '../../../stores/UserActions';
+import { SetMouseClickControlInventory } from '../../../stores/UserActions';
 import { useState } from 'react';
 import { Inventory } from './Inventory';
 import { useDetectClickOutside } from 'react-detect-click-outside';
 import { parseWBTCBalanceV3 } from '../../../utils/web3_utils';
+import store from '../../../stores';
+import { SetFailureNotificationBool, SetFailureNotificationMessage } from '../../../stores/NotificationStore';
 
 
 
 const Backdrop = styled.div`
   position: fixed;
+  z-index: 100;
+  // display: flex;
+  // flex-direction: column;
 `
 
 const WrapperSecondDiv = styled.div`
   position: fixed;
-  left: 5%;
+  left: 6%;
   top: 7%;
 `
 
@@ -84,12 +89,15 @@ const NegNumberHighlight = styled.div`
 `;
 
 export function InventoryView() {
-  const bitsBalance = useAppSelector((state) => state.userPathStore.bitsBalance)
+  // const bitsBalance = useAppSelector((state) => state.userPathStore.bitsBalance)
   const web2_credit_balance = useAppSelector((state) => state.web3BalanceStore.web2CreditBalance)
+  const fightersInfo = useAppSelector((state) => state.userActionsDataStore.fightersInfo)
   const changeInBalanceBool = useAppSelector((state) => state.web3BalanceStore.changeBalanceShowBool)
   const changeInBalance = useAppSelector((state) => state.web3BalanceStore.changeInBalance)
+  const [lastEquipTime, setLastequipTime] = useState(0);
   const dispatch = useAppDispatch()
   const [inventoryState, setInventoryState] = useState("basic")
+  
 
   function closeView() {
     setInventoryState("basic")
@@ -99,7 +107,10 @@ export function InventoryView() {
 
   let viewToRender = <></>
   if (inventoryState === "inventory_view" ){
-    viewToRender = <Inventory />
+    viewToRender = <Inventory
+                      lastEquipTime = {lastEquipTime}
+                      setLastequipTime={setLastequipTime}
+                    />
   }
     
 
@@ -107,11 +118,14 @@ export function InventoryView() {
     <Backdrop
       ref={ref}
       onMouseOver={() => {
-        dispatch(TurnMouseClickOff(true))
+        dispatch(SetMouseClickControlInventory(true))
       }}
       onMouseOut={() =>{ 
-        dispatch(TurnMouseClickOff(false))
+        dispatch(SetMouseClickControlInventory(false))
       }}
+      // onClick={()=> {
+      //   dispatch(SetMouseClickControlInventory(true))
+      // }}
     >
       <Wrapper>
         {/* <img 
@@ -131,7 +145,20 @@ export function InventoryView() {
           alt="Cinque Terre" 
           height="35" 
           width="25"
-          onClick={() =>  setInventoryState("inventory_view")}
+          onClick={() => {
+            if (
+              fightersInfo.fightStarted 
+              &&( 
+                fightersInfo.player1.walletAddress === store.getState().web3store.userAddress ||
+                fightersInfo.player2.walletAddress === store.getState().web3store.userAddress
+              )
+            ) {
+              store.dispatch(SetFailureNotificationBool(true))
+              store.dispatch(SetFailureNotificationMessage("Not Allowed during fight"))
+              return
+            }
+            setInventoryState("inventory_view")
+          }}
         ></img>
       </Wrapper>
 

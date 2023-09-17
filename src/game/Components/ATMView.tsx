@@ -95,7 +95,7 @@ export function ATMView() {
     console.log("debug_AddMoneyToWallet allowance -- >", allowance.toString());
 
     if (
-      ethers.BigNumber.from("10000000000").gte(
+      ethers.BigNumber.from("50000000").gte(
         ethers.BigNumber.from(allowance.toString())
       )
     ) {

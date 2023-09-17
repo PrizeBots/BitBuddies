@@ -1217,7 +1217,7 @@ function NewFighters() {
                 cardSelected !== ""?
                 <ImageView>
                   <h1>
-                    {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+                    <span style={{fontSize: '30px', color: 'grey'}}>{playerSelected?.minted_id}</span>. {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
                   </h1>
                   <img
                     className="imageSelector"

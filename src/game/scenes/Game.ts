@@ -455,14 +455,15 @@ export default class Game extends Phaser.Scene {
     // console.log(worldPoint, this.radiatorRect)
     // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, this.mousePressed, pointer.leftButtonDown())
 
-    // console.log("debug_mouse-------",
-    //   store.getState().userActionsDataStore.turnMouseClickOff, 
-    //   store.getState().userActionsDataStore.mouseClickControlHeader,
-    //   store.getState().userActionsDataStore.mouseClickControlATM,
-    //   store.getState().userActionsDataStore.mouseClickControlFightMachine,
-    //   store.getState().userActionsDataStore.mouseClickControlProfileWindow,
-    //   store.getState().userActionsDataStore.mouseClickControlChat,
-    // )
+    console.log("debug_mouse-------",
+      store.getState().userActionsDataStore.turnMouseClickOff, 
+      store.getState().userActionsDataStore.mouseClickControlHeader,
+      store.getState().userActionsDataStore.mouseClickControlATM,
+      store.getState().userActionsDataStore.mouseClickControlFightMachine,
+      store.getState().userActionsDataStore.mouseClickControlProfileWindow,
+      store.getState().userActionsDataStore.mouseClickControlChat,
+      store.getState().userActionsDataStore.mouseClickControlInventory,
+    )
     
     if (
       // this.input.keyboard.enabled 
@@ -474,7 +475,8 @@ export default class Game extends Phaser.Scene {
       !store.getState().userActionsDataStore.mouseClickControlATM &&
       !store.getState().userActionsDataStore.mouseClickControlFightMachine &&
       !store.getState().userActionsDataStore.mouseClickControlProfileWindow &&
-      !store.getState().userActionsDataStore.mouseClickControlChat
+      !store.getState().userActionsDataStore.mouseClickControlChat&&
+      !store.getState().userActionsDataStore.mouseClickControlInventory
     ) {
       if (pointer.rightButtonDown() && !this.mousePressed){
         this.mousePressed = true
@@ -780,73 +782,6 @@ export default class Game extends Phaser.Scene {
       this.clubFrontLayer.setDepth(this.player.sprite.y+ 1000);
     } else if (this.mapKey === "hq_map") {
       this.hq.update(this.keyControls.keys)
-      // this code check if player is near fight box.
-      // this.otherPlayers.forEach((_player) => {
-      //   if (_player.wallet_address === store.getState().web3store.userAddress && _player.gameObject) {
-      //     if ((_player.gameObject.sprite.x > this.fightMachineOverlapRectReverse.leftX &&_player.gameObject.sprite.x < this.fightMachineOverlapRectReverse.leftX + this.fightMachineOverlapRectReverse.width )
-      //       && (_player.gameObject.sprite.y > this.fightMachineOverlapRectReverse.leftY && _player.gameObject.sprite.y < this.fightMachineOverlapRectReverse.leftY + this.fightMachineOverlapRectReverse.height ) 
-      //     ) {
-      //       this.fightMachineOverlapText.setDepth(1000000);
-      //     } else {
-      //       this.fightMachineOverlapText.setDepth(-1);
-      //       store.dispatch(HitFightMachine(false));
-      //     }
-      //   }
-      // })
-
-      // related to radiator .. check later..
-      // if (
-      //   (worldPoint.x > this.radiatorRect.leftX && worldPoint.x < this.radiatorRect.leftX + this.radiatorRect.width)
-      //   && (worldPoint.y > this.radiatorRect.leftY && worldPoint.y < this.radiatorRect.leftY + this.radiatorRect.height)
-      //   && !store.getState().userActionsDataStore.currentPlayerFighting
-      // ) {
-      //   console.log(" in collision with radiator ")
-      //   if (pointer.leftButtonDown() 
-      //   && store.getState().userActionsDataStore.turnMouseClickOff && !this.radiatorClicked
-      //   && !store.getState().userActionsDataStore.currentPlayerFighting
-      //   ) {
-      //     console.log("here ... in radiator clicked..")
-      //     if (window.confirm("Are you sure? \n You want to see the RoadMap? ")) {
-      //       window.open("https://docs.bitfighters.club/team-and-mission/roadmap", '_blank');
-      //     } else {
-      //       console.log("cancel in confirm clicked....")
-      //     }
-      //     this.radiatorClicked = true;
-      //   }
-      //   store.dispatch(TurnMouseClickOff(true));
-      // } else {
-      //   if (this.radiatorClicked && store.getState().userActionsDataStore.turnMouseClickOff) {
-      //     this.radiatorClicked = false;
-      //     store.dispatch(TurnMouseClickOff(false));
-      //   }
-      //   this.radiatorClicked = false;
-      //   // store.dispatch(TurnMouseClickOff(false));
-      // }
-
-      
-
-      // if (store.getState().userActionsDataStore.fightersInfo.fightStarted) {
-      //   this.myPlayer.movementAbility = true;
-      //   store.dispatch(FightPreStart(false))
-      //   // store.dispatch(ChangeShowMenuBox(false))
-      //   store.dispatch(FightStart(false))
-      //   store.dispatch(FightContinue(true))
-      //   store.dispatch(FightEnd(false))
-      // } else if (store.getState().userActionsDataStore.fightPreStart) {
-      //   this.myPlayer.movementAbility = false;
-      //   store.dispatch(FightPreStart(false));
-      //   // store.dispatch(ChangeShowMenuBox(false));
-        // this.cameras.main.stopFollow();
-        // this.cameras.main.centerOn(this.centerCoordinatesStage.x, this.centerCoordinatesStage.y);
-      //   if (store.getState().userActionsDataStore.fightPlayerSide === "left") {
-      //     this.myPlayer.Teleport(this.centerCoordinatesStage.x - 60, this.centerCoordinatesStage.y + 130, "right")
-      //   }
-      //   if (store.getState().userActionsDataStore.fightPlayerSide === "right") {
-      //     this.myPlayer.Teleport(this.centerCoordinatesStage.x + 60, this.centerCoordinatesStage.y + 130, "left")
-      //   }
-      // } 
-
-      
     }
 
     if (store.getState().userActionsDataStore.fightContinue) {
@@ -959,23 +894,7 @@ export default class Game extends Phaser.Scene {
                 _player.gameObject.sprite.play("fly_as_angel-"+_player.wallet_address + "_" + _player.minted_id )
               }
             })
-          }
-          // else if (_player.gameObject.gassed_lift_off_fall) {
-          //   _player.gameObject.gassed_lift_off_fall = false
-          //   _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
-          //   .once('animationcomplete', () => {
-          //     if (_player.gameObject) {
-          //       _player.gameObject.gassed_lift_off_fallen = false;
-          //       _player.gameObject.sprite.stop()
-          //       _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
-          //     }
-          //   })
-          // } 
-          // else if (_player.gameObject.gassed_lift_off_fallen) {
-          //   //
-          //   console.log("debug_fallen")
-          // }
-          
+          }    
           else if (_player.showEquipAnimationStarted) {
             _player.showEquipAnimationStarted = false
             _player.gameObject.sprite.play("equipBrew-"+_player.wallet_address + "_" + _player.minted_id ).once('animationcomplete', () => {
@@ -1152,6 +1071,7 @@ export default class Game extends Phaser.Scene {
               if ( 
                 _player.gameObject.sprite.anims.currentAnim.key !== "kick-"+_player.wallet_address + "_" + _player.minted_id 
                 && _player.gameObject.sprite.anims.currentAnim.key !== "punch-"+_player.wallet_address + "_" + _player.minted_id
+                && _player.gameObject.sprite.anims.currentAnim.key !== "punchBrew-"+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== "run-"+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'walk-'+_player.wallet_address + "_" + _player.minted_id
                 && _player.gameObject.sprite.anims.currentAnim.key !== 'walkBrew-'+_player.wallet_address + "_" + _player.minted_id

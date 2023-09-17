@@ -149,6 +149,8 @@ let p1_win_pot = 0;
 let p2_win_pot = 0;
 let p1_self_bet = 0;
 let p2_self_bet = 0;
+let p1_total_tips = 0;
+let p2_total_tips = 0;
 
 
 export default function NewWinnersReceipt() {
@@ -189,6 +191,9 @@ export default function NewWinnersReceipt() {
       if (!isNullOrUndefined(tempQueueDetailInfo)) {
         p1_win_pot = tempQueueDetailInfo.win_pot_p1? tempQueueDetailInfo.win_pot_p1: 0;
         p2_win_pot = tempQueueDetailInfo.win_pot_p2? tempQueueDetailInfo.win_pot_p2: 0;
+        
+        p1_total_tips = tempQueueDetailInfo.total_tip_p1? tempQueueDetailInfo.total_tip_p1: 0;
+        p2_total_tips = tempQueueDetailInfo.total_tip_p2? tempQueueDetailInfo.total_tip_p2: 0;
 
         p1_self_bet = tempQueueDetailInfo.self_bet_p1? tempQueueDetailInfo.self_bet_p1: 0;
         p2_self_bet = tempQueueDetailInfo.self_bet_p2? tempQueueDetailInfo.self_bet_p2: 0;
@@ -255,22 +260,29 @@ export default function NewWinnersReceipt() {
             <MyDivider />
 
             <TextInfo>
-                <h4> Your Ante: 200 bits</h4>
-                <h4> Their Ante: 200 bits</h4>
+                <h4> Your Ante: 100 bits</h4>
+                <h4> Their Ante: 100 bits</h4>
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 20000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 20000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 10000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet -p2_total_tips - 10000) } bits </h4>
                   }
                 </div>
                 
-
                 <div>
                   {
                     (store.getState().web3store.userAddress !== store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - 20000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - 20000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 10000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips- 10000) } bits </h4>
+                  }
+                </div>
+
+                <div>
+                  {
+                    (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
+                    <h4>Your Total Tip: { parseWBTCBalanceV3(p1_total_tips) } bits</h4>:
+                    <h4>Your Total Tip: { parseWBTCBalanceV3(p2_total_tips) } bits </h4>
                   }
                 </div>
 
@@ -281,6 +293,7 @@ export default function NewWinnersReceipt() {
                     <h4>Total Prize: { parseWBTCBalanceV3(p2_win_pot) } bits </h4>
                   }
                 </div>
+                
             </TextInfo>
             <DottedDivider />
 

@@ -169,8 +169,8 @@ export default function InGameAssetPurchase() {
               }}
             >
             </input></h3> */}
-          <h3 style={{marginBottom: '20px'}}>Price: 10 Bits</h3>
-          <h3 style={{marginBottom: '20px'}}>Total BITS: {parseWBTCBalanceV3(1000 * quantity)}</h3>
+          <h3 style={{marginBottom: '20px'}}>Price: 5 Bits</h3>
+          <h3 style={{marginBottom: '20px'}}>Total BITS: {parseWBTCBalanceV3(500 * quantity)}</h3>
           {transactionStarted?
             <Button 
             variant="contained" 

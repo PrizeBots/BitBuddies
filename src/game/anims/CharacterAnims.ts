@@ -198,14 +198,18 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
       },
       {
         key,
-        frame: 'punchBrew001.png'
+        frame: 'punchBrew002.png'
+      },
+      {
+        key,
+        frame: 'punchBrew002.png'
       },
       {
         key,
         frame: 'punchBrew002.png'
       },
     ],
-    duration: 300,
+    duration: 200,
     repeat: 0
   })
 
@@ -427,7 +431,7 @@ export const createOtherCharacterAnimsV2 = (anims: Phaser.Animations.AnimationMa
       //   frame: 'burp000.png'
       // },
     ],
-    duration: 2000,
+    duration: 1000,
     repeat: 0
   })
 

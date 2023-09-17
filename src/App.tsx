@@ -12,7 +12,7 @@ import { Web3Login } from "./landing-page/Web3Login";
 import axios from "axios";
 import { ChangeGeoInfo } from "./stores/UserGeoStore";
 import { ChangeMetaMaskInstalled } from "./stores/UserWebsiteStore";
-import { LoopAllFightsAndUpdate } from "./utils/fight_utils";
+import { LoopAllFightsAndUpdate, updateBetInfOfPlayer } from "./utils/fight_utils";
 // import { LoopAllFightsAndUpdate } from './utils/fight_utils';
 // import { FetchFightInfo } from './hooks/ApiCaller';
 import DocumentMeta from 'react-document-meta';
@@ -99,19 +99,15 @@ function App() {
           }
         }
         LoopAllFightsAndUpdate();
-
+        // updateBetInfOfPlayer();
         counter = -1;
       }
-      
       counter = counter + 1;
-
-
       if (fetchWalletCounter > 20) {
         // fetchPlayerWalletInfo(false, "app.tsx");
         fetchWalletCounter = -1;
       }
       fetchWalletCounter = fetchWalletCounter + 1;
-
 
       LoopApiCaller();
     }, 1000);

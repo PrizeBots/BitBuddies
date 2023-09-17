@@ -140,15 +140,16 @@ const vertical= 'top';
 const horizontal = 'center';
 
 const CustomSplit = (text: string) => {
-  let ntext = "";
-  if (text.length > 30) {
-    for (let i =0; i< text.length; i = i + 30) {
-      ntext += text.slice(i,i+30) + "\n"
-    }
-  } else {
-    return text;
-  }
-  return ntext;
+  // let ntext = "";
+  // if (text.length > 30) {
+  //   for (let i =0; i< text.length; i = i + 30) {
+  //     ntext += text.slice(i,i+30) + "\n"
+  //   }
+  // } else {
+  //   return text;
+  // }
+  // return ntext;
+  return text;
 }
 
 const Message = (messageObj: IMsgObject) => {
@@ -258,8 +259,8 @@ export default function Chat() {
   const handleChange = (event: any) => {
     inputRef.current?.focus()
     // console.log(inputValue.length)
-    if (inputValue.length > 60) {
-      setSnackBarMessage("Message length should not exceed 60.")
+    if (inputValue.length > 100) {
+      setSnackBarMessage("Message length should not exceed 100.")
       setSnackBarOpen(true);
       setInputValue(event.target.value)
     } else {
@@ -297,6 +298,7 @@ export default function Chat() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    // console.log("handlesubmit__debug_chat", inputValue)
     console.log("focus-- handle submit pressed", )
     if (new Date().getTime() - lastMessageSubmittedTime < 2 * 1000) {
       setSnackBarMessage("Please wait for the Slow Mode time to finish")
@@ -307,7 +309,9 @@ export default function Chat() {
     // move focus back to the game
     // inputRef.current?.blur()
 
-    const val = inputValue.trim()
+    let val = inputValue.trim()
+    val = val.replace(/'/g, ' ');
+    console.log("handlesubmit__debug_chat", val)
     setInputValue('')
     if (val) {
       inputRef.current?.blur()

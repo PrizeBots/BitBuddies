@@ -60,6 +60,10 @@ const Mytable = styled.table`
   min-width: 400px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 
+  // overflow-y:scroll;
+  // height:100px;
+  // display:block;
+
   thead tr {
     // background-color: #009879;
     color: #ffffff;
@@ -130,7 +134,7 @@ function Leaderboard() {
                 <td>#Rank</td>
                 <td>Player</td>
                 <td>Balance</td>
-                {/* <td>#Fights</td> */}
+                <td>#Fights</td>
               </tr>
               </thead>
 
@@ -143,7 +147,7 @@ function Leaderboard() {
                       <td>{index+1}</td>
                       <td>{getEllipsisTxt(data.user_wallet_address)}</td>
                       <td>{parseWBTCBalanceV3(data.web2_balance)}</td>
-                      {/* <td>{data.num_fights}</td> */}
+                      <td>{data.num_fights}</td>
                     </tr>
                   )
                 })

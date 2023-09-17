@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "util";
+// import { isNullOrUndefined } from "util";
 import phaserGame from "../../PhaserGame";
 import store from "../../stores";
 import { SetFocussedOnChat, ShowChatWindow } from "../../stores/UserActions";
@@ -177,10 +177,6 @@ export default class KeyControls {
           //     }
           //   }
           // })
-            // this.game.lobbySocketConnection.send(JSON.stringify({
-            //   event: "equip_brew",
-            //   walletAddress: store.getState().web3store.userAddress,
-            // }))
           // this.game.otherPlayers.forEach((_otherplayer) => {
           //   if (_otherplayer.wallet_address === store.getState().web3store.userAddress && _otherplayer.gameObject) {
           //     if (_otherplayer.gameObject.gassed_lift_off_fallen) {
@@ -235,7 +231,7 @@ export default class KeyControls {
                 walletAddress: store.getState().web3store.userAddress,
                 minted_id: temp.minted_id,
               }))
-              this.game.bootstrap.play_can_open_sound()
+              // this.game.bootstrap.play_can_open_sound()
             }
           }
           // const temp = this.game.otherPlayers.get(store.getState().web3store.player_id)

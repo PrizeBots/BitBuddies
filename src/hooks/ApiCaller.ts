@@ -485,7 +485,7 @@ export const FetchParticularBetOfPlayer = async (fight_id: string) => {
     console.log("nil user auth token in redeemPlayerBalance");
     return
   }
-  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/fight/bet/fetch/${fight_id}`, {
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/fight/bet/fetch/${fight_id}/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -586,40 +586,40 @@ export const useAssetsApi = async ( asset_name: string) => {
 }
 
 
-export const FetchFightInfo = async (fight_id: string) => {
-  // console.log("----", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
-  if (store.getState().authStore.player_auth_token === "") {
-    console.log("nil user auth token in FetchFightInfo");
-    return
-  }
-  if (fight_id === "") {
-    console.log("empty fight id in FetchFightInfo");
-    return
-  }
-  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/fight/info/fetch/${fight_id}/`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': store.getState().authStore.player_auth_token
-    },
-  })
-  if (result.status !== 200) {
-    return false;
-  }
-  const output = await result.json();
-  console.log("--- FetchFightInfo ", output.data);
-  store.dispatch(SetP1TotalBet(output.data.total_bet_p1))
-  store.dispatch(SetP2TotalBet(output.data.total_bet_p2))
-  store.dispatch(SetP1WinPot(output.data.win_pot_p1))
-  store.dispatch(SetP2WinPot(output.data.win_pot_p2))
+// export const FetchFightInfo = async (fight_id: string) => {
+//   // console.log("----", process.env.REACT_APP_DEV_ENV, REACT_APP_BASE_API_ANAKIN_URL)
+//   if (store.getState().authStore.player_auth_token === "") {
+//     console.log("nil user auth token in FetchFightInfo");
+//     return
+//   }
+//   if (fight_id === "") {
+//     console.log("empty fight id in FetchFightInfo");
+//     return
+//   }
+//   const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/fight/info/fetch/${fight_id}/`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': store.getState().authStore.player_auth_token
+//     },
+//   })
+//   if (result.status !== 200) {
+//     return false;
+//   }
+//   const output = await result.json();
+//   console.log("--- FetchFightInfo ", output.data);
+//   store.dispatch(SetP1TotalBet(output.data.total_bet_p1))
+//   store.dispatch(SetP2TotalBet(output.data.total_bet_p2))
+//   store.dispatch(SetP1WinPot(output.data.win_pot_p1))
+//   store.dispatch(SetP2WinPot(output.data.win_pot_p2))
 
-  store.dispatch(SetP1SelfBet(output.data.self_bet_p1))
-  store.dispatch(SetP2SelfBet(output.data.self_bet_p2))
+//   store.dispatch(SetP1SelfBet(output.data.self_bet_p1))
+//   store.dispatch(SetP2SelfBet(output.data.self_bet_p2))
 
-  store.dispatch(SetP1(output.data.player1))
-  store.dispatch(SetP2(output.data.player2))
-  return true;
-}
+//   store.dispatch(SetP1(output.data.player1))
+//   store.dispatch(SetP2(output.data.player2))
+//   return true;
+// }
 
 
 export const FetchFightEntryInfo = async (fight_id: string) => {

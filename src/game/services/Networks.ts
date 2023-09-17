@@ -8,7 +8,7 @@ import { SetEquippedBrewCount, SetInHandBrew } from "../../stores/AssetStore";
 import { addToChatArray, MessageType, AddInitialToChatArray } from "../../stores/ChatStore";
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
 import { SetServerLatency, SetTotalConnections } from "../../stores/MetaInfoStore";
-import { IfightersInfo, SetFightersInfo, ShowFightConfirmationStartTime, ShowFightConfirmationBox, FightPreStart, SetCurrentPlayerFighting, ClearFighterInfo, FightContinue, FightEnd, FightStart, SetCurrentOtherPlayerFighting } from "../../stores/UserActions";
+import { IfightersInfo, SetFightersInfo, ShowFightConfirmationStartTime, ShowFightConfirmationBox, FightPreStart, SetCurrentPlayerFighting, ClearFighterInfo, FightContinue, FightEnd, FightStart, SetCurrentOtherPlayerFighting, ShowChatWindow, SetMouseClickControlProfileWindow } from "../../stores/UserActions";
 import { ChangeCombinedQueueData, IQueueCombined, ChangeShowQueueBox, ChangeShowMenuBox, ChangeFightAnnouncementMessageFromServer, ChangeFightAnnouncementStateFromServer, ShowWinnerCardAtFightEnd, SetMovementAbilityOfPlayer } from "../../stores/UserWebsiteStore";
 import { getBalances } from "../../utils/web3_utils";
 import { createOtherCharacterAnimsV2 } from "../anims/CharacterAnims";
@@ -231,6 +231,7 @@ export default class Network {
                   store.dispatch(SetInHandBrew(true))
                 }
               }
+              this.game.bootstrap.play_can_open_sound()
             }
           })
         }
@@ -242,8 +243,8 @@ export default class Network {
                 if (_player.wallet_address === store.getState().web3store.userAddress) {
                   store.dispatch(SetEquippedBrewCount(1))
                 }
-                
               }
+              // this.game.bootstrap.play_can_open_sound()
             }
           })
         }
@@ -269,6 +270,7 @@ export default class Network {
             if (_player.gameObject) {
               if (_player.wallet_address === obj.walletAddress) {
                 _player.winningStarted = true;
+                _player.winning = false;
               }
             }
           })
@@ -280,6 +282,7 @@ export default class Network {
             if (_player.gameObject) {
               if (_player.wallet_address === obj.walletAddress) {
                 _player.losingStarted = true;
+                _player.loosing = false;
               }
             }
           })
@@ -369,7 +372,7 @@ export default class Network {
               // _player.gameObject.sprite.x = obj.x
               // _player.gameObject.sprite.y = obj.y
               _player.gameObject.teleport = true
-              console.log("teleport_debug------", _player.gameObject.gassed_lift_off_fallen)
+              // console.log("teleport_debug------", _player.gameObject.gassed_lift_off_fallen)
               _player.gameObject.teleport_coordinates = {x: obj.x, y: obj.y};
               _player.gameObject.target_position_stored = {x: obj.x, y: obj.y};
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
@@ -392,8 +395,8 @@ export default class Network {
           console.log(obj)
           this.game.otherPlayers.forEach(_player => {
             if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              _player.gameObject.gassed_lift_off_fall = true
-              _player.gameObject.gassed_lift_off_fallen = true
+              _player.gameObject.gassed_lift_off_fall = false
+              // _player.gameObject.gassed_lift_off_falling = true
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
               else _player.gameObject.sprite.flipX = true
             }
@@ -482,6 +485,7 @@ export default class Network {
           }
           store.dispatch(ChangeFightAnnouncementMessageFromServer(obj.message))
           store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+          store.dispatch(SetMouseClickControlProfileWindow(false))
 
           setTimeout(() => {
             store.dispatch(ChangeFightAnnouncementStateFromServer(false))
@@ -493,6 +497,7 @@ export default class Network {
             // store.dispatch(FightPlayerSide("left"));
             you_are_player_state = "p1";
             store.dispatch(SetCurrentPlayerFighting(true));
+            
             // store.dispatch(SetCurrentOtherPlayerFighting(obj.player2))
           } else if (obj.player2 === store.getState().web3store.userAddress) {
             store.dispatch(FightPreStart(true));
@@ -503,7 +508,8 @@ export default class Network {
           }
           if (you_are_player_state != "") {
             this.game.cameras.main.stopFollow();
-            this.game.cameras.main.centerOn(obj.centerX, obj.centerY);
+            this.game.cameras.main.centerOn(obj.centerX, obj.centerY - 50);
+            store.dispatch(ShowChatWindow(false))
             // this.game.cameras.main.centerOn(this.game.centerCoordinatesStage.x, this.game.centerCoordinatesStage.y);
           }
           // console.log("fight_start_announcement", "you are ", you_are_player_state, obj)
@@ -789,6 +795,9 @@ export default class Network {
               _player.drinkStarted = true;
               _player.drinking = false;
               _player.hasBrewInHand = false
+              if (obj.force) {
+                this.game.bootstrap.play_can_open_sound()
+              }
             }
           })
         }
@@ -823,7 +832,7 @@ export default class Network {
       }
 
       if (objs.event === "all_chats") {
-        // console.log(obj)
+        // console.log(objs)
         const chats = [];
         for (let i = 0; i < objs.chats.length; i++) {
           if (objs.chats[i].type === MessageType.Chat && objs.chats[i].walletAddress === store.getState().web3store.userAddress ) {

@@ -44,7 +44,7 @@ const Headline = styled.div`
 
 const ButtonView = styled(Button)`
   span {
-    color: black;
+    color: aliceblue;
     // font-family: Monospace;
     font-style: bold;
     font-size: 20px;

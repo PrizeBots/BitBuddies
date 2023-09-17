@@ -12,7 +12,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import store from "../stores";
 import { setNFTLoadedBool } from "../stores/BitFighters";
 import { Web3Login } from "./Web3Login";
-import { SetMouseClickControlHeader, SetMouseClickControlProfileWindow, TurnMouseClickOff } from "../stores/UserActions";
+import { SetMouseClickControlHeader } from "../stores/UserActions";
 import { v4 as uuidv4 } from "uuid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
@@ -211,7 +211,6 @@ function Header() {
   //                 console.log("clicking on profile pic ", ShowMenuBoxRedux);
   //                 store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
   //                 store.dispatch(ChangeShowQueueBox(false));
-  //                 // store.dispatch(SetMouseClickControlProfileWindow(!store.getState().userActionsDataStore.mouseClickControlProfileWindow));
   //               }}
   //             >
   //               <img
@@ -421,14 +420,14 @@ function Header() {
               </Link>
             </li>
 
-            <li className="nav-item" key={uuidv4()}>
+            <li className="nav-item" key={999999999}>
               {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
                 <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
               </Link> */}
 
-              {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
                 <div className="cooper-black-tab"><CompetitionTime /></div>
-              </Link> */}
+              </Link>
             </li>
 
             {HistoryPath === "gamePlay" ? (

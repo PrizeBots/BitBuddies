@@ -9,6 +9,7 @@ import store from "../../../stores";
 import { useAssetsApi } from "../../../hooks/ApiCaller";
 import { SetFailureNotificationBool, SetFailureNotificationMessage, SetSuccessNotificationBool, SetSuccessNotificationMessage } from "../../../stores/NotificationStore";
 import { SetEquippedBrewCount } from "../../../stores/AssetStore";
+import { SetMouseClickControlInventory } from "../../../stores/UserActions";
 
 // const Item = styled(Paper)(({ theme }) => ({
 //   // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,8 +25,9 @@ const Item = styled.div`
   overflow: auto;
   background: #DFEEFC;
   border: 1px solid #000000;
-  margin: auto;
-  padding: 5px;
+  opacity: 0.9;
+  background-color: #3B3B3B;
+  padding: 20px;
 
   span {
     font-family:'Cooper Black', sans-serif;
@@ -36,25 +38,34 @@ const Item = styled.div`
   h2, h3 {
     font-family:'Cooper Black', sans-serif;
     font-style: bold;
-    font-size: 25px;
-    color: black;
-    padding-bottom: 10px;
+    font-size: 22px;
+    color: white;
+    line-height: 75%;
   }
 
 `
 
 const ButtonGroupView = styled.div`
-  background: #DFEEFC;
+  // background: #DFEEFC;
   border: 1px solid #000000;
+  background-color: #3B3B3B;
+  border-radius: 10px;
 
   button {
     width: 100px;
     background-color: #4797df;
     color: aliceblue;
+    border-radius: 5px;
+
+    background-color: #9c341a;
+
+    &:hover {
+      background-color: #852d17;
+    }
   }
 `
 
-export function Inventory() {
+export function Inventory(data: any) {
   const [showButtonGroupBool, setShowButtonGroupBool] = useState(false);
   // const assetsInfo = useAppSelector((state) => state.web3BalanceStore.assetsInfo)
   const assetsInfo = useAppSelector((state) => state.assetStore.assets)
@@ -64,8 +75,8 @@ export function Inventory() {
   // let showButtonGroupIndexArray: Array<boolean> = [];
   
 
-  const numberOfRows = 3;
-  const numberOfColumns = 3;
+  // const numberOfRows = 3;
+  // const numberOfColumns = 3;
   // const numberOfBrew = 2;
   const brewArr = [];
   const nonBrewArrMap: any[] = [];
@@ -81,6 +92,15 @@ export function Inventory() {
   }
 
   async function useBrew() {
+    console.log("debug_equip_brew...", data)
+    if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before drinking again"))
+      return
+    }
+    data.setLastequipTime(new Date().getTime())
+    store.dispatch(SetMouseClickControlInventory(false))
+    // return
     const res = await useAssetsApi("brew")
     if (res) {
       // const otherPlayer = game.otherPlayers.get(store.getState().web3store.player_id)
@@ -92,6 +112,7 @@ export function Inventory() {
         game.lobbySocketConnection.send(JSON.stringify({
           event: "brew_used",
           walletAddress: store.getState().web3store.userAddress,
+          force: true
         }));
 
         // store.dispatch(SetSuccessNotificationBool(true))
@@ -107,7 +128,15 @@ export function Inventory() {
   }
 
   async function equipBrew() {
-    console.log("equip brew...")
+    console.log("debug_equip_brew...")
+    if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before equip again"))
+      return
+    }
+    data.setLastequipTime(new Date().getTime())
+    store.dispatch(SetMouseClickControlInventory(false))
+    
     if (store.getState().assetStore.equippedBrewCount > 0) {
       store.dispatch(SetFailureNotificationBool(true))
       store.dispatch(SetFailureNotificationMessage("Not Allowed"))
@@ -154,7 +183,11 @@ export function Inventory() {
             <Button 
               variant="contained" 
               color="info" 
-              onClick={useBrew}
+              onClick={(event: any) => {
+                event.preventDefault()
+                useBrew()
+              }}
+              // onClick={useBrew}
             > Use </Button>
           </Grid>
         </Grid>
@@ -166,7 +199,10 @@ export function Inventory() {
             <Button 
               variant="contained" 
               color="info"
-              onClick={equipBrew}
+              onClick={(event: any) => {
+                event.preventDefault()
+                equipBrew()
+              }}
             >
               Equip 
             </Button>
@@ -176,17 +212,18 @@ export function Inventory() {
   </ButtonGroupView>
 
   return(
-    <div style={{
+    <div 
+    style={{
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'column',
     }}>
       <Box sx={{ flexGrow: 1 }} 
         style={{
           width: '210px'
         }}
       >
-        <Grid container spacing={0} key={uuidv4()}>
-          <Grid item xs={12} key={uuidv4()}>
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
             <Item>
               <h2> Inventory </h2> 
             </Item>
@@ -195,8 +232,8 @@ export function Inventory() {
             brewArr.map((el, index) => {
               return (
                 <>
-                  <Grid item xs={4} key={uuidv4()}>
-                    <Item key={uuidv4()}>
+                  <Grid item xs={4} key={index}>
+                    <Item>
                       <img 
                         src="bitfgihter_assets/brew/BREW.png" 
                         alt="." 
