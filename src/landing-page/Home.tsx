@@ -44,10 +44,10 @@ const Headline = styled.div`
 
 const ButtonView = styled(Button)`
   span {
-    color: aliceblue;
+    color: #a7a5a5;
     // font-family: Monospace;
-    font-style: bold;
-    font-size: 20px;
+    // font-style: bold;
+    font-size: 18px;
     font-family:'Cooper Black', sans-serif;
   }
 

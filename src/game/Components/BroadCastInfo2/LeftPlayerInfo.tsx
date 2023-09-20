@@ -9,7 +9,7 @@ const BackWrapper = styled.div`
   width: 10%;
   left: 17%;
   margin: auto;
-  opacity: 0.7;
+  // opacity: 0.7;
   // background-color: yellow;
 `
 
@@ -40,7 +40,7 @@ export function LeftPlayerInfo() {
       <div style={{
         // width: '80%',
         backgroundColor: 'black',
-        opacity: '0.8',
+        // opacity: '0.8',
         float: 'left',
         color: 'aliceblue'
       }}>
@@ -62,7 +62,8 @@ export function LeftPlayerInfo() {
           }}>
             <table style={{
               width: `100%`,
-              backgroundColor: 'black'
+              backgroundColor: 'black',
+              opacity: '0.8',
             }}>
               <tbody>
                 <tr key={uuidv4()}>

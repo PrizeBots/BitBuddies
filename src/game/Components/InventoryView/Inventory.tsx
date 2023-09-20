@@ -66,11 +66,11 @@ const ButtonGroupView = styled.div`
 `
 
 export function Inventory(data: any) {
-  const [showButtonGroupBool, setShowButtonGroupBool] = useState(false);
-  // const assetsInfo = useAppSelector((state) => state.web3BalanceStore.assetsInfo)
-  const assetsInfo = useAppSelector((state) => state.assetStore.assets)
-  const game = phaserGame.scene.keys.game as Game;
-  // console.log(" in inventory -- ", assetsInfo)
+  // const [showButtonGroupBool, data.setShowButtonGroupBool] = useState(false);
+  // const data.assetsInfo = useAppSelector((state) => state.web3BalanceStore.data.assetsInfo)
+  // const data.assetsInfo = useAppSelector((state) => state.assetStore.assets)
+  // const game = phaserGame.scene.keys.game as Game;
+  // console.log(" in inventory -- ", data.assetsInfo)
   // const numberOfBrews = 
   // let showButtonGroupIndexArray: Array<boolean> = [];
   
@@ -81,8 +81,8 @@ export function Inventory(data: any) {
   const brewArr = [];
   const nonBrewArrMap: any[] = [];
   const emptyArray = [];
-  for(let i = 0 ; i< assetsInfo.length; i++) {
-    const tempAsset = assetsInfo[i]
+  for(let i = 0 ; i< data.assetsInfo.length; i++) {
+    const tempAsset = data.assetsInfo[i]
     for (let j = 0; j < tempAsset.active_assets; j++) {
       brewArr.push(0)
     }
@@ -91,125 +91,127 @@ export function Inventory(data: any) {
     emptyArray.push(0)
   }
 
-  async function useBrew() {
-    console.log("debug_equip_brew...", data)
-    if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
-      store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before drinking again"))
-      return
-    }
-    data.setLastequipTime(new Date().getTime())
-    store.dispatch(SetMouseClickControlInventory(false))
-    // return
-    const res = await useAssetsApi("brew")
-    if (res) {
-      // const otherPlayer = game.otherPlayers.get(store.getState().web3store.player_id)
-      // if (otherPlayer?.gameObject) {
-      //   // otherPlayer.drinkStarted = true
-      //   // otherPlayer.drinking = false
-      // }
-      setTimeout(() => {
-        game.lobbySocketConnection.send(JSON.stringify({
-          event: "brew_used",
-          walletAddress: store.getState().web3store.userAddress,
-          force: true
-        }));
+  // async function useBrew() {
+  //   console.log("debug_equip_brew...", data)
+  //   if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
+  //     store.dispatch(SetFailureNotificationBool(true))
+  //     store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before drinking again"))
+  //     return
+  //   }
+  //   data.setLastequipTime(new Date().getTime())
+  //   store.dispatch(SetMouseClickControlInventory(false))
+  //   // return
+  //   const res = await useAssetsApi("brew")
+  //   if (res) {
+  //     // const otherPlayer = game.otherPlayers.get(store.getState().web3store.player_id)
+  //     // if (otherPlayer?.gameObject) {
+  //     //   // otherPlayer.drinkStarted = true
+  //     //   // otherPlayer.drinking = false
+  //     // }
+  //     setTimeout(() => {
+  //       game.lobbySocketConnection.send(JSON.stringify({
+  //         event: "brew_used",
+  //         walletAddress: store.getState().web3store.userAddress,
+  //         force: true
+  //       }));
 
-        // store.dispatch(SetSuccessNotificationBool(true))
-        // store.dispatch(SetSuccessNotificationMessage("Successfully Used."))
-        // bootstrap.play_err_sound()
-      }, 1000);
-    }  else {
-      setTimeout(() => {
-        store.dispatch(SetFailureNotificationBool(true))
-        store.dispatch(SetFailureNotificationMessage("Failed to use Brew"))
-      }, 300);
-    }
-  }
+  //       // store.dispatch(SetSuccessNotificationBool(true))
+  //       // store.dispatch(SetSuccessNotificationMessage("Successfully Used."))
+  //       // bootstrap.play_err_sound()
+  //     }, 1000);
+  //   }  else {
+  //     setTimeout(() => {
+  //       store.dispatch(SetFailureNotificationBool(true))
+  //       store.dispatch(SetFailureNotificationMessage("Failed to use Brew"))
+  //     }, 300);
+  //   }
+  // }
 
-  async function equipBrew() {
-    console.log("debug_equip_brew...")
-    if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
-      store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before equip again"))
-      return
-    }
-    data.setLastequipTime(new Date().getTime())
-    store.dispatch(SetMouseClickControlInventory(false))
+  // async function equipBrew() {
+  //   console.log("debug_equip_brew...")
+  //   if (new Date().getTime() - data.lastEquipTime <= 5 * 1000) {
+  //     store.dispatch(SetFailureNotificationBool(true))
+  //     store.dispatch(SetFailureNotificationMessage("Wait 5 seconds before equip again"))
+  //     return
+  //   }
+  //   data.setLastequipTime(new Date().getTime())
+  //   store.dispatch(SetMouseClickControlInventory(false))
     
-    if (store.getState().assetStore.equippedBrewCount > 0) {
-      store.dispatch(SetFailureNotificationBool(true))
-      store.dispatch(SetFailureNotificationMessage("Not Allowed"))
-    } else {
-      // store.dispatch(SetEquippedBrewCount(1))
-      const res = await useAssetsApi("brew")
-      if (res) {
-        store.dispatch(SetEquippedBrewCount(1))
-        // send an message to 
-        const temp = game.otherPlayers.get(store.getState().web3store.player_id)
-        if (temp?.gameObject) {
-          game.lobbySocketConnection.send(JSON.stringify({
-            event: "semi_equip_brew",
-            walletAddress: store.getState().web3store.userAddress,
-            minted_id: temp.minted_id,
-          }))
-        }
-        // game.lobbySocketConnection.send(JSON.stringify({
-        //   event: "equip_brew",
-        //   walletAddress: store.getState().web3store.userAddress,
-        //   minted_id: temp.minted_id,
-        // }))
-      } else {
-        setTimeout(() => {
-          store.dispatch(SetFailureNotificationBool(true))
-          store.dispatch(SetFailureNotificationMessage("Failed to Equip Brew"))
-        }, 300);
-      }
-    }
-  }
+  //   if (store.getState().assetStore.equippedBrewCount > 0) {
+  //     store.dispatch(SetFailureNotificationBool(true))
+  //     store.dispatch(SetFailureNotificationMessage("Not Allowed"))
+  //   } else {
+  //     // store.dispatch(SetEquippedBrewCount(1))
+  //     const res = await useAssetsApi("brew")
+  //     if (res) {
+  //       store.dispatch(SetEquippedBrewCount(1))
+  //       // send an message to 
+  //       const temp = game.otherPlayers.get(store.getState().web3store.player_id)
+  //       if (temp?.gameObject) {
+  //         game.lobbySocketConnection.send(JSON.stringify({
+  //           event: "semi_equip_brew",
+  //           walletAddress: store.getState().web3store.userAddress,
+  //           minted_id: temp.minted_id,
+  //         }))
+  //       }
+  //       // game.lobbySocketConnection.send(JSON.stringify({
+  //       //   event: "equip_brew",
+  //       //   walletAddress: store.getState().web3store.userAddress,
+  //       //   minted_id: temp.minted_id,
+  //       // }))
+  //     } else {
+  //       setTimeout(() => {
+  //         store.dispatch(SetFailureNotificationBool(true))
+  //         store.dispatch(SetFailureNotificationMessage("Failed to Equip Brew"))
+  //       }, 300);
+  //     }
+  //   }
+  // }
 
-  let buttonGroupView = <></>;
-  buttonGroupView = <ButtonGroupView>
-      <Box sx={{ flexGrow: 1 }} 
-        style={{
-          // opacity: 0.8,
-          padding: '10px',
-        }}
-      >
-        <Grid container spacing={0} key={uuidv4()} style={{
-          padding: '10px'
-        }}>
-          <Grid item xs={12} key={uuidv4()}>
-            <Button 
-              variant="contained" 
-              color="info" 
-              onClick={(event: any) => {
-                event.preventDefault()
-                useBrew()
-              }}
-              // onClick={useBrew}
-            > Use </Button>
-          </Grid>
-        </Grid>
+  // let buttonGroupView = <></>;
+  // const buttonGroupView = <ButtonGroupView>
+  //     <Box sx={{ flexGrow: 1 }} 
+  //       style={{
+  //         // opacity: 0.8,
+  //         padding: '10px',
+  //       }}
+  //     >
+  //       <Grid container spacing={0} key={uuidv4()} style={{
+  //         padding: '10px'
+  //       }}>
+  //         <Grid item xs={12} key={uuidv4()}>
+  //           <Button 
+  //             variant="contained" 
+  //             color="info" 
+  //             onClick={(event: any) => {
+  //               event.preventDefault()
+  //               data.useBrew()
+  //             }}
+  //             // onClick={useBrew}
+  //           > Use </Button>
+  //         </Grid>
+  //       </Grid>
 
-        <Grid container spacing={0} key={uuidv4()} style={{
-          padding: '10px'
-        }}>
-          <Grid item xs={12} key={uuidv4()}>
-            <Button 
-              variant="contained" 
-              color="info"
-              onClick={(event: any) => {
-                event.preventDefault()
-                equipBrew()
-              }}
-            >
-              Equip 
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-  </ButtonGroupView>
+  //       <Grid container spacing={0} key={uuidv4()} style={{
+  //         padding: '10px'
+  //       }}>
+  //         <Grid item xs={12} key={uuidv4()}>
+  //           <Button 
+  //             variant="contained" 
+  //             color="info"
+  //             onClick={(event: any) => {
+  //               event.preventDefault()
+  //               data.equipBrew()
+  //             }}
+  //           >
+  //             Equip 
+  //           </Button>
+  //         </Grid>
+  //       </Grid>
+  //     </Box>
+  // </ButtonGroupView>
+
+  console.log("debug_inventory--",data.showButtonGroupBool)
 
   return(
     <div 
@@ -242,9 +244,9 @@ export function Inventory(data: any) {
                         onMouseDown={(el) => {
                           if (el.button === 2) {
                             console.log("right button pressed")
-                            setShowButtonGroupBool(true)
+                            data.setShowButtonGroupBool(true)
                           } else {
-                            setShowButtonGroupBool(false)
+                            data.setShowButtonGroupBool(false)
                           }
                         }}
                         key={uuidv4()}
@@ -305,7 +307,50 @@ export function Inventory(data: any) {
         }}
       >
         {
-          showButtonGroupBool? <>{buttonGroupView}</>: <></>
+          data.showButtonGroupBool?
+          <ButtonGroupView>
+            <Box sx={{ flexGrow: 1 }} 
+              style={{
+                padding: '10px',
+              }}
+            >
+              <Grid container spacing={0} key={uuidv4()} style={{
+                padding: '10px'
+              }}>
+                <Grid item xs={12} key={uuidv4()}>
+                  <Button 
+                    variant="contained" 
+                    color="info" 
+                    onClick={async (event: any) => {
+                      event.preventDefault()
+                      await data.useBrew()
+                      data.setShowButtonGroupBool(false)
+                    }}
+
+                  > Use </Button>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} key={uuidv4()} style={{
+                padding: '10px'
+              }}>
+                <Grid item xs={12} key={uuidv4()}>
+                  <Button 
+                    variant="contained" 
+                    color="info"
+                    onClick={async(event: any) => {
+                      event.preventDefault()
+                      await data.equipBrew()
+                      data.setShowButtonGroupBool(false)
+                    }}
+                  >
+                    Equip 
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </ButtonGroupView>:
+          <></>
         }
       </div>
     </div>

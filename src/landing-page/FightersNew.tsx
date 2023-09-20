@@ -29,7 +29,7 @@ import { ATMView } from '../game/Components/ATMView';
 import NewMenuSideBar from '../game/Components/NewMenuSideBar';
 import { InventoryView } from '../game/Components/InventoryView/InventoryView';
 import InGameAssetPurchase from '../game/Components/MenuComponents/InGameAsssetPurchase';
-import { fetchNFTsFromDB, loginAndAuthenticatePlayer, updateNFTsInDB, updateSingleBfInDB } from '../hooks/ApiCaller';
+import { CheckIfAcceptableNickName, fetchNFTsFromDB, loginAndAuthenticatePlayer, updateNFTsInDB, updateSingleBfInDB } from '../hooks/ApiCaller';
 import store from '../stores';
 import { setPlayerAuthToken } from '../stores/AuthStore';
 import NotificationMessageHelper from '../game/Components/NotificationMessageHelper';
@@ -71,7 +71,8 @@ const Wrapper = styled.div`
 
 const Title = styled.h1`
   font-size: 28px;
-  color: #eee;
+  // color: #eee;
+  color: #d2d2d2;
   text-align: center;
   margin: 50px;
   // margin-top: 20px;
@@ -120,7 +121,7 @@ const HeadingText = styled.h1`
 
 const ButtonView = styled(Button)`
   span {
-    color: black;
+    color: #a7a5a5;;
     font-style: bold;
     font-size: 20px;
     font-family:'Cooper Black', sans-serif;
@@ -482,6 +483,17 @@ function NewFighters() {
     if (!playerSelected) {
       return
     }
+
+    // check if acceptable nick name
+    const data = await CheckIfAcceptableNickName(formNickNameame);
+    console.log("---debug_nick_name_validate---", data)
+    if (!data) {
+      store.dispatch(SetFailureNotificationBool(true))
+      store.dispatch(SetFailureNotificationMessage("Choose other Nick Name. This one is taken"))
+      setRegisterProcessRunning(false)
+      return
+    }
+    
 
     // update in smart contract. and then update the db
     // then fetch data from db

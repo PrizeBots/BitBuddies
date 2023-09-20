@@ -71,7 +71,6 @@ import { gamelogic_contract_address } from "../../../contract/gamelogic_constant
 import { fetchAllNFTsFromDbEntries } from "../../../hooks/FetchNFT";
 import { DripFighterInfo, setNFTDetails, setTotalNFTData } from "../../../stores/BitFighters";
 import { SetMintGameQuantity, SetMintGameStarted } from "../../../stores/PlayerData";
-import { Link } from "react-router-dom";
 
 const ModalWrapper = styled.div`
 `
@@ -185,10 +184,10 @@ const ProgressBar = styled(LinearProgress)`
 function MintCard() {
   const dispatch = useDispatch();
 
-  const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
-  const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
-  const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
-  const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
+  // const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
+  // const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
+  // const bitfightersLoadedBool = useAppSelector((state) => state.bitFighters.loaded)
+  // const loggedInUserWalletAddress = useAppSelector((state) => state.web3store.userAddress)
 
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   const presaleMintVideoURL = "https://production-bitfighters.s3.ap-south-1.amazonaws.com/videos/mc.mp4"
@@ -201,6 +200,7 @@ function MintCard() {
 
   const totalInfoOfUsersDripPresaleCards = useAppSelector((state) => state.bitFighters.totalInfoOfUsersDripPresaleCards)
   const totalInfoOfUsersDripPresaleCardsLoaded = useAppSelector((state) => state.bitFighters.totalInfoOfUsersDripPresaleCardsLoaded)
+  const totalCountOfPresaleMintCardForUser = useAppSelector((state) => state.bitFighters.totalCountOfPresaleMintCardForUser)
 
   const onlyTattooCards:Array<DripFighterInfo> = []
   const onlyTagCards:Array<DripFighterInfo> = []
@@ -282,9 +282,9 @@ function MintCard() {
   const [isRefCode, setIsRefCode] = useState(false);
   const [isDrip, setIsDrip] = useState(0);
 
-  const [bitfightersRefAddr, setBitfightersRefAdd] = useState(ethers.constants.AddressZero)
+  const [bitfightersRefAddr, setBitfightersRefAdd] = useState("")
   const [bitfightersRefBoxMintCard, setBitfightersRefBoxMintCard] = useState(0);
-  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(10);
+  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(5);
   const [bitfighterUseMintCardCheckBox, setBitfighterUseMintCardCheckBox] = useState(false);
 
   const [dripfightersRefAddr, setDripfightersRefAdd] = useState("")
@@ -407,7 +407,7 @@ function MintCard() {
     console.log("initializing bitfighters mint vars");
     setBitfightersRefAdd("");
     setBitfightersRefBoxMintCard(0);
-    setBitFightersMintQuantity(1);
+    setBitFightersMintQuantity(5);
   };
 
   const initializeDripBitfightersMintVars = () => {
@@ -605,6 +605,15 @@ function MintCard() {
         tempRefAddr = ethers.constants.AddressZero;
         setBitfightersRefAdd(ethers.constants.AddressZero);
       }
+    }
+
+    if (tempRefAddr === ethers.utils.getAddress(store.getState().web3store.userAddress)) {
+      setMintingState("");
+      initializeBitfightersMintVars();
+      setErrorState(`Ref. Code cannot be your address. \n If you do not have one, select "I dont have one"`)
+      dispatch(setCardState(PageStates.FailedState))
+      bootstrap.play_err_sound();
+      return
     }
 
     const allowance = await checkAllowance(
@@ -1357,7 +1366,7 @@ function MintCard() {
   } else if (cardState === PageStates.Bitfighter) {
     displayInnerPart = (
       <>
-        <h5>Bitfighters</h5>
+        <h5>Bit Fighters</h5>
         <p>
           {`${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`}
           <br></br> Minted
@@ -1718,7 +1727,8 @@ function MintCard() {
       displayInfoPart = (
         <>
           <div className="mint-card__form">
-            { !bitfighterUseMintCardCheckBox && <>
+            { !bitfighterUseMintCardCheckBox ?
+            <>
               <div className="mint-card__form__item mint-card__form__item--radio">
                 <label htmlFor="code">Ref. Code:</label>
                 <input
@@ -1762,12 +1772,41 @@ function MintCard() {
                 </div>
               :<></>
             }
+            </>:
+            <>
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <div className="haveone-select">
+                  {
+                    totalInfoOfUsersDripPresaleCardsLoaded ?
+                    <label>You own  {totalCountOfPresaleMintCardForUser} Mint Cards </label>:
+                    <div className="mint-card__form__item mint-card__form__item--center">
+                      <CircularProgress />
+                    </div>
+                  }
+                </div>
+              </div>
             </>}
 
 
             <div className="mint-card__form__item mint-card__form__item--radio">
               <label htmlFor="quantity">Quantity:</label>
-              <input
+              <select 
+                name="quantity" 
+                id="quantity"
+                value={bitFightersMintQuantity}
+                onChange={(e) => {
+                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                    setBitFightersMintQuantity(1);
+                  } else {
+                    setBitFightersMintQuantity(parseInt(e.target.value));
+                  }
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+              </select>
+              {/* <input
                 id="quantity"
                 type="number"
                 value={bitFightersMintQuantity}
@@ -1782,7 +1821,7 @@ function MintCard() {
                   outline: "None",
                 }}
                 required
-              />
+              /> */}
             </div>
           </div>
 
@@ -2266,7 +2305,8 @@ function MintCard() {
   return (
     <div>
       <NotificationMessageHelper />
-      {
+      {CustomUI}
+      {/* {
           
         (!bitfightersLoadedBool && !mintGameStarted)?
         <Content>
@@ -2286,26 +2326,10 @@ function MintCard() {
               </ButtonView>
             </Link>
 
-            {/* <ButtonView
-                variant="outlined"
-                color="secondary"
-                onClick={async () => {
-                  bitfightersMint()
-                }}
-                style={{
-                  width: '350px'
-                }}
-              >
-                <span>
-              Get your Bit Fighters
-            </span>
-          </ButtonView> */}
         </Content>
         : 
         (!mintGameStarted && mintingState=== "")?
             <ButtonView
-                // variant="outlined"
-                // color="secondary"
                 onClick={async () => {
                   bitfightersMint()
                 }}
@@ -2322,7 +2346,7 @@ function MintCard() {
             <CircularProgress />
           </>
           : <></>
-      }
+      } */}
     </div>
   );
 }

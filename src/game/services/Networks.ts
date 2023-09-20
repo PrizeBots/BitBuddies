@@ -396,7 +396,7 @@ export default class Network {
           this.game.otherPlayers.forEach(_player => {
             if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
               _player.gameObject.gassed_lift_off_fall = false
-              // _player.gameObject.gassed_lift_off_falling = true
+              // _player.gameObject.gassed_lift_off_fallen = false
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
               else _player.gameObject.sprite.flipX = true
             }
@@ -430,7 +430,7 @@ export default class Network {
         }
 
         if (obj.event === "queue_info") {
-          // console.log("debug queue_info--> ", obj.data)
+          console.log("debug queue_info--> ", obj.data)
           // store.dispatch(ChangeQueueData(obj.data))
           store.dispatch(ChangeCombinedQueueData(obj.data))
           const queueData: Array<IQueueCombined> = obj.data;

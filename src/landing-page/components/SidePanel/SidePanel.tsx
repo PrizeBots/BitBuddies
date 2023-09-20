@@ -1,13 +1,10 @@
 import { useDispatch } from "react-redux";
 import { setCardState } from "../../../stores/MintCardStateStore";
-import Button from "../Button/Button";
 import "./SidePanel.scss";
 import { useAppSelector } from "../../../hooks";
-import offlineBtns from "../../../assets/images/work/Mint_Panel__0002_offlineBTns.png";
 import store from "../../../stores";
 import { SetSuccessNotificationBool, SetSuccessNotificationMessage } from "../../../stores/NotificationStore";
 import NotificationMessageHelper from "../../../game/Components/NotificationMessageHelper";
-import { SetMetaTagDescription } from "../../../stores/MetaInfoStore";
 import phaserGame from "../../../PhaserGame";
 import Bootstrap from "../../../game/scenes/Bootstrap";
 import { useState } from "react";
@@ -80,7 +77,7 @@ const SidePanel = () => {
             <div className="bottom-button-cover"></div>
             {
               <>
-                {state === PageStates.Presale ? (
+                {/* {state === PageStates.Presale ? (
                   <>
                     <div 
                       className="btn-mint--small presale-state-active"
@@ -121,7 +118,52 @@ const SidePanel = () => {
                       ></div>
                     )}
                   </>
+                )} */}
+
+                {state === PageStates.Bitfighter ? (
+                  <>
+                    <div className="btn-mint--small drippresale-state-active" 
+                      onMouseOver={() => {
+                        if ( hoverplace !== 5) {
+                          setOnButton(true)
+                          bootstrap.play_button_hover_sound()
+                        }
+                      }}
+                      onMouseOut={() => {
+                        setOnButton(false)
+                      }}
+                    ></div>
+                  </>
+                ) 
+                : (
+                  <>
+                    {state === PageStates.NotConnectedState ? (
+                      <div className="btn-mint--small sidePanel-disabled"
+                      ></div>
+                    ) : (
+                      <div
+                        onClick={() => {
+                          localStorage.setItem("state", "Bitfighters");
+                          dispatch(setCardState(PageStates.Bitfighter));
+                          bootstrap.play_button_down_sound()
+                        }}
+                        onMouseOver={() => {
+                          if (hoverplace !== 5) {
+                            setOnButton(true)
+                            bootstrap.play_button_hover_sound()
+                          }
+                        }}
+                        onMouseOut={() => {
+                          console.log("on mouse out fn. 3")
+                          setOnButton(false)
+                        }}
+                        className="btn-mint--small sidePanel-bit"
+                      ></div>
+                    )}
+                  </>
                 )}
+
+
                 {state === PageStates.DripPreSale ? (
                   <>
                     <div className="btn-mint--small drippresale-state-active"
@@ -231,7 +273,7 @@ const SidePanel = () => {
                   height: '20px'
                 }}></div>
 
-                {state === PageStates.Bitfighter ? (
+                {/* {state === PageStates.Bitfighter ? (
                   <>
                     <div className="btn-mint--small drippresale-state-active" 
                       onMouseOver={() => {
@@ -245,7 +287,8 @@ const SidePanel = () => {
                       }}
                     ></div>
                   </>
-                ) : (
+                ) 
+                : (
                   <>
                     {state === PageStates.NotConnectedState ? (
                       <div className="btn-mint--small sidePanel-disabled"
@@ -271,13 +314,13 @@ const SidePanel = () => {
                       ></div>
                     )}
                   </>
-                )}
+                )} */}
 
                 <div style={{
                   height: '5px'
                 }}></div>
 
-                {state === PageStates.DripFighter ? (
+                {/* {state === PageStates.DripFighter ? (
                   <>
                     <div className="btn-mint--small presale-state-active" 
                       onMouseOver={() => {
@@ -291,7 +334,9 @@ const SidePanel = () => {
                       }}
                     ></div>
                   </>
-                ) : (
+                ) 
+                : 
+                (
                   <>
                     {state === PageStates.NotConnectedState ? (
                       <div className="btn-mint--small sidePanel-disabled"
@@ -317,7 +362,8 @@ const SidePanel = () => {
                       ></div>
                     )}
                   </>
-                )}
+                )
+                } */}
               </>
             }
           </div>

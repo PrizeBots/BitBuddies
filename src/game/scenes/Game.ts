@@ -455,15 +455,15 @@ export default class Game extends Phaser.Scene {
     // console.log(worldPoint, this.radiatorRect)
     // console.log("debug_mouse-------",store.getState().userActionsDataStore.turnMouseClickOff, this.mousePressed, pointer.leftButtonDown())
 
-    console.log("debug_mouse-------",
-      store.getState().userActionsDataStore.turnMouseClickOff, 
-      store.getState().userActionsDataStore.mouseClickControlHeader,
-      store.getState().userActionsDataStore.mouseClickControlATM,
-      store.getState().userActionsDataStore.mouseClickControlFightMachine,
-      store.getState().userActionsDataStore.mouseClickControlProfileWindow,
-      store.getState().userActionsDataStore.mouseClickControlChat,
-      store.getState().userActionsDataStore.mouseClickControlInventory,
-    )
+    // console.log("debug_mouse-------",
+    //   store.getState().userActionsDataStore.turnMouseClickOff, 
+    //   store.getState().userActionsDataStore.mouseClickControlHeader,
+    //   store.getState().userActionsDataStore.mouseClickControlATM,
+    //   store.getState().userActionsDataStore.mouseClickControlFightMachine,
+    //   store.getState().userActionsDataStore.mouseClickControlProfileWindow,
+    //   store.getState().userActionsDataStore.mouseClickControlChat,
+    //   store.getState().userActionsDataStore.mouseClickControlInventory,
+    // )
     
     if (
       // this.input.keyboard.enabled 
@@ -845,6 +845,7 @@ export default class Game extends Phaser.Scene {
           
           if (_player.gameObject.gassed_lift_off_fall) {
             _player.gameObject.gassed_lift_off_fall = false
+            _player.gameObject.sprite.stop()
             _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               if (_player.gameObject) {
@@ -853,8 +854,7 @@ export default class Game extends Phaser.Scene {
                 _player.gameObject.sprite.play("idle-"+_player.wallet_address + "_" + _player.minted_id)
               }
             })
-          } 
-          else if (_player.gotHit) {
+          } else if (_player.gotHit) {
             _player.gameObject.sprite.play("gotHit-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               _player.gotHit = false

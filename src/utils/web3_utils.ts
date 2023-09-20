@@ -1,10 +1,10 @@
 import { BigNumber as BigNumberEthers } from "ethers";
-import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, FetchInfoOfDripCardMintedByUser, getAssetCountOfPlayer, getBitfightersMintedCount, getBitfightersTotalCountForGen, getDripMintCardsMintedCouponsCount, getMintedDripPresaleCardsByUser, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
+import { checkBetBalance, checkWalletBalance, checkWBTC_Balance, FetchInfoOfDripCardMintedByUser, getAssetCountOfPlayer, getBitfightersMintedCount, getBitfightersTotalCountForGen, getDripMintCardsMintedCouponsCount, getMintedDripPresaleCardsByUser, getMintedPresaleCardsByUser, getOneKMintedTotalCount, getPreSaleCountTotal, getPriceOfOneKCard, getTotalOneKClubCards } from "../contract";
 import store from "../stores";
 import { SetBetBalance, SetWalletBalance, SetWbtcBalance } from "../stores/Web3StoreBalances";
 import BigNumber from "bignumber.js";
 import { isNullOrUndefined } from "util";
-import { DripFighterInfo, SetBitfightersNftMintedCount, SetCurrentPriceOfOnekCard, SetTotalBitfightersNftCount, SetTotalDripPreSaleNFT, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
+import { DripFighterInfo, SetBitfightersNftMintedCount, SetCurrentPriceOfOnekCard, SetTotalBitfightersNftCount, SetTotalCountOfPresaleCarddsOwnedByUser, SetTotalDripPreSaleNFT, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded, SetTotalMintedOneKClubNF, SetTotalOneKClubNF, SetTotalPreSaleNFT } from "../stores/BitFighters";
 
 export async function getBalances(currentUser: string) {
   console.log("in_get_balance---", currentUser)
@@ -186,6 +186,18 @@ export async function FetchDripPresaleInfoMintedByUser() {
     store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
   } catch (err) {
     console.log("error in FetchDripPresaleInfoMintedByUser ", err);
+    store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
+  }
+}
+
+export async function FetchPresaleInfoMintedByUser() {
+  try {
+    const PresaleMintedCouponsArr = await getMintedPresaleCardsByUser(store.getState().web3store.userAddress)
+    console.log("debug FetchPresaleInfoMintedByUser minted ... ", PresaleMintedCouponsArr);
+    store.dispatch(SetTotalCountOfPresaleCarddsOwnedByUser(PresaleMintedCouponsArr.length))
+    store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
+  } catch (err) {
+    console.log("error in FetchPresaleInfoMintedByUser ", err);
     store.dispatch(SetTotalInfoOfUserDripPresaleCardsLoaded(true))
   }
 }

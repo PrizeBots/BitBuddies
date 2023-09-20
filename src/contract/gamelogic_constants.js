@@ -22,6 +22,17 @@ export const GameLogicABI = [{
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "BtcbAddress",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{
       "internalType": "address",
       "name": "",
@@ -76,6 +87,11 @@ export const GameLogicABI = [{
         "internalType": "address",
         "name": "partner_address",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "support_fees",
+        "type": "uint256"
       }
     ],
     "name": "addPartners",
@@ -85,7 +101,18 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "atmVaultWallet",
+    "name": "atmFloatPercent",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "atmWallet",
     "outputs": [{
       "internalType": "address",
       "name": "",
@@ -117,12 +144,34 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "btcB",
+    "outputs": [{
+      "internalType": "contract ERC20",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "_newTax",
+      "type": "uint256"
+    }],
+    "name": "changeRedeemTax",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [{
       "internalType": "address",
       "name": "_sender",
       "type": "address"
     }],
-    "name": "checkwbtcBalanceOfAddress",
+    "name": "checkBtcbBalanceOfAddress",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -140,28 +189,6 @@ export const GameLogicABI = [{
     "name": "depositMoneyToWallet",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "depositWalletShares",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "depositsWallet",
-    "outputs": [{
-      "internalType": "address",
-      "name": "",
-      "type": "address"
-    }],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -203,6 +230,42 @@ export const GameLogicABI = [{
           "internalType": "address",
           "name": "partner_address",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "support_fees",
+          "type": "uint256"
+        }
+      ],
+      "internalType": "struct GameLogic.PartnersInfo",
+      "name": "",
+      "type": "tuple"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "string",
+      "name": "_partner_id",
+      "type": "string"
+    }],
+    "name": "fetchPartnersInfo",
+    "outputs": [{
+      "components": [{
+          "internalType": "string",
+          "name": "partner_id",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "partner_address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "support_fees",
+          "type": "uint256"
         }
       ],
       "internalType": "struct GameLogic.PartnersInfo",
@@ -245,44 +308,7 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "bool",
-        "name": "tattoo",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "tag",
-        "type": "bool"
-      }
-    ],
-    "name": "mintBitFighter",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_price",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_partner",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "tattoo",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "tag",
+        "name": "_support",
         "type": "bool"
       },
       {
@@ -345,6 +371,11 @@ export const GameLogicABI = [{
         "internalType": "address",
         "name": "partner_address",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "support_fees",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -352,33 +383,11 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "priceOfTagAddon",
+    "name": "redeemLock",
     "outputs": [{
-      "internalType": "uint256",
+      "internalType": "bool",
       "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "priceOfTattooAddon",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "priceOfTattooAndTagAddon",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
+      "type": "bool"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -398,6 +407,17 @@ export const GameLogicABI = [{
     "name": "redeemMoneyFromWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "redeemTax",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -452,6 +472,17 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
+      "internalType": "uint256",
+      "name": "_share",
+      "type": "uint256"
+    }],
+    "name": "setAtmFloatPercent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
       "internalType": "address",
       "name": "bitfightersNFTAddress",
       "type": "address"
@@ -463,11 +494,11 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-      "internalType": "uint256",
-      "name": "_share",
-      "type": "uint256"
+      "internalType": "address",
+      "name": "_btcBContractAddress",
+      "type": "address"
     }],
-    "name": "setDepositWalletShare",
+    "name": "setBtcbContract",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -491,11 +522,11 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [{
-      "internalType": "address",
-      "name": "_wbtcContractAddress",
-      "type": "address"
+      "internalType": "bool",
+      "name": "_lock",
+      "type": "bool"
     }],
-    "name": "setWbtcContract",
+    "name": "setRedeemLock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -537,7 +568,7 @@ export const GameLogicABI = [{
     "inputs": [],
     "name": "transferMoneyToDepositWalletFromVault",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -581,9 +612,9 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "wBTC",
+    "name": "vault",
     "outputs": [{
-      "internalType": "contract ERC20",
+      "internalType": "address",
       "name": "",
       "type": "address"
     }],
@@ -593,4 +624,4 @@ export const GameLogicABI = [{
 ]
 
 
-export const gamelogic_contract_address = "0x243A2eBf1745e15301b506bf2401b4ED60C67e6C"
+export const gamelogic_contract_address = "0x2B04D766352FE98c9fa527940cA1C219eF0dD202"

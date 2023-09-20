@@ -40,7 +40,7 @@ export function RightPlayerInfo() {
         <div style={{
           // width: '80%',
           backgroundColor: 'black',
-          opacity: '0.8',
+          // opacity: '0.8',
           float: 'right',
           color: 'aliceblue'
         }}>
@@ -64,7 +64,7 @@ export function RightPlayerInfo() {
                 width: `100%`,
                 backgroundColor: 'black',
                 float: 'right',
-                opacity: '0.7'
+                opacity: '0.8'
               }}>
                 <tbody>
                   <tr key={uuidv4()}>

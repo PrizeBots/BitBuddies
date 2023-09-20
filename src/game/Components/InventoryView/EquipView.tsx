@@ -21,8 +21,15 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   padding: 10px;
-  border-style: solid;
-  border-width: 2px;
+  // background: #2c2c2c;
+  // border: 5px solid #000000;
+  // border-style: solid;
+  // border-width: 2px;
+  // border-radius: 10px;
+
+  background: #2c2c2c;
+  border: 2px solid #000000;
+  border-radius: 10px;
   gap: 20px;
 `
 
@@ -40,7 +47,7 @@ const BitsView = styled.div`
     font-family: Monospace;
     font-style: bold;
     font-size: 20px;
-    color: black;
+    color: white;
   }
 
   h2, h3 {
@@ -83,12 +90,14 @@ export function EquipView() {
             </span>
           </BitsView>
           <div style={{
-            paddingRight: '10px',
+            padding: '10px',
+            // paddingRight: '10px',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
             <img 
-              src="bitfgihter_assets/brew/brew-can.png" 
+              // src="bitfgihter_assets/brew/brew-can.png" 
+              src="bitfgihter_assets/brew/BREW.png"
               alt="." 
               height="35" 
               width="15"

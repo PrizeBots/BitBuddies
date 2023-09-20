@@ -251,28 +251,6 @@ export const ABI = [{
 	},
 	{
 		"inputs": [],
-		"name": "dripMintCardContractAddress",
-		"outputs": [{
-			"internalType": "address",
-			"name": "",
-			"type": "address"
-		}],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "gameLogicContract",
-		"outputs": [{
-			"internalType": "contract GameLogic",
-			"name": "",
-			"type": "address"
-		}],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "gameLogicContractAddress",
 		"outputs": [{
 			"internalType": "address",
@@ -317,12 +295,7 @@ export const ABI = [{
 				},
 				{
 					"internalType": "bool",
-					"name": "tag",
-					"type": "bool"
-				},
-				{
-					"internalType": "bool",
-					"name": "tatoo",
+					"name": "_support",
 					"type": "bool"
 				},
 				{
@@ -540,28 +513,6 @@ export const ABI = [{
 				"type": "string[]"
 			},
 			{
-				"internalType": "uint256[]",
-				"name": "_tokenIDs",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_gen",
-				"type": "uint8"
-			}
-		],
-		"name": "mintDripBitFighterMitCard",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-				"internalType": "string[]",
-				"name": "_tokenURIs",
-				"type": "string[]"
-			},
-			{
 				"internalType": "address",
 				"name": "referrer_address",
 				"type": "address"
@@ -578,12 +529,7 @@ export const ABI = [{
 			},
 			{
 				"internalType": "bool",
-				"name": "tatoo",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "tag",
+				"name": "_support",
 				"type": "bool"
 			}
 		],
@@ -637,12 +583,7 @@ export const ABI = [{
 			},
 			{
 				"internalType": "bool",
-				"name": "tag",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "tatoo",
+				"name": "_support",
 				"type": "bool"
 			},
 			{
@@ -812,17 +753,6 @@ export const ABI = [{
 			}
 		],
 		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-			"internalType": "address",
-			"name": "_dripMintCardContractAddress",
-			"type": "address"
-		}],
-		"name": "setDripMintCardContract",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1021,4 +951,4 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0xd38Ea0Ec1Bd6bB17d3048f31c0874c2D14358619"
+export const bitfighter_contract_adress = "0x3ab095A49f6D3bAA04AC6eb4BD39F34b3C1BEDD3"

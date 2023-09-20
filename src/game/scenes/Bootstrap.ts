@@ -166,12 +166,12 @@ export default class Bootstrap extends Phaser.Scene {
     this.snap_sound = this.sound.add('snap-sound');
     this.button_press_sound = this.sound.add('button-press-sound')
 
-    this.can_open_sound = this.sound.add('can-open-sound', {volume: 0.3})
+    this.can_open_sound = this.sound.add('can-open-sound', {volume: 0.05})
 
     this.dr_bits_success_sound = this.sound.add('dr_bits_success_sound')
     // this.button_hover_sound = this.sound.add('button_hover', {volume: 0.4})
     this.button_hover_sound = this.sound.add('select_music', {volume: 0.2})
-    this.button_down_sound = this.sound.add('button_down')
+    this.button_down_sound = this.sound.add('button_down', {volume: 0.5})
   }
 
   play_dr_bits_success_sound() {

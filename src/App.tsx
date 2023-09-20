@@ -93,11 +93,11 @@ function App() {
       
       // console.log("debug_game_state ", gameStarted, counter)
       if (counter >20) {
-        if (!gameStarted) {
-          if (localStorage.getItem("game_state")=== "start") {
-            ListGameServers(gameServerReginoSelected, "no_create")
-          }
-        }
+        // if (!gameStarted) {
+        //   if (localStorage.getItem("game_state")=== "start") {
+        //     ListGameServers(gameServerReginoSelected, "no_create")
+        //   }
+        // }
         LoopAllFightsAndUpdate();
         // updateBetInfOfPlayer();
         counter = -1;

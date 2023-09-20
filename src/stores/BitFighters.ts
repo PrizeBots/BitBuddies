@@ -24,6 +24,8 @@ interface BitFightersCollection {
 
   totalInfoOfUsersDripPresaleCards: Array<DripFighterInfo>
   totalInfoOfUsersDripPresaleCardsLoaded: boolean;
+
+  totalCountOfPresaleMintCardForUser: number;
 }
 
 const initialState: BitFightersCollection = {
@@ -41,7 +43,8 @@ const initialState: BitFightersCollection = {
   totalBitfightersToMint: 0,
   totalDripFightersToMint: 0,
   totalInfoOfUsersDripPresaleCards: [],
-  totalInfoOfUsersDripPresaleCardsLoaded: false
+  totalInfoOfUsersDripPresaleCardsLoaded: false,
+  totalCountOfPresaleMintCardForUser: 0
 }
 
 export const bitFightersCollection = createSlice({
@@ -117,6 +120,10 @@ export const bitFightersCollection = createSlice({
       state.totalInfoOfUsersDripPresaleCardsLoaded = action.payload;
     },
 
+    SetTotalCountOfPresaleCarddsOwnedByUser: (state: { totalCountOfPresaleMintCardForUser: number; }, action: PayloadAction<number>) => {
+      state.totalCountOfPresaleMintCardForUser = action.payload;
+    },
+
   },
 })
 
@@ -125,7 +132,8 @@ export const { addIntoArray, clearArray, setArray,
   SetTotalOneKClubNF, SetTotalMintedOneKClubNF, 
   SetCurrentPriceOfOnekCard, SetTotalDripPreSaleNFT,
   SetBitfightersNftMintedCount, SetDripfightersNftMintedCount, 
-  SetTotalBitfightersNftCount, SetTotalDripfightersNftCount, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded
+  SetTotalBitfightersNftCount, SetTotalDripfightersNftCount, SetTotalInfoOfUserDripPresaleCards, SetTotalInfoOfUserDripPresaleCardsLoaded,
+  SetTotalCountOfPresaleCarddsOwnedByUser
  } =
   bitFightersCollection.actions
 

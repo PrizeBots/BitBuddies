@@ -884,3 +884,21 @@ export const FetchLeaderBoard = async () => {
   store.dispatch(SetLeaderBoardData(output.data))
   // return output.data;
 }
+
+export const CheckIfAcceptableNickName = async (nick_name: string) => {
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/users/${nick_name}/acceptable/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  if (result.status !== 200) {
+    console.log("fetch CheckIfAcceptableNickName -- not 200")
+    return null;
+  }
+  const output = await result.json();
+  console.log("fetch CheckIfAcceptableNickName -- ", output)
+  return output.data;
+  // store.dispatch(SetLeaderBoardData(output.data))
+  // return output.data;
+}

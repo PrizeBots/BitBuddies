@@ -156,6 +156,29 @@ export function ATMView() {
     setaddToQueueBool(true)
     setAddMoneyState("Removing from wallet")
 
+    const allowance = await checkAllowance(
+      store.getState().web3store.userAddress
+    );
+    console.log("debug_RemoveFromWallet allowance -- >", allowance.toString());
+
+    if (
+      ethers.BigNumber.from("10000").gte(
+        ethers.BigNumber.from(allowance.toString())
+      )
+    ) {
+      console.log("debug_RemoveFromWallet less allowance");
+      setAddMoneyState("Appprove tax amount")
+      if (
+        !(await approveWBTC2(
+          gamelogic_contract_address,
+          ethers.BigNumber.from("10000")
+        ))
+      ) {
+        console.log("debug_RemoveFromWallet failed to approve");
+        return;
+      }
+    }
+
     const done = await redeemPlayerBalance(convertWBTCToBigIntWithDecimlas(amount).toString())
     console.log("debug_redeem ", done)
     if (!isNullOrUndefined(done) && done.done) {

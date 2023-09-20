@@ -828,6 +828,7 @@ export async function createBitFighterV4(_tokenURIs, referer_address, _gen, _par
   console.log("in_createBitFighterV4 ", _tokenURIs, referer_address, _gen, tatoo, tag)
   console.log("gasPrice... ", gasPrice.toNumber())
   const signer = web3Provider.getSigner();
+  const _support = tatoo || tag;
 
   const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);
 
@@ -837,7 +838,7 @@ export async function createBitFighterV4(_tokenURIs, referer_address, _gen, _par
       referer_address,
       _gen,
       _partner,
-      tatoo, tag, {
+      _support, {
         gasPrice: 2 * gasPrice,
       });
     await transaction.wait();
@@ -967,6 +968,23 @@ export async function getMintedDripPresaleCardsByUser(_userAddress) {
   console.log("fetchPreSaleCardsOfUser fetchInfoOfDripCardMintedByUser ", _userAddress)
   const signer = web3Provider.getSigner();
   const contract = new ethers.Contract(PRESALE_DRIP_CONTRACT_V2, PRESALE_DRIP_ABI, signer);
+  try {
+    const data = await contract.fetchPreSaleCardsOfUser(_userAddress);
+    // await transaction.wait();
+    return data;
+  } catch (err) {
+    console.log("err in fetchPreSaleCardsOfUser getMintedDripPresaleCardsByUser ", err)
+    return []
+  }
+}
+
+export async function getMintedPresaleCardsByUser(_userAddress) {
+  const ethers = Moralis.web3Library; // get ethers.js library
+  const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
+  const gasPrice = await web3Provider.getGasPrice();
+  console.log("fetchPreSaleCardsOfUser getMintedPresaleCardsByUser ", _userAddress)
+  const signer = web3Provider.getSigner();
+  const contract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
   try {
     const data = await contract.fetchPreSaleCardsOfUser(_userAddress);
     // await transaction.wait();
