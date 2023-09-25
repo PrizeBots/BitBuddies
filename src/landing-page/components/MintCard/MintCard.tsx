@@ -284,7 +284,7 @@ function MintCard() {
 
   const [bitfightersRefAddr, setBitfightersRefAdd] = useState("")
   const [bitfightersRefBoxMintCard, setBitfightersRefBoxMintCard] = useState(0);
-  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(5);
+  const [bitFightersMintQuantity, setBitFightersMintQuantity] = useState(10);
   const [bitfighterUseMintCardCheckBox, setBitfighterUseMintCardCheckBox] = useState(false);
 
   const [dripfightersRefAddr, setDripfightersRefAdd] = useState("")
@@ -1802,9 +1802,9 @@ function MintCard() {
                   }
                 }}
               >
-                <option value={5}>5</option>
+                {/* <option value={5}>5</option> */}
                 <option value={10}>10</option>
-                <option value={20}>20</option>
+                {/* <option value={20}>20</option> */}
               </select>
               {/* <input
                 id="quantity"
@@ -1830,7 +1830,7 @@ function MintCard() {
               {
               (bitFightersMintQuantity > 0?
                 bitfighterUseMintCardCheckBox?0:
-                bitFightersMintQuantity* (0.0003):
+                bitFightersMintQuantity* (0.0002):
               0).toFixed(4)}{" "}
               BTC.b
             </span>

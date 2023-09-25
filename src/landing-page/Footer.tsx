@@ -69,6 +69,7 @@ export default function Footer() {
     bootstrap.play_snap_sound()
   }
   const added_to_queue_pool = useAppSelector((state) => state.queueDetailedInfo.added_to_queue_pool)
+  const queueCount = useAppSelector((state) => state.queueDetailedInfo.queueCount)
   return (
     <Backdrop 
       onMouseOver={() => {
@@ -85,6 +86,9 @@ export default function Footer() {
         </span>
         <span role="img" aria-label="emoji">
           Please wait. Thank you. &#128516;
+        </span>
+        <span role="img" aria-label="emoji">
+          Total players in pool {queueCount}
         </span>
         <div className="close-icon" onClick={() => {
           //

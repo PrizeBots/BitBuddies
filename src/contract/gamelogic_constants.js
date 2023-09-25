@@ -22,14 +22,20 @@ export const GameLogicABI = [{
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "BtcbAddress",
-    "outputs": [{
-      "internalType": "address",
-      "name": "",
-      "type": "address"
-    }],
-    "stateMutability": "view",
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "_amt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "TransferMoneyToSystemWalletsFromVault",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -39,6 +45,27 @@ export const GameLogicABI = [{
       "type": "address"
     }],
     "name": "_depositCount",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "_depositNFT",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -75,6 +102,23 @@ export const GameLogicABI = [{
       "type": "uint256"
     }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "addPackInfo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -134,9 +178,9 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "bitfightersNFT",
+    "name": "bitfightersNFTAddress",
     "outputs": [{
-      "internalType": "contract BitFightersNFT",
+      "internalType": "address",
       "name": "",
       "type": "address"
     }],
@@ -155,12 +199,23 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "btcbAddress",
+    "outputs": [{
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{
       "internalType": "uint256",
       "name": "_newTax",
       "type": "uint256"
     }],
-    "name": "changeRedeemTax",
+    "name": "changeWithdrawalFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -186,7 +241,7 @@ export const GameLogicABI = [{
       "name": "_amount",
       "type": "uint256"
     }],
-    "name": "depositMoneyToWallet",
+    "name": "depositFundsToVault",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -209,6 +264,32 @@ export const GameLogicABI = [{
       "internalType": "string[]",
       "name": "",
       "type": "string[]"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "index",
+      "type": "uint256"
+    }],
+    "name": "fetchPackInfo",
+    "outputs": [{
+      "components": [{
+          "internalType": "uint256",
+          "name": "quantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "internalType": "struct GameLogic.PacksInfo",
+      "name": "",
+      "type": "tuple"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -297,11 +378,6 @@ export const GameLogicABI = [{
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_price",
-        "type": "uint256"
-      },
-      {
         "internalType": "string",
         "name": "_partner",
         "type": "string"
@@ -324,7 +400,7 @@ export const GameLogicABI = [{
   },
   {
     "inputs": [],
-    "name": "mintSystemShare",
+    "name": "mintingSystemShare",
     "outputs": [{
       "internalType": "uint256",
       "name": "",
@@ -361,6 +437,27 @@ export const GameLogicABI = [{
       "name": "",
       "type": "uint256"
     }],
+    "name": "packsMapping",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
     "name": "partnersMapping",
     "outputs": [{
         "internalType": "string",
@@ -382,6 +479,23 @@ export const GameLogicABI = [{
     "type": "function"
   },
   {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_player",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeemFundsFromAtm",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "redeemLock",
     "outputs": [{
@@ -400,24 +514,24 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "nft_id",
         "type": "uint256"
       }
     ],
-    "name": "redeemMoneyFromWallet",
+    "name": "releaseNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "redeemTax",
-    "outputs": [{
+    "inputs": [{
       "internalType": "uint256",
-      "name": "",
+      "name": "_quantity",
       "type": "uint256"
     }],
-    "stateMutability": "view",
+    "name": "removePack",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -441,7 +555,7 @@ export const GameLogicABI = [{
   {
     "inputs": [{
         "internalType": "address",
-        "name": "_treasryWalletAddress",
+        "name": "_treasuryWalletAddress",
         "type": "address"
       },
       {
@@ -456,7 +570,7 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "address",
-        "name": "_depositWalletAddress",
+        "name": "_atmWalletAddress",
         "type": "address"
       },
       {
@@ -484,7 +598,7 @@ export const GameLogicABI = [{
   {
     "inputs": [{
       "internalType": "address",
-      "name": "bitfightersNFTAddress",
+      "name": "_bitfightersNFTAddress",
       "type": "address"
     }],
     "name": "setBitFightersContract",
@@ -511,7 +625,7 @@ export const GameLogicABI = [{
       },
       {
         "internalType": "uint256",
-        "name": "_mintSystemShare",
+        "name": "_mintingSystemShare",
         "type": "uint256"
       }
     ],
@@ -527,6 +641,17 @@ export const GameLogicABI = [{
       "type": "bool"
     }],
     "name": "setRedeemLock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "uint256",
+      "name": "nft_id",
+      "type": "uint256"
+    }],
+    "name": "stakeNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -549,6 +674,17 @@ export const GameLogicABI = [{
       "internalType": "address",
       "name": "",
       "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalPacks",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "_value",
+      "type": "uint256"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -605,7 +741,7 @@ export const GameLogicABI = [{
         "type": "uint256"
       }
     ],
-    "name": "updateMoneyInDepositWallet",
+    "name": "updateFundsInAtm",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -620,8 +756,19 @@ export const GameLogicABI = [{
     }],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawalFee",
+    "outputs": [{
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
 
 
-export const gamelogic_contract_address = "0x2B04D766352FE98c9fa527940cA1C219eF0dD202"
+export const gamelogic_contract_address = "0x433aC6a7dA978B2e75cF862F66Cf472FE64F1b04"

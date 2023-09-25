@@ -14,7 +14,7 @@ import { getBalances } from "../../utils/web3_utils";
 import { createOtherCharacterAnimsV2 } from "../anims/CharacterAnims";
 import { BrewManager } from "../characters/BrewMananger";
 import { OtherPlayer } from "../characters/OtherPlayer";
-import { SetQueuePoolState } from "../../stores/QueueDetailedInfo";
+import { SetQueueCount, SetQueuePoolState } from "../../stores/QueueDetailedInfo";
 
 export default class Network {
   game: Game
@@ -27,7 +27,8 @@ export default class Network {
   }
   setSocketConnections() {
     this.game.lobbySocketConnection.addEventListener("message", async (event) => {
-      const objs = JSON.parse(event.data.replace(/'/g, '"'))
+      // const objs = JSON.parse(event.data.replace(/'/g, '"'))
+      const objs = JSON.parse(event.data);
       // if (objs.length > 0) console.log("message_here --> ", objs)
 
       for (let gameQueueMessageIndex = 0; gameQueueMessageIndex < objs.length; gameQueueMessageIndex++) {
@@ -452,12 +453,14 @@ export default class Network {
         }
 
         if (obj.event === "notification") {
-          console.log("debug_notification--> ", obj.data)
+          console.log("debug_notification--> ", obj)
           if (obj.walletAddress === store.getState().web3store.userAddress) {
             if (obj.state === "join") {
               store.dispatch(SetQueuePoolState(true))
+              store.dispatch(SetQueueCount(obj.count))
             } else {
               store.dispatch(SetQueuePoolState(false))
+              store.dispatch(SetQueueCount(obj.count))
             }
           }
         }

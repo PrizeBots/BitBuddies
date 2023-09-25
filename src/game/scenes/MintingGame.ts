@@ -44,7 +44,7 @@ export default class MitingGame extends Phaser.Scene {
     console.log("minting preload ", data)
 
     this.load.spritesheet("mint_machine", "new_assets/mom/MINT_MACHINE.png", { frameWidth: 96, frameHeight: 147 });
-    this.load.spritesheet("mint_machine_goo", "new_assets/mom/MINT_MACHINE_GOO.png", { frameWidth: 96, frameHeight: 147 });
+    this.load.spritesheet("mint_machine_goo", "new_assets/mom/MINT_MACHINE_goo.png", { frameWidth: 96, frameHeight: 147 });
     this.load.spritesheet("mint_machine_base", "new_assets/mom/MINT_MACHINE_BASE.png", { frameWidth: 96, frameHeight: 147 });
     this.load.spritesheet("mint_machine_open", "new_assets/mom/MINT_MACHINE_OPEN.png", { frameWidth: 96, frameHeight: 147 });
 

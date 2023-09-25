@@ -134,7 +134,7 @@ const FormInputView = styled.div`
 
 const ImageAndTextView = styled.div`
   border: 4px solid #000000;
-  border-radius: 6px;
+  border-radius: 10px;
   // border-color: red;
 `
 

@@ -154,7 +154,7 @@ export function ServerListInfo() {
                                   <span style={{
                                     color: "aliceblue",
                                   }}>
-                                    {`${getServerNameForDisplay(serverinfo.region)} - ${serverinfo.active_users}/ 100`}
+                                    {`${getServerNameForDisplay(serverinfo.region)} - ${serverinfo.active_users}/ 50`}
                                   </span>
                                 } 
                                 secondary={getEllipsisTxt(serverinfo.room_id)}

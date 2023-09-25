@@ -479,7 +479,7 @@ export async function depositMoneyToWalletV2(_amount) {
   const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
 
   try {
-    const transaction = await contract.depositMoneyToWallet(
+    const transaction = await contract.depositFundsToVault(
       _amount, {
         gasPrice: 2 * gasPrice,
       });
@@ -501,7 +501,7 @@ export async function removeFromWallet() {
   const contract = new ethers.Contract(gamelogic_contract_address, GameLogicABI, signer);
 
   try {
-    const transaction = await contract.redeemMoneyFromWallet();
+    const transaction = await contract.redeemFundsFromAtm();
     await transaction.wait();
     console.log("--------------------------------");
   } catch (err) {

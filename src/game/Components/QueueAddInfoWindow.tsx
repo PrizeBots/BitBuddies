@@ -86,7 +86,8 @@ export function QueueAddInfoWindow() {
     if (success) {
       game.lobbySocketConnection.send(
         JSON.stringify({
-        event: "add_queue_new",
+        // event: "add_queue_new",
+        event: "add_queue",
         data: {
           minted_id: store.getState().playerDataStore.current_game_player_info.minted_id,
           nick_name: store.getState().playerDataStore.current_game_player_info.nick_name,

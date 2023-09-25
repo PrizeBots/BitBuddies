@@ -104,6 +104,7 @@ const Wrapper = styled.div`
   opacity: 0.95;
   justify-content: 'center';
   background: #2c2c2c;
+  border-radius: 10px;
 `
 
 const MenuBox = styled(Box)`

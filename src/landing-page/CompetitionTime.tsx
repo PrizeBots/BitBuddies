@@ -39,7 +39,7 @@ function CompetitionTime() {
       <div> 
         <div className="cooper-black-tab">
           {/* Game Ends In: {` ${hours} : ${minutes} : ${seconds} `} */}
-          Game Starts On: Friday (Sep 22nd)
+          Game Ends On: Friday (Sep 29nd)
         </div> 
       </div>
     </div>

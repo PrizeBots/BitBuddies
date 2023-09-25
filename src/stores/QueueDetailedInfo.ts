@@ -8,6 +8,7 @@ interface QueueDetaildInfo {
 
   added_to_queue_pool: boolean;
   queuePoolMessage: string;
+  queueCount: number;
 }
 
 const initialState: QueueDetaildInfo = {
@@ -15,7 +16,8 @@ const initialState: QueueDetaildInfo = {
   // bet_queue_view_map: {},
 
   added_to_queue_pool: false,
-  queuePoolMessage: ""
+  queuePoolMessage: "",
+  queueCount: 0
 }
 
 export const queueInfoStore = createSlice({
@@ -31,6 +33,10 @@ export const queueInfoStore = createSlice({
       state.added_to_queue_pool = action.payload;
     },
 
+    SetQueueCount: (state: { queueCount: number; }, action: PayloadAction<number>) => {
+      state.queueCount = action.payload;
+    },
+
     // SetBetQueueMap: (state: { bet_queue_view_map: any; }, action: PayloadAction<any>) => {
     //   state.bet_queue_view_map = action.payload;
     // },
@@ -38,7 +44,7 @@ export const queueInfoStore = createSlice({
   },
 })
 
-export const { SetFightEntryInfo, SetQueuePoolState } =
+export const { SetFightEntryInfo, SetQueuePoolState, SetQueueCount  } =
   queueInfoStore.actions
 
 export default queueInfoStore.reducer

@@ -116,13 +116,28 @@ export const ABI = [{
 	},
 	{
 		"inputs": [{
+			"internalType": "uint256",
+			"name": "_genId",
+			"type": "uint256"
+		}],
+		"name": "GetOtherGenContractAddreses",
+		"outputs": [{
+			"internalType": "address",
+			"name": "",
+			"type": "address"
+		}],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{
 				"internalType": "address",
 				"name": "_genNBFContraactAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_genPlusOne",
+				"name": "_genId",
 				"type": "uint256"
 			}
 		],
@@ -215,21 +230,6 @@ export const ABI = [{
 	},
 	{
 		"inputs": [{
-			"internalType": "uint256",
-			"name": "_mintedId",
-			"type": "uint256"
-		}],
-		"name": "checkIfLocked",
-		"outputs": [{
-			"internalType": "bool",
-			"name": "",
-			"type": "bool"
-		}],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{
 				"internalType": "address",
 				"name": "_sender",
 				"type": "address"
@@ -290,12 +290,7 @@ export const ABI = [{
 				},
 				{
 					"internalType": "bool",
-					"name": "locked",
-					"type": "bool"
-				},
-				{
-					"internalType": "bool",
-					"name": "_support",
+					"name": "support",
 					"type": "bool"
 				},
 				{
@@ -393,21 +388,6 @@ export const ABI = [{
 			"internalType": "string",
 			"name": "value",
 			"type": "string"
-		}],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-			"internalType": "uint8",
-			"name": "_gen",
-			"type": "uint8"
-		}],
-		"name": "getPriceOfGenN",
-		"outputs": [{
-			"internalType": "uint256",
-			"name": "",
-			"type": "uint256"
 		}],
 		"stateMutability": "view",
 		"type": "function"
@@ -578,12 +558,7 @@ export const ABI = [{
 			},
 			{
 				"internalType": "bool",
-				"name": "locked",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "_support",
+				"name": "support",
 				"type": "bool"
 			},
 			{
@@ -632,21 +607,6 @@ export const ABI = [{
 			"internalType": "address",
 			"name": "",
 			"type": "address"
-		}],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-			"internalType": "uint8",
-			"name": "",
-			"type": "uint8"
-		}],
-		"name": "priceOfGenNBitFighters",
-		"outputs": [{
-			"internalType": "uint256",
-			"name": "",
-			"type": "uint256"
 		}],
 		"stateMutability": "view",
 		"type": "function"
@@ -770,23 +730,6 @@ export const ABI = [{
 	},
 	{
 		"inputs": [{
-				"internalType": "uint256",
-				"name": "_mintedId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "lockState",
-				"type": "bool"
-			}
-		],
-		"name": "setLockStateForPlayer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
 			"internalType": "address",
 			"name": "_mintCardContractAddress",
 			"type": "address"
@@ -826,23 +769,6 @@ export const ABI = [{
 			}
 		],
 		"name": "setNumberOfNFTsLimitForGenN",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_gen",
-				"type": "uint8"
-			}
-		],
-		"name": "setPriceOfGenN",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -951,4 +877,4 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0x3ab095A49f6D3bAA04AC6eb4BD39F34b3C1BEDD3"
+export const bitfighter_contract_adress = "0x0cd0529499A1c2e6F254C3B8B3F0c8938157Edc1"
