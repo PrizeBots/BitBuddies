@@ -164,7 +164,7 @@ const SidePanel = () => {
                 )}
 
 
-                {state === PageStates.DripPreSale ? (
+                {/* {state === PageStates.DripPreSale ? (
                   <>
                     <div className="btn-mint--small drippresale-state-active"
                     onMouseOver={() => {
@@ -205,7 +205,8 @@ const SidePanel = () => {
                       ></div>
                     )}
                   </>
-                )}
+                )} */}
+
                 {state === PageStates.OneKClub ? (
                   <>
                     <div className="btn-mint--small oneclub-state-active" 
@@ -248,7 +249,13 @@ const SidePanel = () => {
                     )}
                   </>
                 )}
+                
                 <div className="btn-mint--small sidePanel-disabled"></div>
+
+                <div style={{
+                  height: '50px'
+                }}></div>
+
 
                 {state === PageStates.NotConnectedState ? (
                   <div className="btn-mint--small sidePanel-refrink-disabled sidePanel-disabled"></div>
@@ -316,9 +323,9 @@ const SidePanel = () => {
                   </>
                 )} */}
 
-                <div style={{
+                {/* <div style={{
                   height: '5px'
-                }}></div>
+                }}></div> */}
 
                 {/* {state === PageStates.DripFighter ? (
                   <>

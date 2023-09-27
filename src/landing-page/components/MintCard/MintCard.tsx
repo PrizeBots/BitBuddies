@@ -1788,41 +1788,50 @@ function MintCard() {
             </>}
 
 
-            <div className="mint-card__form__item mint-card__form__item--radio">
-              <label htmlFor="quantity">Quantity:</label>
-              <select 
-                name="quantity" 
-                id="quantity"
-                value={bitFightersMintQuantity}
-                onChange={(e) => {
-                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
-                    setBitFightersMintQuantity(1);
-                  } else {
-                    setBitFightersMintQuantity(parseInt(e.target.value));
-                  }
-                }}
-              >
-                {/* <option value={5}>5</option> */}
-                <option value={10}>10</option>
-                {/* <option value={20}>20</option> */}
-              </select>
-              {/* <input
-                id="quantity"
-                type="number"
-                value={bitFightersMintQuantity}
-                onChange={(e) => {
-                  if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
-                    setBitFightersMintQuantity(1);
-                  } else {
-                    setBitFightersMintQuantity(parseInt(e.target.value));
-                  }
-                }}
-                style={{
-                  outline: "None",
-                }}
-                required
-              /> */}
-            </div>
+            {
+              !bitfighterUseMintCardCheckBox?
+              <>
+                <div className="mint-card__form__item mint-card__form__item--radio">
+                  <label htmlFor="quantity">Quantity:</label>
+                  <select 
+                    name="quantity" 
+                    id="quantity"
+                    value={bitFightersMintQuantity}
+                    onChange={(e) => {
+                      if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                        setBitFightersMintQuantity(1);
+                      } else {
+                        setBitFightersMintQuantity(parseInt(e.target.value));
+                      }
+                    }}
+                  >
+                    {/* <option value={5}>5</option> */}
+                    <option value={10}>10</option>
+                    {/* <option value={20}>20</option> */}
+                  </select>
+                </div>
+              </>
+              :
+              <div className="mint-card__form__item mint-card__form__item--radio">
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  value={bitFightersMintQuantity}
+                  onChange={(e) => {
+                    if (isNullOrUndefined(e.target.value) || parseInt(e.target.value) < 1) {
+                      setBitFightersMintQuantity(1);
+                    } else {
+                      setBitFightersMintQuantity(parseInt(e.target.value));
+                    }
+                  }}
+                  style={{
+                    outline: "None",
+                  }}
+                  required
+                />
+              </div>
+            }
           </div>
 
           <div className="mint-card-base__info__btc2">

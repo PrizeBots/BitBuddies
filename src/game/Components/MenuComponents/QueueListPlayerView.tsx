@@ -252,9 +252,13 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
 
           <ListItemButton>
             <img
-              src={queueWindowData.profile_image}
+              src={queueWindowData.profile_image!== ""?queueWindowData.profile_image: "/new_assets/questionGIF.gif"}
               alt="Hero"
             />
+            {/* <img
+              src={queueWindowData.profile_image}
+              alt="Hero"
+            /> */}
             <ListItemText
               primary={
                 <span style={{
