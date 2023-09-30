@@ -921,7 +921,7 @@ export async function registerBitfighter(_name, lucky_number, _tokenID) {
   const ethers = Moralis.web3Library; // get ethers.js library
   const web3Provider = await Moralis.enableWeb3(); // Get ethers.js web3Provider
   const gasPrice = await web3Provider.getGasPrice();
-  console.log("in registerBitfighter gasPrice... ", gasPrice.toNumber(), _name, lucky_number, _tokenID)
+  console.log("in registerBitfighter gasPrice... ", bitfighter_contract_adress, gasPrice.toNumber(), _name, lucky_number, _tokenID)
   const signer = web3Provider.getSigner();
 
   const contract = new ethers.Contract(bitfighter_contract_adress, ABI, signer);

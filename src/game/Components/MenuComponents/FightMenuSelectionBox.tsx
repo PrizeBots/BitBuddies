@@ -143,11 +143,10 @@ export default function FightMenuSelectionBox(data: any) {
           </Button>
 
 
-          <Button
+          {/* <Button
             variant="contained" 
             color="primary"
             onClick={() => {
-              // data.enterQueue()
               dispatch(TurnMouseClickOff(false))
               store.dispatch(ChangeShowQueueBox(true))
               store.dispatch(ChangeShowMenuBox(true))
@@ -156,7 +155,7 @@ export default function FightMenuSelectionBox(data: any) {
             <span style={{
               color: 'aliceblue'
             }}>Bet</span>
-          </Button>
+          </Button> */}
         </FriendRequestBox2>
       </Wrapper>
     </div>

@@ -406,7 +406,7 @@ function Header() {
               </Link>
             </li>
 
-            <li className="nav-item" key={uuidv4()} >
+            {/* <li className="nav-item" key={uuidv4()} >
               <Link 
                 className="nav-link" 
                 to="/leaderboard" 
@@ -418,16 +418,16 @@ function Header() {
               >
                 <div className="cooper-black-tab">Leaderboard</div>
               </Link>
-            </li>
+            </li> */}
 
             <li className="nav-item" key={999999999}>
               {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
                 <div className="cooper-black-tab">Prize Game Ends In: {` ${hours} : ${minutes} : ${seconds} `}</div>
               </Link> */}
 
-              <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
+              {/* <Link className="nav-link" to="/about" onClick={event => event.preventDefault()}>
                 <div className="cooper-black-tab"><CompetitionTime /></div>
-              </Link>
+              </Link> */}
             </li>
 
             {HistoryPath === "gamePlay" ? (

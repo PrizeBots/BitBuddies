@@ -130,7 +130,7 @@ function App() {
 
     // getGeoInfo();
     LoopApiCaller();
-    FetchLeaderBoard();
+    // FetchLeaderBoard();
 
     // else if (!isNullOrUndefined(localStorage.getItem("web2_email_address")) && localStorage.getItem("web2_email_address") !== "" ) {
     //   console.log("web2 email exist login...")
@@ -159,7 +159,7 @@ function App() {
       
       <Backdrop>
         <BrowserRouter>
-          <Leaderboard />
+          {/* <Leaderboard /> */}
           {/* <FightersNewCenterPart /> */}
           <React.Suspense fallback={loading()}>
             {ValidUser ? (

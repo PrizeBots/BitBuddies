@@ -15,7 +15,6 @@ import { isNullOrUndefined } from "util";
 import phaserGame from "../../PhaserGame";
 import Bootstrap from "./Bootstrap";
 import { getRandomInt } from "../../utils";
-import { random_spawn_points } from "../controls/randomSpawnPoints";
 import { IMouse, IRatsStateManager, Mouse } from "../characters/Mouse";
 import { createRatsAnims } from "../anims/createRatsAnims";
 import { createSilverCoinAnim } from "../anims/createSilverCoinsAnim";
@@ -33,6 +32,7 @@ import { SetGameLoadingState, SetShowGameServersList } from "../../stores/Websit
 import { BrewManager, IBrew } from "../characters/BrewMananger";
 import KeyControls from "../services/KeyControls";
 import Network from "../services/Networks";
+import { random_spawn_points } from "../controls/randomSpawnPoints";
 
 const textAreaVisible = false;
 
@@ -295,10 +295,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
+    // this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
@@ -692,6 +692,7 @@ export default class Game extends Phaser.Scene {
       } if ( this.keyControls.keys.keyP.pressed ) {
         this.otherPlayers.forEach((_otherplayer) => {
           if (
+            _otherplayer.gameObject?.sprite.anims.currentAnim &&
             _otherplayer.wallet_address === store.getState().web3store.userAddress
             && _otherplayer.gameObject
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
@@ -839,13 +840,13 @@ export default class Game extends Phaser.Scene {
           && _player.gameObject?.sprite.anims 
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
-          // if (_player.wallet_address === store.getState().web3store.userAddress) {
-          //   console.log("other_players_loop ", _player.showBrewDropFrame, _player.kicking, _player.punching, _player.stunnedStarted, _player.deadStarted) 
-          // }
+          if (_player.wallet_address === store.getState().web3store.userAddress) {
+            console.log("other_players_loop ", _player.showBrewDropFrame, _player.kicking, _player.punching, _player.stunnedStarted, _player.deadStarted) 
+          }
           
           if (_player.gameObject.gassed_lift_off_fall) {
             _player.gameObject.gassed_lift_off_fall = false
-            _player.gameObject.sprite.stop()
+            // _player.gameObject.sprite.stop()
             _player.gameObject.sprite.play("front_gassed_lift_off_fall-"+_player.wallet_address + "_" + _player.minted_id )
             .once('animationcomplete', () => {
               if (_player.gameObject) {

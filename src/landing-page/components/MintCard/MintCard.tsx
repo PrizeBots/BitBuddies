@@ -1324,12 +1324,12 @@ function MintCard() {
             localStorage.getItem("state") === "The 1K Club"?
             `${onekClubMintedNFT} of ${totalOneKClubNFTs.toLocaleString()}`:
             localStorage.getItem("state") === "Bitfighters"?
-            `${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`:
+            `${bitfightersMintedCount.toLocaleString()} Minted`:
             localStorage.getItem("state") === "DripFighters"?
             `${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`:
             `${dripPresaleMintedNFT} of ${totalDripPresaleCount.toLocaleString()}`
           }
-          <br></br> Minted
+          {/* <br></br> Minted */}
         </p>
       </>
     );
@@ -1368,8 +1368,8 @@ function MintCard() {
       <>
         <h5>Bit Fighters</h5>
         <p>
-          {`${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`}
-          <br></br> Minted
+          {`${bitfightersMintedCount.toLocaleString()}`} Minted
+          {/* <br></br> Minted */}
         </p>
       </>
     );
@@ -1805,9 +1805,9 @@ function MintCard() {
                       }
                     }}
                   >
-                    {/* <option value={5}>5</option> */}
+                    <option value={5}>5</option>
                     <option value={10}>10</option>
-                    {/* <option value={20}>20</option> */}
+                    <option value={20}>20</option>
                   </select>
                 </div>
               </>
@@ -1837,10 +1837,14 @@ function MintCard() {
           <div className="mint-card-base__info__btc2">
             <span>
               {
-              (bitFightersMintQuantity > 0?
-                bitfighterUseMintCardCheckBox?0:
-                bitFightersMintQuantity* (0.0002):
-              0).toFixed(4)}{" "}
+                (
+                  bitfighterUseMintCardCheckBox? 0:
+                  bitFightersMintQuantity === 5? 0.0015:
+                  bitFightersMintQuantity === 10? 0.0025:
+                  bitFightersMintQuantity === 20? 0.0040:
+                  0
+                ).toFixed(4)
+              }
               BTC.b
             </span>
             <img src={btcIcon} alt="btc-info" />

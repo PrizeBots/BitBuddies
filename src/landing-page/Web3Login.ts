@@ -63,7 +63,7 @@ const siweSign = async (accounts: Array<string>, siweMessage: string) => {
 //   console.log("in siweSign ", recoveredAddr)
 // }
 
-const SignatureMessage = "By participating in this game you are acknowledging that you have read, understood, and agree to be bound by the terms and conditions found here: www.BitFighters.club/termsandconditions Failure to comply with these terms and conditions may result in, but will not be limited to, disqualification from participation in the game and the forfeiture of your account and all associated game assets."
+const SignatureMessage = "By participating in this game you are acknowledging that you have read, understood, and agree to be bound by the terms and conditions found here: https://docs.bitfighters.club/terms-of-service Failure to comply with these terms and conditions may result in, but will not be limited to, disqualification from participation in the game and the forfeiture of your account and all associated game assets. Sign to confirm and continue."
 
 export async function Web3Login() {
   console.log("in web3login ", window.ethereum)
@@ -82,7 +82,7 @@ export async function Web3Login() {
     const SUPPORTED_NETWORK_LONG ="Avalanche Network";
     console.log("in web3login ....*******", network.name, process.env.NODE_ENV)
     if (SUPPORTED_CHAINIDS.indexOf(network.chainId) === -1) {
-      if (window.confirm(`Only ${SUPPORTED_NETWORK_LONG} networks are currently supported. Should we switch to ${SUPPORTED_NETWORK_LONG}?`) == true) {
+      if (window.confirm(`Only ${SUPPORTED_NETWORK_LONG} network is currently supported. Should we switch to Avalanche now?`) == true) {
           const check = await window.ethereum.request({
             method: "wallet_addEthereumChain",
             params: [{

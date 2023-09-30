@@ -50,6 +50,7 @@ interface IQueueOptions {
   setAmount: any,
   ANTE: number,
   amountInString: string,
+  enterfightButtonPressed: any,
 }
 
 export default function AddToQueueBox(data: IQueueOptions) {

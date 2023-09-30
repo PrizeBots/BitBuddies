@@ -396,8 +396,8 @@ export default class Network {
           console.log(obj)
           this.game.otherPlayers.forEach(_player => {
             if (_player.wallet_address === obj.walletAddress && _player.gameObject) {
-              _player.gameObject.gassed_lift_off_fall = false
-              // _player.gameObject.gassed_lift_off_fallen = false
+              _player.gameObject.gassed_lift_off_fall = true
+              _player.gameObject.gassed_lift_off_fallen = false
               if (obj.orientation === 'right') _player.gameObject.sprite.flipX = false
               else _player.gameObject.sprite.flipX = true
             }
@@ -795,6 +795,7 @@ export default class Network {
           // this.game.bootstrap.play_can_open_sound()
           this.game.otherPlayers.forEach(_player => {
             if (_player.gameObject && obj.walletAddress === _player.wallet_address) {
+              this.game.keyControls.keys.keyQ.time_last_lifted = new Date().getTime()
               _player.drinkStarted = true;
               _player.drinking = false;
               _player.hasBrewInHand = false

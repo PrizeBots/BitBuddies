@@ -877,4 +877,13 @@ export const ABI = [{
 	}
 ]
 
-export const bitfighter_contract_adress = "0x0cd0529499A1c2e6F254C3B8B3F0c8938157Edc1"
+// export const bitfighter_contract_adress = "0x6e3F1091BdD40658b71b945ba88A92f09C9B7E22"
+
+const DEV_BF_CONTRACT = "0xD9889c17D5DbF08E5D6ab5CA9a6eb14bD843432b"
+export const PROD_BF_CONTRACT = "0x37f956b72255F8ca75202627d96C319F31c751A1"
+export let bitfighter_contract_adress = ""
+if (process.env.REACT_APP_DEV_ENV === "production") {
+	bitfighter_contract_adress = PROD_BF_CONTRACT
+} else {
+	bitfighter_contract_adress = DEV_BF_CONTRACT
+}

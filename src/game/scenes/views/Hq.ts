@@ -206,7 +206,7 @@ export class HQ {
     const tempMyPlayer = this.game.otherPlayers.get(store.getState().web3store.player_id)
     // const pointer: Phaser.Input.Pointer = this.game.input.activePointer;
     // let onGameUI = false;
-    // console.log("debug-pos ... ", stempMyPlayer?.sprite?.x, tempMyPlayer?.sprite?.y)
+    // console.log("debug_pos ... ", tempMyPlayer?.sprite?.x, tempMyPlayer?.sprite?.y)
     // console.log("overlap atm and kick", store.getState().userActionsDataStore.openAtmView);
     if (tempMyPlayer?.gameObject) {
       // console.log("payer atm pos-- ", tempMyPlayer.gameObject.sprite.x, tempMyPlayer.gameObject.sprite.y)

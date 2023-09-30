@@ -1079,7 +1079,7 @@ function NewFighters() {
                           {
                             data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
                               return(
-                                attr.trait_type === "defense"?
+                                attr.trait_type === "Defense"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/diamond_icon.png" 
@@ -1088,35 +1088,35 @@ function NewFighters() {
                                 </AttributeInfo>
                                 
                                 :
-                                attr.trait_type === "health"?
+                                attr.trait_type === "Health"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/heart_icon.png" 
                                     alt="." />
                                   <h5> Health : {attr.value} </h5>
                                 </AttributeInfo>:
-                                attr.trait_type === "kick"?
+                                attr.trait_type === "Kick"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/kick_icon.png" 
                                     alt="." />
                                   <h5> Kick : {attr.value} </h5>
                                 </AttributeInfo>:
-                                attr.trait_type === "punch"?
+                                attr.trait_type === "Punch"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/punch_icon.png" 
                                     alt="." />
                                   <h5> Punch : {attr.value} </h5>
                                 </AttributeInfo>:
-                                attr.trait_type === "speed"?
+                                attr.trait_type === "Speed"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/flash_icon.png" 
                                     alt="." />
                                   <h5> Speed : {attr.value} </h5>
                                 </AttributeInfo>:
-                                attr.trait_type === "stamina"?
+                                attr.trait_type === "Stamina"?
                                 <AttributeInfo>
                                   <img 
                                     src="bitfgihter_assets/icons/water_drop_icon.png" 
@@ -1165,8 +1165,6 @@ function NewFighters() {
                 ))}
               </Grid>
             </BoxWrapper>
-
-            {/* <FightersNewCenterPart /> */}
 
             <BoxWrapper2>
               {

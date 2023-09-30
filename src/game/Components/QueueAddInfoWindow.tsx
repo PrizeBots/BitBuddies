@@ -58,6 +58,7 @@ export function QueueAddInfoWindow() {
   
   const hitFightMachine = useAppSelector((state) => state.userActionsDataStore.hitFightMachine)
   const selectFightMenu = useAppSelector((state) => state.userActionsDataStore.selectedFightButton)
+  const [enterfightButtonPressed, setEnterFightButtonPressed] = useState(false)
 
   // console.log("**********debug.. ", hitFightMachine, selectFightMenu)
 
@@ -77,8 +78,14 @@ export function QueueAddInfoWindow() {
     if (isNullOrUndefined(amount) || isNullOrUndefined(ANTE + amount)) {
       store.dispatch(SetFailureNotificationBool(true))
       store.dispatch(SetFailureNotificationMessage("Please enter valid amount"))
+      return
     }
-    // console.log("debug ...enterFight button pressed", store.getState().playerDataStore.current_game_player_info, ANTE + amount, convertWBTCToBigIntWithDecimlas(ANTE + amount) )
+    console.log("debug_enter_fight_button_pressed ", enterfightButtonPressed)
+    if (enterfightButtonPressed) {
+      setaddToQueueState("Wait.");
+      return
+    }
+    setEnterFightButtonPressed(true)
     setaddToQueueBool(true);
     setaddToQueueState("Processing");
 
@@ -112,6 +119,7 @@ export function QueueAddInfoWindow() {
         store.dispatch(HitFightMachine(false))
         store.dispatch(SelectFightInFightMachineMenu(false))
         setAmount(0)
+        setEnterFightButtonPressed(false)
       }, 1000)
     } else {
       setaddToQueueBool(true);
@@ -122,6 +130,7 @@ export function QueueAddInfoWindow() {
       store.dispatch(SetFailureNotificationMessage("Less balance. Please Use ATM to add funds"))
       dispatch(HitFightMachine(false))
       setaddToQueueBool(false);
+      setEnterFightButtonPressed(false)
       return
     }
 
@@ -212,6 +221,7 @@ export function QueueAddInfoWindow() {
               setAmount = {changeAmount}
               amountInString = {amountInString}
               ANTE = {ANTE}
+              enterfightButtonPressed={enterfightButtonPressed}
             />
             {
             addToQueueBool && 

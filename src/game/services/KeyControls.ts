@@ -201,48 +201,32 @@ export default class KeyControls {
           break
         }
         case 'KeyQ': {
-          // console.log("Q pressed..", store.getState().assetStore.equippedBrewCount );
+          console.log("debugQ pressed..", store.getState().assetStore.equippedBrewCount, this.keys.keyQ.time_last_lifted );
           
-          if (this.keys.keyQ.time_last_lifted && this.keys.keyQ.time_last_lifted > 10 ) {
-            if (new Date().getTime() - this.keys.keyQ.time_last_lifted > 500) {
-              this.keys.keyQ.pressed = true
-            }
+          // if (this.keys.keyQ.time_last_lifted && this.keys.keyQ.time_last_lifted > 10 ) {
+          //   if (new Date().getTime() - this.keys.keyQ.time_last_lifted > 100) {
+          //     this.keys.keyQ.pressed = true
+          //   }
+          // }
+          if (
+            store.getState().assetStore.in_hand_brew 
+            && this.keys.keyQ.time_last_lifted 
+            && (new Date().getTime() - this.keys.keyQ.time_last_lifted > 100)
+          ) {
+            this.keys.keyQ.pressed = true
           }
-
-          
-          
-
-          // if (!this.keys.keyQ.pressed) {
-          //   this.keys.keyQ.pressed = true
-          // }
-          //   console.log("Q pressed..", this.keys.keyQ.time_last_pressed, new Date().getTime() - this.keys.keyQ.time_last_pressed );
-            // if (new Date().getTime() - this.keys.keyQ.time_last_pressed > 400) {
-            //   this.keys.keyQ.pressed = true
-            //   this.keys.keyQ.time_last_pressed = new Date().getTime()
-            // }
-          // }
-
 
           if (store.getState().assetStore.equippedBrewCount > 0) {
             const temp = this.game.otherPlayers.get(store.getState().web3store.player_id)
             if (temp?.gameObject) {
+              this.keys.keyQ.time_last_lifted = 0
               this.game.lobbySocketConnection.send(JSON.stringify({
                 event: "equip_brew",
                 walletAddress: store.getState().web3store.userAddress,
                 minted_id: temp.minted_id,
               }))
-              // this.game.bootstrap.play_can_open_sound()
             }
           }
-          // const temp = this.game.otherPlayers.get(store.getState().web3store.player_id)
-          // if (temp?.gameObject) {
-          //   if (temp.hasBrewInHand) {
-          //     this.keys.keyQ.pressed = true
-          //     this.keys.keyQ.time_last_pressed = new Date().getTime()
-          //   }
-          // }
-          
-          
           break;
         }
         case 'Enter':
@@ -270,7 +254,12 @@ export default class KeyControls {
           break
         case 'KeyQ':
           this.keys.keyQ.pressed = false
-          this.keys.keyQ.time_last_lifted = new Date().getTime()
+          console.log("debugQ released", store.getState().assetStore.equippedBrewCount, this.keys.keyQ.time_last_lifted )
+          // this.keys.keyQ.time_last_lifted = 0
+          if (store.getState().assetStore.in_hand_brew) {
+            this.keys.keyQ.time_last_lifted = new Date().getTime()
+          }
+          // this.keys.keyQ.time_last_lifted = new Date().getTime()
           break
         case 'KeyD':
           this.onKeysChange = true

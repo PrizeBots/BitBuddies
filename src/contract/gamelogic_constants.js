@@ -771,4 +771,13 @@ export const GameLogicABI = [{
 ]
 
 
-export const gamelogic_contract_address = "0x433aC6a7dA978B2e75cF862F66Cf472FE64F1b04"
+// export const gamelogic_contract_address = "0x769b0a003856c19785841cDabF8619fb8D6998c1"
+
+const DEV_GAMELOGIC_CONTRACT = "0x679FC84d0Dcd160a167bD1f52C5782A207d2e895"
+export const PROD_GAMELOGIC_CONTRACT = "0xD49D1cA1FF72E043a5FEE7c48Ddb785B44A7dB90"
+export let gamelogic_contract_address = ""
+if (process.env.REACT_APP_DEV_ENV === "production") {
+  gamelogic_contract_address = PROD_GAMELOGIC_CONTRACT
+} else {
+  gamelogic_contract_address = DEV_GAMELOGIC_CONTRACT
+}
