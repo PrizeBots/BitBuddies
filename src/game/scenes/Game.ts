@@ -840,9 +840,9 @@ export default class Game extends Phaser.Scene {
           && _player.gameObject?.sprite.anims 
           // && store.getState().web3store.userAddress !== _player.wallet_address 
         ) {
-          if (_player.wallet_address === store.getState().web3store.userAddress) {
-            console.log("other_players_loop ", _player.showBrewDropFrame, _player.kicking, _player.punching, _player.stunnedStarted, _player.deadStarted) 
-          }
+          // if (_player.wallet_address === store.getState().web3store.userAddress) {
+          //   console.log("other_players_loop ", _player.showBrewDropFrame, _player.kicking, _player.punching, _player.stunnedStarted, _player.deadStarted) 
+          // }
           
           if (_player.gameObject.gassed_lift_off_fall) {
             _player.gameObject.gassed_lift_off_fall = false

@@ -20,6 +20,7 @@ import { ListGameServers } from "./utils/game_server_utils";
 import { FetchLeaderBoard, fetchPlayerWalletInfo } from "./hooks/ApiCaller";
 import Leaderboard from "./landing-page/Leaderboard";
 import FightersNewCenterPart from "./landing-page/FightersNewCenterPart";
+import { getBalances } from "./utils/web3_utils";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -104,6 +105,7 @@ function App() {
       }
       counter = counter + 1;
       if (fetchWalletCounter > 20) {
+        getBalances(store.getState().web3store.userAddress)
         // fetchPlayerWalletInfo(false, "app.tsx");
         fetchWalletCounter = -1;
       }

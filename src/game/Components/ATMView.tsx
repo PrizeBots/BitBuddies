@@ -87,7 +87,7 @@ export function ATMView() {
       return
     }
     setaddToQueueBool(true)
-    setAddMoneyState("Adding to wallet")
+    setAddMoneyState("Sending to Bag")
 
     const allowance = await checkAllowance(
       store.getState().web3store.userAddress
@@ -154,7 +154,7 @@ export function ATMView() {
     }
     // await add
     setaddToQueueBool(true)
-    setAddMoneyState("Removing from wallet")
+    setAddMoneyState("Sending to Wallet")
 
     const allowance = await checkAllowance(
       store.getState().web3store.userAddress
@@ -189,6 +189,7 @@ export function ATMView() {
       store.dispatch(SetSuccessNotificationMessage("Updating Balance"))
 
       const check = await fetchPlayerWalletInfo();
+      await getBalances(store.getState().web3store.userAddress)
       if (check) {
         setSuccessSnackBarMessage("Updated Balance")
         store.dispatch(SetSuccessNotificationMessage("Updated Balance"))

@@ -255,10 +255,6 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
               src={queueWindowData.profile_image!== ""?queueWindowData.profile_image: "/new_assets/questionGIF.gif"}
               alt="Hero"
             />
-            {/* <img
-              src={queueWindowData.profile_image}
-              alt="Hero"
-            /> */}
             <ListItemText
               primary={
                 <span style={{
@@ -306,7 +302,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
             
 
         </BetInfoView>
-
+{/* 
         <FormInputView>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -355,15 +351,6 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
                       onChangeTipAmount(e, queueWindowData.fight_id , queueWindowData.wallet )
                     }}
                   />
-                  {/* <InputTextField
-                    type='number'
-                    fullWidth
-                    autoFocus={data.fight_id===fight_id_selected && data.wallet===playerSelected && !betLastEdit}
-                    value={tipOnPlayer? data.wallet===playerSelected:0}
-                    onChange={(e) => {
-                      onChangeTipAmount(e, data.fight_id, data.wallet)
-                    }}
-                  /> */}
                 </h3>
               </Grid>
             </Grid>
@@ -372,9 +359,9 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
 
           
         </FormInputView>
-        
+         */}
 
-        <div style={{
+        {/* <div style={{
           display: "flex",
           flexDirection: 'column',
           justifyContent: 'column',
@@ -393,7 +380,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
           >
             {queueWindowData.extra_data.betState}
           </Button>
-        </div>
+        </div> */}
       </ImageAndTextView>
     </div>
   )

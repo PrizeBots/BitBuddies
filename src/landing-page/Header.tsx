@@ -635,7 +635,7 @@ function Header() {
                 <li key={10}>
                   <div
                     style={{
-                      width: 10,
+                      width: 100,
                     }}
                   ></div>
                 </li>

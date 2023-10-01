@@ -616,30 +616,34 @@ function MintCard() {
       return
     }
 
-    const allowance = await checkAllowance(
-      store.getState().web3store.userAddress
-    );
-    console.log("allowance -- >", allowance.toString());
-    if (
-      ethers.BigNumber.from("10000000000").gte(
-        ethers.BigNumber.from(allowance.toString())
-      )
-    ) {
-      console.log("less allowance");
-      setMintingState("Approval in Progress");
+    if (bitfighterUseMintCardCheckBox){
+      const allowance = await checkAllowance(
+        store.getState().web3store.userAddress
+      );
+      console.log("allowance -- >", allowance.toString());
       if (
-        !(await approveWBTC2(
-          gamelogic_contract_address,
-          ethers.BigNumber.from("10000000000")
-        ))
+        ethers.BigNumber.from("10000000000").gte(
+          ethers.BigNumber.from(allowance.toString())
+        )
       ) {
-        setErrorState("Approval Failed")
-        dispatch(setCardState(PageStates.FailedState))
-        bootstrap.play_err_sound();
-        initializeBitfightersMintVars();
-        return;
+        console.log("less allowance");
+        setMintingState("Approval in Progress");
+        if (
+          !(await approveWBTC2(
+            gamelogic_contract_address,
+            ethers.BigNumber.from("10000000000")
+          ))
+        ) {
+          setErrorState("Approval Failed")
+          dispatch(setCardState(PageStates.FailedState))
+          bootstrap.play_err_sound();
+          initializeBitfightersMintVars();
+          return;
+        }
       }
     }
+
+    
 
     setMintingState("Generating Bitfighters");
 

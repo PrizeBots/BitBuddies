@@ -5,6 +5,8 @@ import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { TurnMouseClickOff } from '../../../stores/UserActions';
 import { parseWBTCBalanceV2, parseWBTCBalanceV3 } from '../../../utils/web3_utils';
+import { getEllipsisTxt } from '../../../utils';
+import store from '../../../stores';
 
 const Wrapper = styled.div`
   position: relative;
@@ -24,6 +26,10 @@ const TableWrapper = styled.div`
   td {
     font-size: 30px;
     color: blue;
+  }
+
+  input::placeholder {
+    font-size: 20px;
   }
 
   margin-left: auto;
@@ -50,7 +56,7 @@ const ATMBOX = styled(Box)`
   h2 {
     font-family: Monospace;
     font-style: bold;
-    font-size: 30px;
+    font-size: 34px;
     color: black;
   }
 
@@ -91,21 +97,17 @@ export default function AtmViewBox(data: IQueueOptions) {
       >
         <ATMBOX>
           <h2>
-            ATM
+            ATM <span>(1 BTC == 1,000,000 Bits)</span> 
           </h2>
-
-
           <TableWrapper>
-
             <table style={{
               width: '100%'
             }}>
               <thead>
               <tr>
-                <th>Coin</th>
-                <th>Your Balance</th>
-                <th>BF Credit</th>
-                {/* <th>Bet</th> */}
+                <th>Bits</th>
+                <th>Wallet: {getEllipsisTxt(store.getState().web3store.userAddress)}</th>
+                <th>Bag</th>
                 <th>Amount</th>
               </tr>
               </thead>
@@ -118,7 +120,7 @@ export default function AtmViewBox(data: IQueueOptions) {
                   {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
                   <input 
                   type="number" 
-                  placeholder='amount in BITS' 
+                  placeholder='Enter Bits' 
                   value={data.amount}
                   style={{
                     width: "200px"
@@ -144,7 +146,7 @@ export default function AtmViewBox(data: IQueueOptions) {
           >
             <span style={{
               color: 'aliceblue'
-            }}>Credit To BF</span>
+            }}>Deposit</span>
           </button>
 
 
@@ -158,8 +160,14 @@ export default function AtmViewBox(data: IQueueOptions) {
             >
             <span style={{
               color: 'aliceblue'
-            }}>Remove From BF</span>
+            }}>Withdraw</span>
           </button>
+
+          <div>
+            <span>
+              40 bit fee on all withdraws.
+            </span>
+          </div>
           
         </ATMBOX>
       </Wrapper>
