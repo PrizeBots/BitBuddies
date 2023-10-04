@@ -741,6 +741,15 @@ export default class Network {
           }
         }
 
+        if (obj.event === "fight_announcement") {
+          const message = `${obj.winner_nick_name} won against ${obj.loser_nick_name}`
+          store.dispatch(addToChatArray({
+            ...obj,
+            message,
+            type: MessageType.FightAnnouncement
+          }));
+        }
+
         if (obj.event === "typing") {
           this.game.otherPlayers.forEach((_player) => {
             if (_player.wallet_address === obj.walletAddress) _player.gameObject?.createNewDialogBox(obj.message)
@@ -866,8 +875,13 @@ export default class Network {
         const tempDiff =  Math.abs((new Date(now_utc).getTime() ) - (objs.server_time)) ;
         // console.log("received ping ", new Date().getTime(), new Date(now_utc).getTime(), objs.server_time, (2 * tempDiff).toString(), timezoneOffset, objs.server_offset)
         // store.dispatch(SetServerLatency((2 * tempDiff).toString()))
-        store.dispatch(SetServerLatency((objs.latency_time).toString()))
-        store.dispatch(SetTotalConnections((objs.total_connections)))
+        try {
+          store.dispatch(SetServerLatency((objs.latency_time).toString()))
+          store.dispatch(SetTotalConnections((objs.total_connections)))
+        } catch(err) {
+          console.log("error in 873 ", err)
+        }
+        
       }
 
       if (objs.event === "move" || objs.event === "running") {

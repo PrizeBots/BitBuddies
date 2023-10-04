@@ -78,7 +78,7 @@ interface IQueueOptions {
 
 export default function AtmViewBox(data: IQueueOptions) {
   const wbtcBalance = useAppSelector((state) => state.web3BalanceStore.wbtcBalance);
-  const walletBalance = useAppSelector((state) => state.web3BalanceStore.walletBalance);
+  // const walletBalance = useAppSelector((state) => state.web3BalanceStore.walletBalance);
   const betBalance = useAppSelector((state) => state.web3BalanceStore.betBalance);
   const web2_credit_balance = useAppSelector((state) => state.web3BalanceStore.web2CreditBalance);
 

@@ -3,7 +3,7 @@ import { setNFTDetails, setNFTLoadedBool, setTotalNFTData } from '../stores/BitF
 import { validation } from '../utils/Validation';
 import { ethers } from "ethers";
 import { ChangeAuthTOken, ChangeLoggerMessage, ChangeUserData, ChangeValidUserState, USER_DETAILS } from '../stores/UserWebsiteStore';
-import { checkIfUserSignedMetamask, fetchNFTsFromDB, fetchUserDetails, loginAndAuthenticateUser, postUserSignedMessage } from '../hooks/ApiCaller';
+import { checkIfUserSignedMetamask, fetchNFTsFromDB, fetchUserDetails, loginAndAuthenticateUser, postUserSignedMessage, updateNFTsInDB } from '../hooks/ApiCaller';
 import store from '../stores';
 import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -12,6 +12,8 @@ import { FetchDripPresaleInfoMintedByUser, FetchPresaleInfoMintedByUser, getBala
 import { setCardState } from '../stores/MintCardStateStore';
 import { PageStates } from './components/SidePanel/SidePanel';
 import {Buffer} from 'buffer';
+import { ReaderFunctions } from '../contract/ReaderFunctions';
+
 // import {
 //   recoverPersonalSignature,
 // } from '@metamask/eth-sig-util';
@@ -53,17 +55,7 @@ const siweSign = async (accounts: Array<string>, siweMessage: string) => {
   }
 };
 
-// const verifyMetamaskSignature = async (accounts: Array<string>, message: string, sign: string) => {
-//   const from = accounts[0];
-//   const msg = `0x${Buffer.from(message, 'utf8').toString('hex')}`;
-//   const recoveredAddr = recoverPersonalSignature({
-//     data: msg,
-//     signature: sign,
-//   });
-//   console.log("in siweSign ", recoveredAddr)
-// }
-
-const SignatureMessage = "By participating in this game you are acknowledging that you have read, understood, and agree to be bound by the terms and conditions found here: https://docs.bitfighters.club/terms-of-service Failure to comply with these terms and conditions may result in, but will not be limited to, disqualification from participation in the game and the forfeiture of your account and all associated game assets. Sign to confirm and continue."
+const SignatureMessage = "By interacting with this game you are acknowledging that you have read, understood, and agree to be bound by the terms and conditions found here: https://docs.bitfighters.club/terms-of-service Failure to comply with these terms and conditions may result in, but will not be limited to, disqualification from participation in the game and the forfeiture of your account and all associated game assets. Sign to confirm and continue."
 
 export async function Web3Login() {
   console.log("in web3login ", window.ethereum)
@@ -186,9 +178,16 @@ export async function Web3Login() {
   const auth_token: string = await loginAndAuthenticateUser(accounts[0]);
   store.dispatch(ChangeAuthTOken(auth_token)); 
 
-  const result = await fetchNFTsFromDB(accounts[0]);
-  // console.log(accounts[0]);
-  console.log("in web3login fetchNFTsFromDB ", result)
+  const fetchTokensOfUserFromSC = await ReaderFunctions.fetchTokenOfUserFromSC()
+  let result = await fetchNFTsFromDB(accounts[0]);
+  console.log("______debug_tokenIds____web2__ ", result.message.length);
+  // if mismatch. then call. the update function.
+  if (result.message.length !== fetchTokensOfUserFromSC.length) {
+    // call update
+    await updateNFTsInDB(accounts[0]);
+  }
+  result = await fetchNFTsFromDB(accounts[0]);
+
   const dataOfNFTS = await fetchAllNFTsFromDbEntries(result.message)
   store.dispatch(setTotalNFTData(result.message))
   store.dispatch(setNFTDetails(dataOfNFTS))

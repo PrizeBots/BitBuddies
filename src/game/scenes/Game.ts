@@ -628,7 +628,9 @@ export default class Game extends Phaser.Scene {
         this.otherPlayers.forEach((_otherplayer) => {
           if (
             _otherplayer.wallet_address === store.getState().web3store.userAddress
-            && _otherplayer.gameObject
+             && _otherplayer.gameObject
+            && _otherplayer.gameObject?.sprite.anims
+            && _otherplayer.gameObject?.sprite.anims.currentAnim
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
@@ -692,9 +694,10 @@ export default class Game extends Phaser.Scene {
       } if ( this.keyControls.keys.keyP.pressed ) {
         this.otherPlayers.forEach((_otherplayer) => {
           if (
-            _otherplayer.gameObject?.sprite.anims.currentAnim &&
             _otherplayer.wallet_address === store.getState().web3store.userAddress
             && _otherplayer.gameObject
+            && _otherplayer.gameObject?.sprite.anims
+            && _otherplayer.gameObject?.sprite.anims.currentAnim
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
@@ -731,6 +734,8 @@ export default class Game extends Phaser.Scene {
           if (
             _otherplayer.wallet_address === store.getState().web3store.userAddress
             && _otherplayer.gameObject
+            && _otherplayer.gameObject?.sprite.anims
+            && _otherplayer.gameObject.sprite.anims.currentAnim
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'win-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'lose-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id
             && _otherplayer.gameObject.sprite.anims.currentAnim.key !== 'drink-'+_otherplayer.wallet_address + "_" + _otherplayer.minted_id

@@ -29,6 +29,12 @@ export default class MitingGame extends Phaser.Scene {
   second_stage_doing= false;
   third_stage_idle = false;
 
+  // musics
+  mom_bg_music!: Phaser.Sound.BaseSound
+  door_open_music!: Phaser.Sound.BaseSound
+  foam_spray!: Phaser.Sound.BaseSound
+  swoosh!: Phaser.Sound.BaseSound
+
 
   constructor() {
     super('minting')
@@ -48,13 +54,25 @@ export default class MitingGame extends Phaser.Scene {
     this.load.spritesheet("mint_machine_base", "new_assets/mom/MINT_MACHINE_BASE.png", { frameWidth: 96, frameHeight: 147 });
     this.load.spritesheet("mint_machine_open", "new_assets/mom/MINT_MACHINE_OPEN.png", { frameWidth: 96, frameHeight: 147 });
 
+    // mom musics
+    this.load.audio("mom-bgm", "bitfgihter_assets/sounds/soundFX/mom-bg-music.mp3")
+    this.load.audio("door-open", "bitfgihter_assets/sounds/soundFX/door-open.mp3")
+    this.load.audio("foam-spray", "bitfgihter_assets/sounds/soundFX/foam-spray.mp3")
+    this.load.audio("swoosh", "bitfgihter_assets/sounds/soundFX/swoosh.mp3")
+
   }
 
-  
+  play_mom_bg_music() {
+    this.mom_bg_music.play({loop: true})
+  }
 
+  stop_all_music() {
+    this.mom_bg_music.stop()
+  }
 
   async create(data: any) {
     console.log("minting create ", data)
+
 
     this.quantity = store.getState().playerDataStore.mintingGameNftQuantity;
     this.quantityLeft = store.getState().playerDataStore.mintingGameNftQuantity;
@@ -70,10 +88,11 @@ export default class MitingGame extends Phaser.Scene {
       await delay(50);
     }
     this.load.start()
-
-    // this.load.once("complete", (key: any, val: any) => {
-    //     console.log("debug ,, ", key, val)
-    // });
+    this.mom_bg_music = this.sound.add('mom-bgm', {volume: 0.1})
+    this.door_open_music = this.sound.add("door-open", {volume: 0.2})
+    this.foam_spray = this.sound.add("foam-spray", {volume: 0.05})
+    this.swoosh = this.sound.add("swoosh", {volume: 0.5})
+    this.play_mom_bg_music()
 
     this.load.on('loaderror', (data: any) => {
       console.log("debug loaderror,, ", data)
@@ -158,52 +177,6 @@ export default class MitingGame extends Phaser.Scene {
 
 
 
-    // this.anims.create({
-    //   key: "juice1",
-    //   frames: this.anims.generateFrameNumbers("mint_machine_goo", {
-    //     start: 11,
-    //     end: 15,
-    //     first: 11
-    //   }),
-    //   duration:2000,
-    //   repeat: -1
-    // });
-
-    // this.anims.create({
-    //   key: "juice2",
-    //   frames: this.anims.generateFrameNumbers("mint_machine_goo", { frames: [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34]}),
-    //   duration:4000,
-    //   repeat: 0
-    // });
-
-    // this.anims.create({
-    //   key: "mom-idle",
-    //   frames: this.anims.generateFrameNumbers("mint_machine", {frames: [0]}),
-    //   duration:600,
-    //   repeat: -1
-    // });
-
-    // this.anims.create({
-    //   key: "mom-door-open",
-    //   frames: this.anims.generateFrameNumbers("mint_machine", {frames: [1,2,3,4,5,6,7,8,9,10]}),
-    //   duration:2000,
-    //   repeat: 0
-    // });
-
-    // this.anims.create({
-    //   key: "mom-spray-anim",
-    //   frames: this.anims.generateFrameNumbers("mint_machine", {frames: [10, 11,12,13,14,15]}),
-    //   duration:2000,
-    //   repeat: -1
-    // });
-
-    // this.anims.create({
-    //   key: "mom-spray-anim2",
-    //   frames: this.anims.generateFrameNumbers("mint_machine", { frames: [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34]}),
-    //   duration:4000,
-    //   repeat: 0
-    // });
-    
     
     const spriteX = window.innerWidth/2;
     const spriteY = window.innerHeight/2 - 50;
@@ -237,54 +210,6 @@ export default class MitingGame extends Phaser.Scene {
     this.Opensprite.play("first_frame_idle");
     temp.play("constant_base_anim");
 
-    // setTimeout(() => {
-    //   console.log("running animation .. ")
-    //   this.sprite.play("mom-door-open");
-    // }, 1000 )
-
-    // this.sprite.on('animationcomplete', (animation: Phaser.Animations.Animation, fr: any) => {
-
-    //   console.log("debug animation done ....", animation.key)
-    //   // if (animation.key === "mom-door-open") {
-    //   //   this.sprite.play("mom-spray-anim")
-    //   //   this.juice_sprite.play("juice1")
-    //   //   this.canEject = true;
-    //   // }
-
-    //   // if (animation.key === "mom-spray-anim2") {
-    //   //   this.canEject = true;
-    //   //   if (this.quantityLeft >0) {
-    //   //     this.sprite.play("mom-spray-anim")
-    //   //     this.juice_sprite.play("juice1")
-
-          
-    //   //   }
-
-      //   if (this.quantity >= 0) {
-      //     const temp = Array.from( this.nftSprites.keys() );
-      //     // console.log("debug temp 111 -- ", temp, this.quantity)
-      //     const tempSprite = this.nftSprites.get(temp[this.quantity])
-      //     tempSprite?.setDepth(10)
-
-      //     const {randomX, randomY} = generateRandomXAndY()
-
-      //     // const randomX = (Math.random() - 0.5)* 600
-      //     // const randomY = Math.random()* 100 + 200
-      //     console.log("debug----pos--", randomX, randomY)
-      //     tempSprite?.setDepth(randomY)
-
-      //     if (tempSprite)
-      //       this.tweens.add({
-      //         targets: tempSprite,
-      //         x: { from: tempSprite.x, to: tempSprite.x - randomX, duration: 500, ease: 'Linear' },
-      //         y: { from: tempSprite.y, to: tempSprite.y + randomY, duration: 500, ease: 'Linear' }
-      //       }).once("complete", () => {
-      //         // healthsprite.destroy()
-      //       })
-      //   }
-      // }
-    // })
-
     this.Opensprite.on('animationcomplete', (animation: Phaser.Animations.Animation, fr: any) => {
       //
       console.log("debug animation Opensprite done ....", animation.key)
@@ -295,54 +220,50 @@ export default class MitingGame extends Phaser.Scene {
         this.Opensprite.play("second_stage_idle")
         this.notifText.text = "Click to Start"
         this.second_stage_doing = true
+        setTimeout(() => {
+          this.door_open_music.stop()
+        }, 500)
       }
-      // if (animation.key === "second_stage_idle") {
-      //   console.log("debug animation Opensprite done second_stage_idle ....")
-      //   this.sprite.play("third_stage_idle")
-      //   this.notifText.text = "Click to Release"
-      // }
     })
 
     this.sprite.on('animationcomplete', (animation: Phaser.Animations.Animation, fr: any) => {
-      // console.log("debug animation sprite done ....", animation.key)
+      console.log("debug animation sprite done ....", animation.key)
       if (animation.key === "third_stage_idle") {
-        // console.log("debug animation sprite done third_stage_idle ....")
         this.Opensprite.setVisible(false)
         this.sprite.stop()
         this.sprite.play("repeat_mint_machine")
         this.juice_sprite.play("repeat_goo")
         this.notifText.text = "Click to Release"
         this.third_stage_idle = true
+        this.foam_spray.play({loop: true})
       }
       if (animation.key == "release_bf_anim") {
         
-        // console.log("debug animation sprite done release_bf_anim ....", this.quantity, this.quantityLeft)
         if (this.quantity >= 0) {
           const temp = Array.from( this.nftSprites.keys() );
           const tempSprite = this.nftSprites.get(temp[this.quantity])
-          // this.quantity -= 1
-          // tempSprite?.setDepth(7)
-
           const {randomX, randomY} = generateRandomXAndY()
-
-          // console.log("debug----pos--", randomX, randomY)
           tempSprite?.setDepth(randomY)
 
           // 
           this.sprite.stop()
           this.sprite.play("repeat_mint_machine")
           this.juice_sprite.play("repeat_goo")
+          this.foam_spray.play({loop: true})
           this.notifText.text = "Click to Release"
           this.third_stage_idle = true
 
-          if (tempSprite)
+          if (tempSprite) {
+            this.swoosh.play({loop: false})
             this.tweens.add({
               targets: tempSprite,
               x: { from: tempSprite.x, to: tempSprite.x - randomX, duration: 500, ease: 'Linear' },
               y: { from: tempSprite.y, to: tempSprite.y + randomY, duration: 500, ease: 'Linear' }
             }).once("complete", () => {
-              // healthsprite.destroy()
+              this.swoosh.stop()
             })
+          }
+            
 
           if (this.quantity === 0) {
             this.notifText.text = "Go To Game"
@@ -352,23 +273,19 @@ export default class MitingGame extends Phaser.Scene {
               .setStyle({ backgroundColor: '#9c341a'})
 
             this.notifText.on("pointerdown", () => {
-              //
-              // console.log(" debug click on notif button")
-              // navigator.clipboard.writeText("/game")
               window.location.href = "/game"
-              // window.location.reload()
             })
-            // this.notifText.text = ""
             this.sprite.stop()
             this.juice_sprite.stop()
+            this.foam_spray.stop()
             this.juice_sprite.setVisible(false)
           }
         } else {
-          // this.notifText.text = "Click to go to Game View"
           this.notifText.text = ""
           this.notifText.text = ""
           this.sprite.stop()
           this.juice_sprite.stop()
+          this.foam_spray.stop()
           this.juice_sprite.setVisible(false)
         }
       
@@ -377,16 +294,17 @@ export default class MitingGame extends Phaser.Scene {
     })
 
     this.sprite.on("pointerdown", (pointer: any) => {
-      // console.log("debug clicked on sprite ", this.clickCount, this.third_stage_idle, this.quantityLeft)
+      console.log("debug clicked on sprite ", this.clickCount, this.third_stage_idle, this.quantityLeft)
       if (this.clickCount === 2 && this.third_stage_idle && this.quantityLeft >= 0) {
 
         //
-        
         this.quantityLeft -= 1
         if (this.quantityLeft >= 0) {
           this.sprite.stop()
           this.sprite.play("release_bf_anim")
           this.juice_sprite.play("release_bf_anim_goo")
+          // this.foam_spray.play({loop: true})
+          this.foam_spray.stop()
 
           const temp = Array.from( this.nftSprites.keys() );
           this.quantity -= 1;
@@ -399,21 +317,16 @@ export default class MitingGame extends Phaser.Scene {
           this.canEject = true
           this.third_stage_idle = false
         }
-        // else {
-        //   this.notifText.text = ""
-        //   this.sprite.stop()
-        //   this.juice_sprite.stop()
-        //   this.juice_sprite.setVisible(false)
-        // }
       } 
 
     })
 
     this.Opensprite.on("pointerdown", (pointer: any) => {
-      // console.log("debug clicked Opensprite... ", this.clickCount)
+      console.log("debug clicked Opensprite... ", this.clickCount)
       if (this.clickCount === 0) {
         this.Opensprite.stop()
         this.Opensprite.play("mom_door_open")
+        this.door_open_music.play({loop: false})
         this.clickCount += 1
         return
       }
@@ -422,32 +335,6 @@ export default class MitingGame extends Phaser.Scene {
         this.sprite.play("third_stage_idle")
         this.clickCount += 1
       }
-      // if (this.clickCount === 2 && this.third_stage_idle) {
-      //   //
-      //   this.sprite.stop()
-      //   this.sprite.play("release_bf_anim")
-      //   this.juice_sprite.play("release_bf_anim_goo")
-      //   this.clickCount += 1
-      // }
-      
-      // console.log("mouse over me 3 -- clicked", this.canEject)
-      // if (!this.canEject) {
-      //   return
-      // }
-      // this.juice_sprite.stop()
-      // this.quantityLeft -= 1
-      // if (this.quantityLeft >= 0) {
-      //   const temp = Array.from( this.nftSprites.keys() );
-      //   this.quantity -= 1;
-      //   const tempSprite = this.nftSprites.get(temp[this.quantity])
-      //   tempSprite?.setDepth(10)
-    
-      //   leftText.text = `Left: ${this.quantityLeft}`
-      //   leftText.update()
-      //   this.juice_sprite.play("juice2")
-      //   this.sprite.play("mom-spray-anim2")
-      // }
-      // this.canEject = false
     }, this)
  
   }

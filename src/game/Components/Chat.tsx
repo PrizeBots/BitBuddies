@@ -167,13 +167,19 @@ const Message = (messageObj: IMsgObject) => {
     {
       (messageObj.chatMessage.type === MessageType.Announcement) ?
       <>
-        {/* <div className="msg-bubble"> */}
-            <div>
-              <span style={{ color: 'grey', fontSize: '16px', fontFamily: 'monospace' }}>
-                {(messageObj.chatMessage.nick_name) } { messageObj.chatMessage.message }   
-              </span> 
-            </div>
-          {/* </div> */}
+        <div>
+          <span style={{ color: 'grey', fontSize: '16px', fontFamily: 'monospace' }}>
+            {(messageObj.chatMessage.nick_name) } { messageObj.chatMessage.message }   
+          </span>
+        </div>
+      </>:
+      (messageObj.chatMessage.type === MessageType.FightAnnouncement) ?
+      <>
+        <div>
+          <span style={{ color: 'green', fontSize: '18px', fontFamily: 'monospace' }}>
+            {(messageObj.chatMessage.message) }
+          </span>
+        </div>
       </>:
       <div>
         {( messageObj.chatMessage.direction === "left")? 

@@ -12,22 +12,22 @@ export async function getBalances(currentUser: string) {
   const wbtcBalance = await checkWBTC_Balance(currentUser);
   // const walletBalance = 0;
   // const betBalance = 0;
-  const walletBalance = await checkWalletBalance(currentUser);
+  // const walletBalance = await checkWalletBalance(currentUser);
   // const betBalance = await  checkBetBalance(currentUser);
   // const decimals = await getWBTCDecimals();
 
-  console.log("all balance --> ", walletBalance.toString(), wbtcBalance.toString());
+  // console.log("all balance --> ", walletBalance.toString(), wbtcBalance.toString());
 
   
 
   store.dispatch(SetWbtcBalance(wbtcBalance.toString()));
   // store.dispatch(SetBetBalance(betBalance.toString()));
-  store.dispatch(SetWalletBalance(walletBalance.toString()));
+  // store.dispatch(SetWalletBalance(walletBalance.toString()));
   // store.dispatch(SetDecimals(decimals.toString()));
 
   return {
     wbtcBalance,
-    walletBalance,
+    walletBalance: 0,
     betBalance: 0,
   }
 }

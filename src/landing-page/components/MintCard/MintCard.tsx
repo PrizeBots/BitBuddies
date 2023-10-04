@@ -564,8 +564,7 @@ function MintCard() {
     );
 
     // store.dispatch(SetMintGameStarted(true))
-    // store.dispatch(SetMintGameQuantity(10))
-    
+    // store.dispatch(SetMintGameQuantity(2))
     // bootstrap.launchMintingGame({
     //   quantity: 10
     // })
@@ -616,13 +615,13 @@ function MintCard() {
       return
     }
 
-    if (bitfighterUseMintCardCheckBox){
+    if (!bitfighterUseMintCardCheckBox){
       const allowance = await checkAllowance(
         store.getState().web3store.userAddress
       );
       console.log("allowance -- >", allowance.toString());
       if (
-        ethers.BigNumber.from("10000000000").gte(
+        ethers.BigNumber.from("10000000").gte(
           ethers.BigNumber.from(allowance.toString())
         )
       ) {
@@ -631,7 +630,7 @@ function MintCard() {
         if (
           !(await approveWBTC2(
             gamelogic_contract_address,
-            ethers.BigNumber.from("10000000000")
+            ethers.BigNumber.from("100000000")
           ))
         ) {
           setErrorState("Approval Failed")
@@ -645,7 +644,7 @@ function MintCard() {
 
     
 
-    setMintingState("Generating Bitfighters");
+    setMintingState("Generating Bit Fighters");
 
     const output = await randomGenarateBitfightersV2(
       store.getState().web3store.userAddress,
@@ -803,7 +802,7 @@ function MintCard() {
       }
     }
 
-    setMintingState("Generating Bitfighters");
+    setMintingState("Generating Bit Fighters");
     console.log("---- debug ,,,", onlyTaooFighter || tagAndTatooFighter)
 
     const output = await randomGenarateDripBitfightersV2(
@@ -929,7 +928,7 @@ function MintCard() {
       return;
     }
 
-    setMintingState("Generating Bitfighters");
+    setMintingState("Generating Bit Fighters");
     console.log("---- debug ,,,", onlyTaooFighter || tagAndTatooFighter)
     const allowance = await checkAllowance(
       store.getState().web3store.userAddress
@@ -1327,7 +1326,7 @@ function MintCard() {
             `${preSaleMintedNFT} of ${totalPresaleCount.toLocaleString()}`:
             localStorage.getItem("state") === "The 1K Club"?
             `${onekClubMintedNFT} of ${totalOneKClubNFTs.toLocaleString()}`:
-            localStorage.getItem("state") === "Bitfighters"?
+            localStorage.getItem("state") === "Bit Fighters"?
             `${bitfightersMintedCount.toLocaleString()} Minted`:
             localStorage.getItem("state") === "DripFighters"?
             `${bitfightersMintedCount.toLocaleString()} of ${totalBitfightersCount.toLocaleString()}`:
@@ -1866,6 +1865,11 @@ function MintCard() {
                 checked={bitfighterUseMintCardCheckBox}
                 onChange={() => {
                   console.log("debug pressed checkbox ",bitfighterUseMintCardCheckBox)
+                  if(!bitfighterUseMintCardCheckBox) {
+                    setBitFightersMintQuantity(totalCountOfPresaleMintCardForUser)
+                  } else {
+                    setBitFightersMintQuantity(5)
+                  }
                   setBitfighterUseMintCardCheckBox(!bitfighterUseMintCardCheckBox)
                 }} 
               />

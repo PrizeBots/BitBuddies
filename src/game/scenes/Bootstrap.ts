@@ -70,7 +70,7 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.audio("punch2-music", "bitfgihter_assets/sounds/punch02.mp3")
 
     // this.load.audio("fight-music", "bitfgihter_assets/sounds/fight-track.mp3")
-    
+    // fight musics 
     this.load.audio("fight-music-1", "bitfgihter_assets/sounds/new_fight_tracks/Ayumi.mp3")
     this.load.audio("fight-music-2", "bitfgihter_assets/sounds/new_fight_tracks/BullDancer.mp3")
     this.load.audio("fight-music-3", "bitfgihter_assets/sounds/new_fight_tracks/Deeper.mp3")
@@ -137,7 +137,11 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   play_select_sound() {
-    this.select_music.play({loop: false})
+    try {
+      this.select_music.play({loop: false})
+    } catch(err) {
+      console.log("error ", err)
+    }
   }
 
   play_err_sound() {

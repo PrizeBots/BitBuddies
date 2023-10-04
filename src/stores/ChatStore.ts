@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export enum MessageType {
   Chat = 10,
-  Announcement = 20
+  Announcement = 20,
+  FightAnnouncement = 30
 }
 
 export interface IChatObject {

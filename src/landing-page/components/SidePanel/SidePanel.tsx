@@ -143,7 +143,7 @@ const SidePanel = () => {
                     ) : (
                       <div
                         onClick={() => {
-                          localStorage.setItem("state", "Bitfighters");
+                          localStorage.setItem("state", "Bit Fighters");
                           dispatch(setCardState(PageStates.Bitfighter));
                           bootstrap.play_button_down_sound()
                         }}

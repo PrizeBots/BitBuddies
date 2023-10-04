@@ -199,13 +199,13 @@ function Home() {
         </span>
       </ButtonView>
       </Tooltip>
-      <Tooltip title="Go to Docs">
+      {/* <Tooltip title="Go to Docs">
       <InfoButtonWrapper>
         <a href="https://docs.bitfighters.club/bit-fighters/the-game/get-started/connect-a-wallet" target="_blank">
         <InfoOutlined color='action' fontSize='medium' />
         </a>
       </InfoButtonWrapper>
-      </Tooltip>
+      </Tooltip> */}
     </ButtonnAndInfoWrapper>
     </>
   } else if (nftDataLoaded && !web3ConnectedUser && bitFighterNFTData.length > 0) {

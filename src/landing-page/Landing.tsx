@@ -67,6 +67,9 @@ const Landing = (props: any) => {
       }
       store.dispatch(ChangePath(location.pathname));
       store.dispatch(SetGameStarted(false));
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     } else {
       console.log("no no no..");
       // var bodyHtml = document.querySelector('body');

@@ -260,31 +260,31 @@ export default function NewWinnersReceipt() {
             <MyDivider />
 
             <TextInfo>
-                <h4> Your Ante: 100 bits</h4>
-                <h4> Their Ante: 100 bits</h4>
+                <h4> Your Ante: 50 bits</h4>
+                <h4> Their Ante: 50 bits</h4>
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 10000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet -p2_total_tips - 10000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 5000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips - 5000) } bits </h4>
                   }
                 </div>
                 
                 <div>
                   {
                     (store.getState().web3store.userAddress !== store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 10000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips- 10000) } bits </h4>
+                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 5000) } bits</h4>:
+                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips - 5000) } bits </h4>
                   }
                 </div>
 
-                <div>
+                {/* <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
                     <h4>Your Total Tip: { parseWBTCBalanceV3(p1_total_tips) } bits</h4>:
                     <h4>Your Total Tip: { parseWBTCBalanceV3(p2_total_tips) } bits </h4>
                   }
-                </div>
+                </div> */}
 
                 <div>
                   {

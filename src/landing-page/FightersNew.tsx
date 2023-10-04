@@ -34,7 +34,6 @@ import store from '../stores';
 import { setPlayerAuthToken } from '../stores/AuthStore';
 import NotificationMessageHelper from '../game/Components/NotificationMessageHelper';
 import { EquipView } from '../game/Components/InventoryView/EquipView';
-import WinnersReceipt from '../game/Components/MenuComponents/WinnersReceipt';
 import { Loader } from './components/Loader/Loader';
 import { SetGameLoadingState, SetSelectedGameServerURL, SetShowGameServersList } from '../stores/WebsiteStateStore';
 import { ListGameServers } from '../utils/game_server_utils';
@@ -50,24 +49,6 @@ import FightersNewCenterPart from './FightersNewCenterPart';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
-
-const Backdrop = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  align-items: center;
-`
-
-const Wrapper = styled.div`
-  background: #D8DFE5;
-  border-radius: 16px;
-  padding: 36px 60px;
-  box-shadow: 0px 0px 5px #0000006f;
-`
 
 const Title = styled.h1`
   font-size: 28px;
@@ -96,29 +77,6 @@ const Content = styled.div`
   transform: translate(-50%, -50%);
 `
 
-const ImageWraper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  opacity: 0.8;
-  padding: 20px 20px 20px;
-  width: 300px;
-  align-items: center;
-  justify-content: center;
-`
-
-const HeadingText = styled.h1`
-  font-size: 2rem;
-  letter-spacing: 1px;
-  font-family:'Cooper Black', sans-serif;
-  // font-family: Montserrat, sans-serif;
-  font-weight: 400;
-  text-transform: none;
-  margin: 0px auto 0;
-  color: aliceblue;
-`
-
 const ButtonView = styled(Button)`
   span {
     color: #a7a5a5;;
@@ -126,6 +84,7 @@ const ButtonView = styled(Button)`
     font-size: 20px;
     font-family:'Cooper Black', sans-serif;
   }
+  border-radius: 20px;
 
   background-color: #9c341a;
 
@@ -140,12 +99,19 @@ const ButtonView = styled(Button)`
 
 const FixedForm = styled.div`
   position: absolute;
-  margin: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  // margin: 50%;
+  // transform: translate(-50%, -50%);
+
+  // margin: 10%;
 
   background: #d2d3e1;
   width: 400px;
   height: 30vh;
+
+  border: 5px solid #000000;
+  border-radius: 10px;
+  padding: 20px;
 
   opacity: 0.9;
 
@@ -159,15 +125,6 @@ const FixedForm = styled.div`
     letter-spacing: 0.5px;
     margin-left: 5px;
   }
-
-  // h2 {
-  //   font-family:'Cooper Black', sans-serif;
-  //   font-style: bold;
-  //   font-size: 30px;
-  //   color: black;
-  //   line-height: 75%;
-  //   margin: 10px;
-  // }
 
   input[type="text"] {
     padding: 0;
@@ -202,10 +159,16 @@ const FixedForm = styled.div`
 const BoxWrapper2 = styled(Box)`
   overflow-y: scroll;
   width: 33vw;
+  // max-width: 33vw;
   position: relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 20px;
+  // background: #ffff;
 
   img {
-    margin-top: 50px;
+    // margin-top: 50px;
   }
 
   h2 {
@@ -224,12 +187,15 @@ const BoxWrapper = styled(Box)`
   overflow-y: scroll;
   position: relative;
   background-color:#2d2a2a;
-  // background-color: #111b28;
   
   height: 80vh;
-  max-width: 36vw;
+  // max-width: 36vw;
+  width: 36vw;
+  // max-width: 35vw;
   margin-left: 10px;
   color: white;
+
+  margin-top: 3%;
 
   border-right: 10px solid #626d7c;
   border-left: 10px solid #626d7c;
@@ -241,13 +207,6 @@ const BoxWrapper = styled(Box)`
   }
 `;
 
-const BoxImageList = styled(ImageList)`
-  background-color:#2d2a2a;
-  border-right: 10px solid #626d7c;
-  border-left: 10px solid #626d7c;
-  border-bottom: 10px solid #626d7c;
-`;
-
 const ImageView = styled.div`
   h1 {
     font-family:'Cooper Black', sans-serif;
@@ -255,8 +214,6 @@ const ImageView = styled.div`
     font-size: 30px;
     color: aliceblue;
     line-height: 75%;
-    // margin: 10px;
-    // margin-top: 25px;
   }
 
   img {
@@ -325,9 +282,6 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 }));
 
-  // background: #A1A7B8;
-
-
 function NewFighters() {
   const bitFighterNFTData = useAppSelector((state) => state.bitFighters.nftData)
   const bitFightersTotalData = useAppSelector((state) => state.bitFighters.totalNFTData)
@@ -336,43 +290,14 @@ function NewFighters() {
   const userAddress = useAppSelector((state) => state.web3store.userAddress);
   
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
-  // console.log("--------total_data-------", bitFightersTotalData)
+  console.log("--------total_data-------", bitFightersTotalData)
   // console.log("--------total_data2-------", bitFighterNFTData)
 
   const selectedPlayer = useAppSelector(
     (state) => state.playerDataStore.current_game_player_info
   );
-
-
-  // const tempAllData = JSON.parse(JSON.stringify(bitFightersTotalData))
-  // console.log("--------total_data_temp2-------", tempAllData)
-  // if (bitFightersTotalData.length > 0) {
-  //   for (let i =0; i < 50; i++) {
-  //     const temp = tempAllData[0];
-  //     temp.data.first_frame_image = "https://images.unsplash.com/photo-1589118949245-7d38baf380d6"
-  //     temp.dummy = true;
-
-  //     tempAllData.push(temp)
-  //   }
-  // }
-
-  // console.log("--------total_data_temp-------", tempAllData)
-  
-
-  const dummyBfsData: any[] = []
-  const attributesHTML: Array<any> = []
-  // for (let i =0 ; i < 100; i ++) {
-  //   for (let j = 0; j < 5; j++) {
-  //     dummyBfsData.push(bitFightersTotalData[j])
-  //   }
-  // }
-
   const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
-
   const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
-
-  // console.log("current path 333 ", gameStarted)
-
   const [formNickNameame, setFormNickName] = useState("")
   const [formLuckyNumber, setFormLuckyNumber] = useState(1)
 
@@ -381,31 +306,10 @@ function NewFighters() {
   const [registerProcessRunning, setRegisterProcessRunning] = useState(false)
 
   const [playerSelectedBool, setPlayerSelectedBool] = useState(false);
-  const [snackBarOpen , setSnackBarOpen] = useState(false);
-  const [snackBarMessage, setSnackBarMessage] = useState("")
   const [playerSelected, setPlayerSelected] = useState<IPlayerData>();
   // const [gameStarted, setGameStarted] = useState(false);
   const [cardSelected, setCardSelected] = useState("")
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-  // let noBitFighter = false;
-  // let boxWidth = 500;
-  // let carouselUI = null;
-  // let NewUI = null;
-  // let totalUI: JSX.Element = <></>;
-  // const [totalUI, setTotalUI] = useState<JSX.Element>(<></>);
-  // let totalUI = null;
-  // let animationView = <>Animation View</>;
-  // let animationUI = null;
-  // const dispatch = useAppDispatch();
-
-  // const handleClose = () => {
-  //   setSnackBarOpen(false);
-  // };
-
-  // const [openModal, setOpenModal] = useState(false);
-  // const handleModalClose = () => {
-  //   setOpenModal(false);
-  // };
   
   const handlePlayerSelection = async (data:IPlayerData) => {
     console.log("--player selected.. data ", data)
@@ -426,36 +330,7 @@ function NewFighters() {
       store.dispatch(setPlayerAuthToken(playerAuthToken))
       ListGameServers(gameServerReginoSelected)
     }
-
-    
-    // console.log("game start -> ", playerSelected)
   }
-
-  // const startGame = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-  //   event.preventDefault();
-    
-  //   // if (bodyHtml) {
-  //   //   bodyHtml.style.zoom = "80%";
-  //   //   // bodyHtml.style.webkitTransform = "rotate(90deg)";
-  //   // }
-  //   // navigate("/game", { replace: true });
-  //   const playerAuthToken = await loginAndAuthenticatePlayer(playerSelected!.user_wallet_address, playerSelected!.minted_id);
-  //   if (!isNullOrUndefined(playerAuthToken)) {
-  //     store.dispatch(setPlayerAuthToken(playerAuthToken))
-  //     dispatch(SetGameStarted(true));
-
-  //     store.dispatch(SetSelectedGameServerURL(REACT_APP_LOBBY_WEBSOCKET_SERVER));
-      
-  //     // dispatch(SetCurrentGamePlayer(playerSelected))
-
-  //     // dispatch(setNickName(playerSelected!.nick_name))
-  //     // const bodyHtml = document.querySelector('html');
-  //     // console.log("bodyhtml ", bodyHtml);
-  //     store.dispatch(SetGameLoadingState(true))
-  //     bootstrap.launchGame(playerSelected)
-  //   }
-    
-  // }
 
   const registerFormValidate = async () => {
     setRegisterProcessRunning(true)
@@ -561,458 +436,11 @@ function NewFighters() {
   }, [])
 
 
-  if (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool) {
-    // carouselUI = <Title>  :( No Bit Fighters detected in this wallet. </Title>
-    // totalUI = <Title>  :( No Bit Fighters detected in this wallet. </Title>
-    // boxWidth = 400;
-    // noBitFighter = true;
-  } else if (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool) {
-    // carouselUI = <Title> Loading.. </Title>
-    // boxWidth = 400;
-    // noBitFighter = true;
-  } else if (loggedInUserWalletAddress === "") {
-    // carouselUI = <Title>  Checking for Bitfighters </Title>
-    // boxWidth = 400;
-    // noBitFighter = true;
-  } else {
-    // console.log("changing current path")
-    // if (!gameStarted) {
-    //   store.dispatch(SetShowGameServersList(true));
-    // } else {
-    //   store.dispatch(SetShowGameServersList(false));
-    // }
-  }
-
-  // if (gameStarted) {
-  //   totalUI = <>
-  //     <NotificationMessageHelper />
-  //     <>
-  //       {ProfilemenuClicked && <NewMenuSideBar />}
-  //     </>
-      
-  //     <InventoryView />
-  //     <EquipView />
-  //     <BroadCastCombiner2 />
-  //     <ATMView />
-  //     <InGameAssetPurchase />
-  //     <BroadcastingAnnouncement />
-  //     {/* <RegisterNow /> */}
-  //     {/* <RegisterNewUserInGame /> */}
-  //     <ControlsInfo />
-  //     <Chat />
-  //     <PlayersInfo />
-  //     <QueueAddInfoWindow />
-  //     {/* <WinnersReceipt /> */}
-  //     <NewWinnersReceipt />
-  //     <SendingFriendRequest />
-  //     <Footer />
-  //   </>
-  // } else {
-  //   totalUI = 
-  //   <div style={{
-  //     display: 'flex',
-  //     flexDirection: 'row',
-  //     marginTop: '5%'
-  //   }}>
-  //     {
-  //       (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool)?
-  //       <Content>
-  //           <Title>  :( No Bit Fighters detected in this wallet. </Title>
-  //           <Link 
-  //             className="primary" 
-  //             to="/mint" 
-  //           >
-  //             <ButtonView variant="contained">
-  //               <span>
-  //                 Mint BitFighters
-  //               </span>
-  //             </ButtonView>
-  //           </Link>
-  //       </Content>
-  //        :
-  //       (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && !bitfightersLoadedBool)?
-  //       <Content>
-  //         <Title> Loading.. </Title>
-  //       </Content>:
-  //       (loggedInUserWalletAddress === "")?
-  //       <Content>
-  //         <Title> Checking for Bitfighters </Title>
-  //       </Content>
-  //         :
-  //       <>
-  //         {/* <BoxWrapper sx={{ flexGrow: 1 }} >
-
-
-  //           <ImageList 
-  //             cols={4} 
-  //             gap={0}
-  //             rowHeight={164}
-  //           >
-  //             {bitFightersTotalData.map((data) => (
-  //               <ImageListItem key={uuidv4()} style={{
-  //                 border: '2px solid #bababa'
-  //               }}>
-  //                 <HtmlTooltip title={
-  //                   <React.Fragment>
-  //                       {
-  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-  //                           return(
-  //                             attr.trait_type === "defense"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Defense : {attr.value} </h5>
-  //                             </AttributeInfo>
-                              
-  //                             :
-  //                             attr.trait_type === "health"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Health : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "kick"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Kick : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "punch"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Punch : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "speed"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Speed : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "stamina"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Stamina : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                           <></>
-  //                         )
-                          
-  //                         })) 
-  //                       }
-  //                   </React.Fragment>
-  //                 }>
-  //                   <ImageListItem key={uuidv4()}>
-  //                     <img
-  //                       src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-  //                       srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-  //                       // src={`${data.data.first_frame_image}`}
-  //                       alt={"Hero"}
-  //                       loading="lazy"
-  //                       style={{
-  //                         // margin: '20px',
-  //                         // aspectRatio: `${15/16}`,
-  //                         // backgroundColor: 'red'
-  //                       }}
-  //                       onClick={() => {
-  //                         handlePlayerSelection(data)
-  //                       }}
-  //                     />
-  //                   </ImageListItem>
-  //                 </HtmlTooltip>
-  //               </ImageListItem>
-  //             ))}
-  //           </ImageList>
-  //         </BoxWrapper> */}
-
-  //         {/* <ImageList 
-  //             cols={5} 
-  //             gap={0}
-  //             sx={{
-  //               width: `36vw`,
-  //               height: `80vh`
-  //             }}
-  //           >
-  //             {bitFightersTotalData.map((data: any) => (
-  //               <ImageListItem key={uuidv4()} style={{
-  //                 border: '2px solid #bababa'
-  //               }}>
-  //                 <HtmlTooltip title={
-  //                   <React.Fragment>
-  //                       {
-  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-  //                           return(
-  //                             attr.trait_type === "defense"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Defense : {attr.value} </h5>
-  //                             </AttributeInfo>
-  //                             :
-  //                             attr.trait_type === "health"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Health : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "kick"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Kick : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "punch"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Punch : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "speed"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Speed : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "stamina"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Stamina : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                           <></>
-  //                         )
-                          
-  //                         })) 
-  //                       }
-  //                   </React.Fragment>
-  //                 }>
-  //                   <ListImageView>
-  //                     <h1>
-  //                       {data?.nick_name !== ""? data?.nick_name: "?"}
-  //                     </h1>
-  //                     <ImageListItem key={uuidv4()}>
-  //                       <img
-  //                         src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-  //                         srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-  //                         alt={"Hero"}
-  //                         loading="lazy"
-  //                         onClick={() => {
-  //                           handlePlayerSelection(data)
-  //                         }}
-  //                       />
-  //                     </ImageListItem>
-  //                   </ListImageView>
-  //                 </HtmlTooltip>
-  //               </ImageListItem>
-  //             ))}
-  //         </ImageList> */}
-
-  //         <BoxWrapper sx={{ flexGrow: 1}}>
-  //           <Grid container spacing={0}>
-
-  //             {bitFightersTotalData.map((data) => (
-  //               <Grid key={uuidv4()} item xs={3} style={{
-  //                 border: '2px solid #bababa'
-  //               }}>
-  //                 <HtmlTooltip title={
-  //                   <React.Fragment>
-  //                       {
-  //                         data.data.attributes.map(((attr: {trait_type: any, value: any} )=> {
-  //                           return(
-  //                             attr.trait_type === "defense"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/diamond_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Defense : {attr.value} </h5>
-  //                             </AttributeInfo>
-                              
-  //                             :
-  //                             attr.trait_type === "health"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/heart_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Health : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "kick"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/kick_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Kick : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "punch"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/punch_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Punch : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "speed"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/flash_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Speed : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                             attr.trait_type === "stamina"?
-  //                             <AttributeInfo>
-  //                               <img 
-  //                                 src="bitfgihter_assets/icons/water_drop_icon.png" 
-  //                                 alt="." />
-  //                               <h5> Stamina : {attr.value} </h5>
-  //                             </AttributeInfo>:
-  //                           <></>
-  //                         )
-                          
-  //                         })) 
-  //                       }
-  //                   </React.Fragment>
-  //                 }>
-  //                   <Grid key={uuidv4()}>
-  //                     <ListImageView>
-  //                     <h1>
-  //                       {data?.nick_name !== ""? data?.nick_name: "?"}
-  //                     </h1>
-
-  //                     {/* <h1 style={{
-  //                       position:'relative',
-  //                       left: `-50px`,
-  //                     }}>
-  //                       {data.data.total_ap}
-  //                     </h1> */}
-  //                     <img
-  //                       // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-  //                       // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-  //                       src={`${data.data.first_frame_image}`}
-  //                       alt={"Hero"}
-  //                       loading="lazy"
-  //                       style={{
-  //                         marginBottom: '20px',
-  //                         // marginTop: '-10px'
-  //                         // aspectRatio: `${15/16}`,
-  //                         // backgroundColor: 'red'
-  //                       }}
-  //                       onClick={() => {
-  //                         handlePlayerSelection(data)
-  //                       }}
-  //                     />
-  //                     </ListImageView>
-  //                   </Grid>
-  //                 </HtmlTooltip>
-  //               </Grid>
-  //             ))}
-  //           </Grid>
-  //         </BoxWrapper>
-
-  //         <BoxWrapper2>
-  //           {
-  //             (cardSelected !== "" && selectedPlayer.nick_name === "")?
-  //               <FixedForm>
-  //                 <h2>
-  //                   Register your Fighter
-  //                 </h2>
-
-  //                 <label htmlFor="nick_name" style={{
-  //                   marginTop: '20px'
-  //                 }}> Name: </label>
-  //                 <input
-  //                   id="nick_name"
-  //                   type="text"
-  //                   placeholder='up to 12 letters'
-  //                   value={formNickNameame}
-  //                   onChange={(e) => {
-  //                     setFormNickName(e.target.value);
-  //                   }}
-  //                   required
-  //                 />
-  //                 <br />
-
-  //                 <label htmlFor="lucky_number" style={{
-  //                   marginTop: '20px'
-  //                 }}> Lucky #: </label>
-  //                 <input
-  //                   id="lucky_number"
-  //                   type="text"
-  //                   placeholder='(1-100)'
-  //                   onChange={(e) => {
-  //                     setFormLuckyNumber(parseInt(e.target.value));
-  //                   }}
-  //                   required
-  //                 />
-
-  //                 { !registerProcessRunning? 
-  //                 <ButtonView style={{marginTop: '40px'}}
-  //                   onClick={() => {
-  //                     registerFormValidate()
-  //                   }}
-  //                   >
-  //                      <span>
-  //                       Submit!
-  //                   </span>
-  //                 </ButtonView>: 
-  //                 <ButtonView style={{marginTop: '40px'}}>
-  //                   <span>
-  //                     <CircularProgress />
-  //                   </span>
-  //                 </ButtonView>
-                  
-                  
-  //                 }
-  //               </FixedForm>
-  //             :<></>
-  //           }
-  //           {
-  //             cardSelected !== ""?
-  //             <ImageView>
-  //               <h1>
-  //                 {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
-  //               </h1>
-  //               <img
-  //                 className="imageSelector"
-  //                 src={cardSelected}
-  //                 alt={"Hello"}
-  //                 loading="lazy"
-  //                 style={{
-  //                   height: (500).toString()+'px',
-  //                   width: (300).toString()+'px',
-  //                 }}
-  //                 key={uuidv4()}
-  //               />
-  //             </ImageView>
-  //               :<> </>
-  //           }
-  //         </BoxWrapper2>
-  //       </>
-  //     }
-  //   </div>
-    
-  // }
-
   return(
     <div>
       <NotificationMessageHelper />
       <ServerListWindow />
       <Loader />
-      {/* {!gameStarted ? totalUI: animationUI} */}
-      {/* {(!playerSelectedBool || gameStarted)? totalUI: animationUI} */}
-
-      {/* {totalUI} */}
-      {/* {(!playerSelectedBool || gameStarted)? totalUI: animationUI} */}
-
       {gameStarted?
         <>
         <NotificationMessageHelper />
@@ -1026,8 +454,6 @@ function NewFighters() {
         <ATMView />
         <InGameAssetPurchase />
         <BroadcastingAnnouncement />
-        {/* <RegisterNow /> */}
-        {/* <RegisterNewUserInGame /> */}
         <ControlsInfo />
         <Chat />
         <PlayersInfo />
@@ -1039,7 +465,7 @@ function NewFighters() {
       <div style={{
         display: 'flex',
         flexDirection: 'row',
-        marginTop: '5%'
+        marginTop: '2%'
       }}>
         {
           (bitFighterNFTData.length == 0 && (loggedInUserWalletAddress !== "") && bitfightersLoadedBool)?
@@ -1063,10 +489,13 @@ function NewFighters() {
           </Content>:
           (loggedInUserWalletAddress === "")?
           <Content>
-            <Title> Checking for Bitfighters </Title>
+            <Title> Checking for Bit Fighters </Title>
           </Content>
             :
-          <>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
             <BoxWrapper sx={{ flexGrow: 1}}>
               <Grid container spacing={0}>
 
@@ -1135,24 +564,12 @@ function NewFighters() {
                         <h1>
                           {data?.nick_name !== ""? data?.nick_name: "?"}
                         </h1>
-
-                        {/* <h1 style={{
-                          position:'relative',
-                          left: `-50px`,
-                        }}>
-                          {data.data.total_ap}
-                        </h1> */}
                         <img
-                          // src={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format`}
-                          // srcSet={`${data.data.first_frame_image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                           src={`${data.data.first_frame_image}`}
                           alt={"Hero"}
                           loading="lazy"
                           style={{
                             marginBottom: '20px',
-                            // marginTop: '-10px'
-                            // aspectRatio: `${15/16}`,
-                            // backgroundColor: 'red'
                           }}
                           onClick={() => {
                             handlePlayerSelection(data)
@@ -1167,6 +584,26 @@ function NewFighters() {
             </BoxWrapper>
 
             <BoxWrapper2>
+              {
+                cardSelected !== ""?
+                <ImageView>
+                  <h1>
+                    <span style={{fontSize: '30px', color: 'grey'}}>{playerSelected?.minted_id}</span>. {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+                  </h1>
+                  <img
+                    className="imageSelector"
+                    src={cardSelected}
+                    alt={"Hello"}
+                    loading="lazy"
+                    style={{
+                      height: (500).toString()+'px',
+                      width: (300).toString()+'px',
+                    }}
+                    key={uuidv4()}
+                  />
+                </ImageView>
+                :<> </>
+              }
               {
                 (cardSelected !== "" && selectedPlayer.nick_name === "")?
                   <FixedForm>
@@ -1203,7 +640,11 @@ function NewFighters() {
                     />
 
                     { !registerProcessRunning? 
-                    <ButtonView style={{marginTop: '40px'}}
+                    <ButtonView 
+                    style={{
+                      marginTop: '40px',
+                      marginBottom: '20px'
+                    }}
                       onClick={() => {
                         registerFormValidate()
                       }}
@@ -1212,7 +653,12 @@ function NewFighters() {
                           Submit!
                       </span>
                     </ButtonView>: 
-                    <ButtonView style={{marginTop: '40px'}}>
+                    <ButtonView 
+                    style={{
+                      marginTop: '40px',
+                      marginBottom: '20px'
+                    }}
+                    >
                       <span>
                         <CircularProgress />
                       </span>
@@ -1223,28 +669,8 @@ function NewFighters() {
                   </FixedForm>
                 :<></>
               }
-              {
-                cardSelected !== ""?
-                <ImageView>
-                  <h1>
-                    <span style={{fontSize: '30px', color: 'grey'}}>{playerSelected?.minted_id}</span>. {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
-                  </h1>
-                  <img
-                    className="imageSelector"
-                    src={cardSelected}
-                    alt={"Hello"}
-                    loading="lazy"
-                    style={{
-                      height: (500).toString()+'px',
-                      width: (300).toString()+'px',
-                    }}
-                    key={uuidv4()}
-                  />
-                </ImageView>
-                  :<> </>
-              }
             </BoxWrapper2>
-          </>
+          </div>
         }
       </div>
 
