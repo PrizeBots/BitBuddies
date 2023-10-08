@@ -16,6 +16,7 @@ import { Moralis } from "moralis";
 
 const appId = process.env.REACT_APP_MORALIS_APP_ID
 const serverUrl = process.env.REACT_APP_MORALIS_SERVER_URL
+// console.log("&&&&&&&&&&&&&&&&&& server url -- ", serverUrl)
 
 Moralis.start({
   serverUrl,

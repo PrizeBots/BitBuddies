@@ -9,7 +9,7 @@ import { ChangeCombinedQueueData, ChangeFightAnnouncementMessageFromServer, Chan
 // import { OtherPlayer } from "../characters/OtherPlayer";
 import { ClearFighterInfo, FightContinue, FightEnd, FightPreStart, FightStart, IfightersInfo, SetCurrentOtherPlayerFighting, SetCurrentPlayerFighting, SetFightersInfo, SetFocussedOnChat, ShowBrewEjectAnimationFromServer, ShowChatWindow, ShowFightConfirmationBox, ShowFightConfirmationStartTime, ShowFightConfirmationTime, ShowMagnetMoveBrew } from "../../stores/UserActions";
 import { IKeysInfo, INFTDataOfConnections, IPlayerData } from "../characters/IPlayer";
-import { SetCurrentGamePlayer } from "../../stores/PlayerData";
+import { SetCurrentGamePlayer, setNickName } from "../../stores/PlayerData";
 import { FightInfoText } from "../Components/FightInfoText";
 import { isNullOrUndefined } from "util";
 import phaserGame from "../../PhaserGame";
@@ -159,6 +159,7 @@ export default class Game extends Phaser.Scene {
     console.log("running init in game .. ", data)
     this.nftData = data.data;
     store.dispatch(SetCurrentGamePlayer(this.nftData))
+    store.dispatch(setNickName(this.nftData.nick_name))
     fetchPlayerWalletInfo(true)
     fetchPlayerAssets()
   }

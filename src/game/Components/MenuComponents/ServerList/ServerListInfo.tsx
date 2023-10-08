@@ -17,8 +17,8 @@ import { isNullOrUndefined } from 'util';
 const ButtonView = styled(Button)`
   span {
     color: black;
-    font-style: bold;
-    font-size: 15px;
+    // font-style: bold;
+    font-size: 10px;
     font-family:'Cooper Black', sans-serif;
   }
 
@@ -74,17 +74,13 @@ export function ServerListInfo() {
   );
 
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
-
-  // console.log("-=-- selected_player---", selectedPlayer)
-  // const [game_server, set_game_server ]= useState("Washington_DC")
   console.log("game servers info --", gameServersInfo)
-
+  // console.log("debug_selected_player ", selectedPlayer)
   const SelectGameServerAndLoadInfo = async (region: string) => {
     store.dispatch(SetGameServersData([]));
     ListGameServers(region)
     console.log("in SelectGameServerAndLoadInfo", region)
     store.dispatch(SetSelectedRegionofGameServer(region))
-    // set_game_server(region);
   }
 
   const fetchServerUrlAndConnect = async (room_id: string) => {

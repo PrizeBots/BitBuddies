@@ -527,7 +527,7 @@ export default class Network {
         }
 
         if (obj.event === "fight_end_announcement") {
-          // console.log(obj)
+          console.log(obj)
           // store.dispatch(ChangeFightAnnouncementMessageFromServer(obj.message))
           // store.dispatch(ChangeFightAnnouncementStateFromServer(true))
           const newObj: IfightersInfo = {...obj}
@@ -547,44 +547,88 @@ export default class Network {
             store.dispatch(SetCurrentPlayerFighting(false));
           }, 6000)
 
-          this.game.otherPlayers.forEach(_player => {
-            if (_player.wallet_address === newObj.player1.walletAddress || _player.wallet_address === newObj.player2.walletAddress) {
-              if (_player.gameObject && _player.wallet_address !== store.getState().web3store.userAddress) {
-                _player.gameObject.playerContainer.add(_player.gameObject.playerInfoIcon)
+          console.log("debug_fight_end_announcement", store.getState().web3store.userAddress)
+
+          const tempMyPlayer = this.game.otherPlayers.get(store.getState().web3store.player_id)
+          if (tempMyPlayer?.gameObject) {
+            if (
+              (newObj.player1 && store.getState().web3store.userAddress === newObj.player1.walletAddress)
+              || (newObj.player2 && store.getState().web3store.userAddress === newObj.player2.walletAddress)
+            ) {
+              console.log("debug_fight_end_announcement 1", store.getState().web3store.userAddress)
+              this.game.cameras.main.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
+              this.game.cameras.main.startFollow(tempMyPlayer.gameObject.sprite);
+              if (store.getState().web3store.userAddress === obj.winner) {
+                // show that card.. 
+                console.log("in here fight_end_announcement ",obj.winner )
+                setTimeout(() => {
+                  store.dispatch(ShowWinnerCardAtFightEnd(true))
+                }, 8000)
+                store.dispatch(ChangeFightAnnouncementMessageFromServer("You Win"))
+                store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+
+                store.dispatch(SetMovementAbilityOfPlayer(false))
+
+                setTimeout(() => {
+                  store.dispatch(SetMovementAbilityOfPlayer(true))
+                }, 3000)
+
               } else {
-                if (_player.gameObject && _player.wallet_address === store.getState().web3store.userAddress) {
-                  // this.game.cameras.main.startFollow(_player.gameObject.sprite, false, 0.2);
-                  this.game.cameras.main.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
-                  this.game.cameras.main.startFollow(_player.gameObject.sprite);
-                  if (store.getState().web3store.userAddress === obj.winner) {
-                    // show that card.. 
-                    console.log("in here fight_end_announcement ",obj.winner )
-                    setTimeout(() => {
-                      store.dispatch(ShowWinnerCardAtFightEnd(true))
-                    }, 8000)
-                    store.dispatch(ChangeFightAnnouncementMessageFromServer("You Win"))
-                    store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+                console.log("debug_fight_end_announcement 2", store.getState().web3store.userAddress)
+                store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
+                store.dispatch(ChangeFightAnnouncementStateFromServer(true))
 
-                    store.dispatch(SetMovementAbilityOfPlayer(false))
+                store.dispatch(SetMovementAbilityOfPlayer(false))
 
-                    setTimeout(() => {
-                      store.dispatch(SetMovementAbilityOfPlayer(true))
-                    }, 3000)
-
-                  } else {
-                    store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
-                    store.dispatch(ChangeFightAnnouncementStateFromServer(true))
-
-                    store.dispatch(SetMovementAbilityOfPlayer(false))
-
-                    setTimeout(() => {
-                      store.dispatch(SetMovementAbilityOfPlayer(true))
-                    }, 3000)
-                  }
-                }
+                setTimeout(() => {
+                  store.dispatch(SetMovementAbilityOfPlayer(true))
+                }, 3000)
               }
             }
-          })
+          }
+
+          // this.game.otherPlayers.forEach(_player => {
+          //   if (
+          //     (newObj.player1.walletAddress &&
+          //     _player.wallet_address === newObj.player1.walletAddress) || 
+          //     (newObj.player2.walletAddress || _player.wallet_address === newObj.player2.walletAddress)
+          //   ) {
+          //     if (_player.gameObject && _player.wallet_address !== store.getState().web3store.userAddress) {
+          //       _player.gameObject.playerContainer.add(_player.gameObject.playerInfoIcon)
+          //     } else {
+          //       if (_player.gameObject && _player.wallet_address === store.getState().web3store.userAddress) {
+          //         // this.game.cameras.main.startFollow(_player.gameObject.sprite, false, 0.2);
+          //         this.game.cameras.main.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
+          //         this.game.cameras.main.startFollow(_player.gameObject.sprite);
+          //         if (store.getState().web3store.userAddress === obj.winner) {
+          //           // show that card.. 
+          //           console.log("in here fight_end_announcement ",obj.winner )
+          //           setTimeout(() => {
+          //             store.dispatch(ShowWinnerCardAtFightEnd(true))
+          //           }, 8000)
+          //           store.dispatch(ChangeFightAnnouncementMessageFromServer("You Win"))
+          //           store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+
+          //           store.dispatch(SetMovementAbilityOfPlayer(false))
+
+          //           setTimeout(() => {
+          //             store.dispatch(SetMovementAbilityOfPlayer(true))
+          //           }, 3000)
+
+          //         } else {
+          //           store.dispatch(ChangeFightAnnouncementMessageFromServer("You Lose"))
+          //           store.dispatch(ChangeFightAnnouncementStateFromServer(true))
+
+          //           store.dispatch(SetMovementAbilityOfPlayer(false))
+
+          //           setTimeout(() => {
+          //             store.dispatch(SetMovementAbilityOfPlayer(true))
+          //           }, 3000)
+          //         }
+          //       }
+          //     }
+          //   }
+          // })
 
           this.game.fighterOtherPlayer = "";
         }

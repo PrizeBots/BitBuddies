@@ -3,28 +3,20 @@ import { LoadingButton } from '@mui/lab';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Box, Button, CircularProgress, FormControl, Grid, ImageList, ImageListItem, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, Snackbar, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
-import Carousel from 'react-material-ui-carousel'
 import phaserGame from '../PhaserGame'
 import Bootstrap from '../game/scenes/Bootstrap'
 import { Link, useNavigate } from 'react-router-dom';
 import Chat from '../game/Components/Chat';
-import CancelIcon from '@mui/icons-material/Cancel';
-import Utils from './Utils';
 import { v4 as uuidv4 } from 'uuid';
 import { SetCurrentGamePlayer, setNickName } from '../stores/PlayerData';
 import { IPlayerData } from '../game/characters/IPlayer';
 import { PlayersInfo } from '../game/Components/PlayersInfo';
 import { SendingFriendRequest } from '../game/Components/SendingFriendRequest';
 import { QueueAddInfoWindow } from '../game/Components/QueueAddInfoWindow';
-// import { BroadCastingMessage } from '../game/Components/BroadcastingInfo/BroadCastingMessageCenter';
 import { BroadcastingAnnouncement } from '../game/Components/BroadcastingInfo/BroadcastingAnnouncement';
 import { BroadCastCombiner2 } from '../game/Components/BroadCastInfo2/BroadcastCombiner';
-import { RegisterNow } from '../game/Components/RegisterNow';
-import { RegisterNewUserInGame } from '../game/Components/RegisterNewUserInGame';
 import { ControlsInfo } from '../game/Components/ControlsInfo';
 import { isNullOrUndefined } from 'util';
-import { getSystemInfo } from '../utils/systemInfo';
-// import { CoinsView } from '../game/Components/CoinsView';
 import { ATMView } from '../game/Components/ATMView';
 import NewMenuSideBar from '../game/Components/NewMenuSideBar';
 import { InventoryView } from '../game/Components/InventoryView/InventoryView';
@@ -38,14 +30,12 @@ import { Loader } from './components/Loader/Loader';
 import { SetGameLoadingState, SetSelectedGameServerURL, SetShowGameServersList } from '../stores/WebsiteStateStore';
 import { ListGameServers } from '../utils/game_server_utils';
 import { ServerListWindow } from '../game/Components/MenuComponents/ServerList/ServerListWindow';
-import REACT_APP_LOBBY_WEBSOCKET_SERVER from '../game/configs';
 import { SetFailureNotificationBool, SetFailureNotificationMessage } from '../stores/NotificationStore';
 import { registerBitfighter } from '../contract';
 import { fetchAllNFTsFromDbEntries } from '../hooks/FetchNFT';
 import { setTotalNFTData, setNFTDetails } from '../stores/BitFighters';
 import Footer from './Footer';
 import NewWinnersReceipt from '../game/Components/MenuComponents/NewWinnersReceipt';
-import FightersNewCenterPart from './FightersNewCenterPart';
 // import TextView from '../game/Components/TextView';
 // import { MyInfoIcon } from '../game/Components/InfoIcon';
 
@@ -96,6 +86,26 @@ const ButtonView = styled(Button)`
   height: 60px;
 `;
 
+const ButtonView2 = styled(Button)`
+  span {
+    color: #a7a5a5;;
+    font-style: bold;
+    font-size: 20px;
+    font-family:'Cooper Black', sans-serif;
+  }
+  border-radius: 20px;
+
+  background-color: #9c341a;
+
+  &:hover {
+    background-color: #852d17;
+  }
+
+  width: 200px;
+  height: 30px;
+  margin: 10px;
+`;
+
 
 const FixedForm = styled.div`
   position: absolute;
@@ -106,8 +116,8 @@ const FixedForm = styled.div`
   // margin: 10%;
 
   background: #d2d3e1;
-  width: 400px;
-  height: 30vh;
+  width: 300px;
+  // height: 35vh;
 
   border: 5px solid #000000;
   border-radius: 10px;
@@ -155,30 +165,27 @@ const FixedForm = styled.div`
   }
 `
 
-
 const BoxWrapper2 = styled(Box)`
   overflow-y: scroll;
   width: 33vw;
+  max-height: 90vh;
   // max-width: 33vw;
   position: relative;
   display:flex;
   flex-direction:column;
   align-items:center;
   gap: 20px;
-  // background: #ffff;
-
-  img {
-    // margin-top: 50px;
-  }
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 
   h2 {
     font-family:'Cooper Black', sans-serif;
     font-style: bold;
-    font-size: 30px;
+    font-size: 20px;
     color: black;
     line-height: 75%;
     margin: 10px;
-    margin-top: 25px;
+    margin-top: 10px;
   }
 `;
 
@@ -291,23 +298,21 @@ function NewFighters() {
   
   const gameServerReginoSelected = useAppSelector((state) => state.websiteStateStore.region)
   console.log("--------total_data-------", bitFightersTotalData)
-  // console.log("--------total_data2-------", bitFighterNFTData)
 
   const selectedPlayer = useAppSelector(
     (state) => state.playerDataStore.current_game_player_info
   );
+
+  // console.log("debug_selected_player_in_fightersNew", selectedPlayer)
   const ProfilemenuClicked = useAppSelector((state) => state.userPathStore.ShowMenuBox)
   const gameStarted = useAppSelector((state) => state.playerDataStore.gameStarted)
   const [formNickNameame, setFormNickName] = useState("")
   const [formLuckyNumber, setFormLuckyNumber] = useState(1)
 
-  // const [game_server, set_game_server ]= useState("Washington_DC")
-
   const [registerProcessRunning, setRegisterProcessRunning] = useState(false)
 
   const [playerSelectedBool, setPlayerSelectedBool] = useState(false);
   const [playerSelected, setPlayerSelected] = useState<IPlayerData>();
-  // const [gameStarted, setGameStarted] = useState(false);
   const [cardSelected, setCardSelected] = useState("")
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
   
@@ -588,7 +593,7 @@ function NewFighters() {
                 cardSelected !== ""?
                 <ImageView>
                   <h1>
-                    <span style={{fontSize: '30px', color: 'grey'}}>{playerSelected?.minted_id}</span>. {playerSelected?.nick_name !== ""? playerSelected?.nick_name: ""}
+                    <span style={{fontSize: '30px', color: 'grey'}}>{playerSelected?.minted_id}</span>. {selectedPlayer.nick_name !== ""? selectedPlayer.nick_name: "?"}
                   </h1>
                   <img
                     className="imageSelector"
@@ -596,8 +601,8 @@ function NewFighters() {
                     alt={"Hello"}
                     loading="lazy"
                     style={{
-                      height: (500).toString()+'px',
-                      width: (300).toString()+'px',
+                      height: (400).toString()+'px',
+                      width: (240).toString()+'px',
                     }}
                     key={uuidv4()}
                   />
@@ -612,7 +617,7 @@ function NewFighters() {
                     </h2>
 
                     <label htmlFor="nick_name" style={{
-                      marginTop: '20px'
+                      margin: '5px'
                     }}> Name: </label>
                     <input
                       id="nick_name"
@@ -627,7 +632,7 @@ function NewFighters() {
                     <br />
 
                     <label htmlFor="lucky_number" style={{
-                      marginTop: '20px'
+                      margin: '5px'
                     }}> Lucky #: </label>
                     <input
                       id="lucky_number"
@@ -640,11 +645,7 @@ function NewFighters() {
                     />
 
                     { !registerProcessRunning? 
-                    <ButtonView 
-                    style={{
-                      marginTop: '40px',
-                      marginBottom: '20px'
-                    }}
+                    <ButtonView2
                       onClick={() => {
                         registerFormValidate()
                       }}
@@ -652,17 +653,18 @@ function NewFighters() {
                         <span>
                           Submit!
                       </span>
-                    </ButtonView>: 
-                    <ButtonView 
-                    style={{
-                      marginTop: '40px',
-                      marginBottom: '20px'
-                    }}
-                    >
-                      <span>
-                        <CircularProgress />
-                      </span>
-                    </ButtonView>
+                    </ButtonView2>: 
+                    <div>
+                      <CircularProgress />
+                    </div>
+                    
+                    // <ButtonView2 style={{
+                    //   height: `20px`
+                    // }}>
+                    //   {/* <span> */}
+                    //     <CircularProgress />
+                    //   {/* </span> */}
+                    // </ButtonView2>
                     
                     
                     }
