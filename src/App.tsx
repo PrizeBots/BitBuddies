@@ -93,7 +93,7 @@ function App() {
       // TODO: call update for all of the fight ids in queuue
       
       // console.log("debug_game_state ", gameStarted, counter)
-      if (counter >20) {
+      if (counter >10) {
         // if (!gameStarted) {
         //   if (localStorage.getItem("game_state")=== "start") {
         //     ListGameServers(gameServerReginoSelected, "no_create")

@@ -208,3 +208,8 @@ td {
     /* 1px 25px 35px rgba(16,16,16,0.2), */
     10px 10px 10px rgba(38, 37, 37, 0.4);
 }
+
+
+.bg-ORANGE{
+  background-color: #ed764f;
+}

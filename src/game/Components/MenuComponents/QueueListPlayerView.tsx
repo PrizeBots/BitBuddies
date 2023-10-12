@@ -16,12 +16,7 @@ import { parseWBTCBalanceV3 } from '../../../utils/web3_utils';
 import { useEffect, useState } from 'react';
 // import { ChangeBetWindowViewState, ChangeBetingOnPlayerData } from '../../../stores/UserActions';
 import { Box, Button, Divider, Grid, InputBase, ListItemButton } from '@mui/material';
-import { BetOnOtherPlayerAndFightId, fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
 import { SetFailureNotificationBool, SetFailureNotificationMessage } from '../../../stores/NotificationStore';
-import { type } from 'os';
-// import { QueueSingleEntry } from '../../../utils/interface';
-// import { BetData } from '../../../utils/fight_utils';
-
 
 function lotsOfStringGenrator() {
   const arr: string[] = []
@@ -174,9 +169,11 @@ interface QueueWindowInfo {
 export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
   const queueDetailsInfo = useAppSelector((state) => state.queueDetailedInfo.queue_to_fight_info_map)
   const playersBetInfo = useAppSelector((state) => state.userPathStore.playersBetInfo)
+  const chatting = useAppSelector((state) => state.userActionsDataStore.focussedOnChat)
 
   const game = phaserGame.scene.keys.game as Game
   const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
+  console.log("debug_chatting", chatting)
 
   let required_bet_info_index = -1;
   for(let i=0; i < playersBetInfo.length; i++) {
@@ -302,7 +299,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
             
 
         </BetInfoView>
-{/* 
+
         <FormInputView>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -315,6 +312,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
                     type='number'
                     fullWidth
                     autoFocus={
+                      !chatting&&
                       queueWindowData.extra_data.fight_id_selected===queueWindowData.fight_id 
                       && queueWindowData.wallet===queueWindowData.extra_data.player_id_selected 
                       && queueWindowData.extra_data.last_edit_bet
@@ -338,6 +336,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
                     type='number'
                     fullWidth
                     autoFocus={
+                      !chatting &&
                       queueWindowData.extra_data.fight_id_selected===queueWindowData.fight_id 
                       && queueWindowData.wallet===queueWindowData.extra_data.player_id_selected 
                       && !queueWindowData.extra_data.last_edit_bet
@@ -359,9 +358,9 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
 
           
         </FormInputView>
-         */}
+        
 
-        {/* <div style={{
+        <div style={{
           display: "flex",
           flexDirection: 'column',
           justifyContent: 'column',
@@ -380,7 +379,7 @@ export default function QueueListPlayerView(queueWindowData: QueueWindowInfo) {
           >
             {queueWindowData.extra_data.betState}
           </Button>
-        </div> */}
+        </div>
       </ImageAndTextView>
     </div>
   )

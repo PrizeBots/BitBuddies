@@ -20,8 +20,6 @@ import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 // import Badge from '@mui/material/Badge';
 import { getEllipsisTxt } from "../utils";
 import { ChangeShowMenuBox, ChangeShowQueueBox } from "../stores/UserWebsiteStore";
-import CompetitionTime from "./CompetitionTime";
-import { SetLeaderBoardOpen } from "../stores/WebsiteStateStore";
 
 const appId = process.env.REACT_APP_MORALIS_APP_ID;
 const serverUrl = process.env.REACT_APP_MORALIS_SERVER_URL;
@@ -450,7 +448,12 @@ function Header() {
                   </Tooltip>
                 </li>
 
-                <li
+                <div style={{
+                  width: '100px',
+                  // background: 'yellow'
+                }}>
+
+                  <li
                   className="nav-item"
                   key={uuidv4()}
                   style={{
@@ -458,15 +461,19 @@ function Header() {
                     justifyContent: "center",
                     display: "flex",
                     flexDirection: "row",
+                    // background: 'red'
                   }}
                 >
-                  {currentServerLatency.toString() + " ms"}
+                  {currentServerLatency.toString() + "ms"}
                 </li>
+                </div>
+
+                
 
                 <li key={uuidv4()}>
                   <div
                     style={{
-                      width: 20,
+                      width: 10,
                     }}
                   ></div>
                 </li>
@@ -483,6 +490,20 @@ function Header() {
                 >
                   {totalConnections.toString()}
                 </li>
+
+                <li key={uuidv4()}>
+                  <div
+                    style={{
+                      width: 30,
+                    }}
+                  ></div>
+                </li>
+
+                {/* <li className="nav-item" 
+                key={999999998}
+                >
+                  <XpProgressBar />
+                </li> */}
               </div>
             ) : (
               <></>
@@ -490,6 +511,15 @@ function Header() {
           </ul>
 
           <div className="navbar-collapse collapse w-100 order-1 dual-collapse2">
+{/* 
+            {HistoryPath === "gamePlay" ? (
+              <div key={999999998}>
+
+                  <XpProgressBar />
+              </div>
+            ) : (
+              <></>
+            )} */}
             <ul className="navbar-nav ms-auto" id="moralis-connector-ul">
               <ul
                 className="navbar-nav"

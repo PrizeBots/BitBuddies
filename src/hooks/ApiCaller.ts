@@ -902,3 +902,23 @@ export const CheckIfAcceptableNickName = async (nick_name: string) => {
   // store.dispatch(SetLeaderBoardData(output.data))
   // return output.data;
 }
+
+export const FetchWalletLog = async () => {
+  if (store.getState().authStore.player_auth_token === "") {
+    console.log("nill user address");
+    return
+  }
+  const result = await fetch(`${REACT_APP_BASE_API_ANAKIN_URL}/v1/wallet/logs/fetch/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': store.getState().authStore.player_auth_token
+    },
+  })
+  const output = await result.json();
+  if (result.status!== 200) {
+    return "false"
+  }
+  console.log("output in FetchWalletLog --", output)
+  return output;
+}

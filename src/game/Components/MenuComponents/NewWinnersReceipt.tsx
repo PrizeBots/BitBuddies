@@ -265,26 +265,32 @@ export default function NewWinnersReceipt() {
                 <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
-                    <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 5000) } bits</h4>:
-                    <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips - 5000) } bits </h4>
+                    <>
+                      <h4>Your Max Bet: { parseWBTCBalanceV3( p1_self_bet - 5000) } bits</h4>
+                      <h4>Their Max Bet: { parseWBTCBalanceV3( p2_self_bet - 5000) } bits </h4>
+                    </>:
+                    <>
+                      <h4>Your Max Bet: { parseWBTCBalanceV3( p2_self_bet - 5000) } bits</h4>
+                      <h4>Their Max Bet: { parseWBTCBalanceV3( p1_self_bet - 5000) } bits </h4>
+                    </>
                   }
                 </div>
                 
-                <div>
+                {/* <div>
                   {
                     (store.getState().web3store.userAddress !== store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
                     <h4>Your Max Bet: { parseWBTCBalanceV3(p1_win_pot - p1_self_bet - p1_total_tips - 5000) } bits</h4>:
                     <h4>Their Max Bet: { parseWBTCBalanceV3(p2_win_pot - p2_self_bet - p2_total_tips - 5000) } bits </h4>
                   }
-                </div>
+                </div> */}
 
-                {/* <div>
+                <div>
                   {
                     (store.getState().web3store.userAddress === store.getState().userActionsDataStore.fightersInfo.player1.walletAddress) ?
                     <h4>Your Total Tip: { parseWBTCBalanceV3(p1_total_tips) } bits</h4>:
                     <h4>Your Total Tip: { parseWBTCBalanceV3(p2_total_tips) } bits </h4>
                   }
-                </div> */}
+                </div>
 
                 <div>
                   {
@@ -310,7 +316,8 @@ export default function NewWinnersReceipt() {
                   <h4> 1% Prize Pool - {(parseWBTCBalanceV4(p1_win_pot) * 0.01).toFixed(2)} </h4>
                   <h4> 1% JackPot - {(parseWBTCBalanceV4(p1_win_pot) * 0.01).toFixed(2)} </h4>
                   <DottedDivider />
-                </>:
+                </>
+                :
                 <>
                   <h4> 10% PPS - {(parseWBTCBalanceV4(p2_win_pot) * 0.1).toFixed(2)} </h4>
                   <DottedDivider />

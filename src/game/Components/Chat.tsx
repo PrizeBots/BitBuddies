@@ -321,6 +321,7 @@ export default function Chat() {
     setInputValue('')
     if (val) {
       inputRef.current?.blur()
+      dispatch(SetFocussedOnChat(false))
       
       setlastMessageSubMittedTime(new Date().getTime())
       startTimer()
@@ -373,18 +374,12 @@ export default function Chat() {
         
           {showChatWindow ? (
             <Wrapper 
-    //         onMouseOver={() => {
-    //   dispatch(TurnMouseClickOff(true))
-    // }}
-    // onMouseOut={() => {
-    //   dispatch(TurnMouseClickOff(false))
-    // }}
-            onMouseOver={() => {
-              dispatch(SetMouseClickControlChat(true))
-            }}
-            onMouseOut={() => {
-              dispatch(SetMouseClickControlChat(false))
-            }}
+              onMouseOver={() => {
+                dispatch(SetMouseClickControlChat(true))
+              }}
+              onMouseOut={() => {
+                dispatch(SetMouseClickControlChat(false))
+              }}
             >
 
               <ChatHeader>
@@ -393,7 +388,6 @@ export default function Chat() {
                   aria-label="close dialog"
                   className="close"
                   onClick={() => 
-                    // (setShowChat(false))
                     {
                       dispatch(ShowChatWindow(false))
                       dispatch(SetFocussedOnChat(false))
@@ -415,11 +409,11 @@ export default function Chat() {
                 {showEmojiPicker && (
                   <EmojiPickerWrapper
                     onMouseOver={() => {
-              dispatch(SetMouseClickControlChat(true))
-            }}
-            onMouseOut={() => {
-              dispatch(SetMouseClickControlChat(false))
-            }}
+                      dispatch(SetMouseClickControlChat(true))
+                    }}
+                    onMouseOut={() => {
+                      dispatch(SetMouseClickControlChat(false))
+                    }}
                   >
                     <Picker
                       theme="dark"
@@ -427,11 +421,11 @@ export default function Chat() {
                       showPreview={false}
 
                       onMouseOver={() => {
-              dispatch(SetMouseClickControlChat(true))
-            }}
-            onMouseOut={() => {
-              dispatch(SetMouseClickControlChat(false))
-            }}
+                        dispatch(SetMouseClickControlChat(true))
+                      }}
+                      onMouseOut={() => {
+                        dispatch(SetMouseClickControlChat(false))
+                      }}
                       // onSelect={(emoji: any) => {
                       //   console.log("emoji selected -- ", emoji)
                       //   setInputValue(inputValue + emoji.native)
@@ -467,19 +461,19 @@ export default function Chat() {
                   value={inputValue}
                   onKeyDown={handleKeyDown}
                   onChange={handleChange}
-                  onFocus={() => {
-                    if (!focussedOnChat) {
-                      console.log("on focused focused --", focussedOnChat, showChatWindow)
-                      // setFocused(true)
-                      dispatch(SetFocussedOnChat(true))
-                      // dispatch(SetMouseClickControlChat(true))
-                    }
-                  }}
+                  // onFocus={() => {
+                  //   if (!focussedOnChat) {
+                  //     console.log("on focused focused --", focussedOnChat, showChatWindow)
+                  //     // setFocused(true)
+                  //     dispatch(SetFocussedOnChat(true))
+                  //     // dispatch(SetMouseClickControlChat(true))
+                  //   }
+                  // }}
                   onBlur={() => {
                     console.log("on blur focused --", focussedOnChat, showChatWindow)
                     // console.log("on blur triggered,, ")
                     // setFocused(false)
-                    // dispatch(SetFocussedOnChat(false))
+                    dispatch(SetFocussedOnChat(false))
                     // game.enableKeyBoard()
                     dispatch(SetMouseClickControlChat(false))
                   }}
@@ -495,11 +489,11 @@ export default function Chat() {
             </Wrapper>
           ): (
             <Wrapper2 onMouseOver={() => {
-      dispatch(TurnMouseClickOff(true))
-    }}
-    onMouseOut={() => {
-      dispatch(TurnMouseClickOff(false))
-    }}>
+                dispatch(TurnMouseClickOff(true))
+              }}
+              onMouseOut={() => {
+                dispatch(TurnMouseClickOff(false))
+              }}>
               <FabWrapper>
                 <Fab
                   color="info"

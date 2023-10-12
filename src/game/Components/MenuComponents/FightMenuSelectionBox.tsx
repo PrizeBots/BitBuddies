@@ -143,7 +143,7 @@ export default function FightMenuSelectionBox(data: any) {
           </Button>
 
 
-          {/* <Button
+          <Button
             variant="contained" 
             color="primary"
             onClick={() => {
@@ -155,7 +155,7 @@ export default function FightMenuSelectionBox(data: any) {
             <span style={{
               color: 'aliceblue'
             }}>Bet</span>
-          </Button> */}
+          </Button>
         </FriendRequestBox2>
       </Wrapper>
     </div>

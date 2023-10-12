@@ -3,7 +3,7 @@ import { setNFTDetails, setNFTLoadedBool, setTotalNFTData } from '../stores/BitF
 import { validation } from '../utils/Validation';
 import { ethers } from "ethers";
 import { ChangeAuthTOken, ChangeLoggerMessage, ChangeUserData, ChangeValidUserState, USER_DETAILS } from '../stores/UserWebsiteStore';
-import { checkIfUserSignedMetamask, fetchNFTsFromDB, fetchUserDetails, loginAndAuthenticateUser, postUserSignedMessage, updateNFTsInDB } from '../hooks/ApiCaller';
+import { checkIfUserSignedMetamask, fetchNFTsFromDB, loginAndAuthenticateUser, postUserSignedMessage, updateNFTsInDB } from '../hooks/ApiCaller';
 import store from '../stores';
 import { Login, SetConnectedWeb3 } from '../stores/Web3Store';
 import MetaMaskOnboarding from '@metamask/onboarding';

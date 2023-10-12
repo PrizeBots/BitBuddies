@@ -22,7 +22,7 @@ import { SetPlayerIdForGame } from "../../stores/Web3Store";
 import { HQ } from "./views/Hq";
 import { getBalances } from "../../utils/web3_utils";
 // import { SetAssetsInfo } from "../../stores/Web3StoreBalances";
-import { fetchPlayerAssets, fetchPlayerWalletInfo } from "../../hooks/ApiCaller";
+import { fetchPlayerAssets, fetchPlayerWalletInfo, FetchWalletLog } from "../../hooks/ApiCaller";
 import { updateBetInfOfPlayer } from "../../utils/fight_utils";
 import  { SetServerLatency } from "../../stores/MetaInfoStore";
 import { SetCurrentFightId, SetFightWinner } from "../../stores/FightsStore";
@@ -281,6 +281,7 @@ export default class Game extends Phaser.Scene {
 
     store.dispatch(ChangePath("gamePlay"));
     updateBetInfOfPlayer()
+    FetchWalletLog()
 
     // console.log(" game created .. ", data, data.key, this.nftData);
     // createCharacterAnims(this.anims)
@@ -296,10 +297,10 @@ export default class Game extends Phaser.Scene {
     store.dispatch(SetShowGameServersList(false));
     // this.lobbySocketConnection = new WebSocket(REACT_APP_LOBBY_WEBSOCKET_SERVER+ "/roomid")
 
-    // this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
+    this.lobbySocketConnection = new WebSocket("ws://localhost:9001/")
 
     // console.log("-game_server_url--", store.getState().websiteStateStore.selected_server_url)
-    this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
+    // this.lobbySocketConnection = new WebSocket(`${store.getState().websiteStateStore.selected_server_url}/${store.getState().websiteStateStore.selected_roomId}`)
     this.lobbySocketConnection.addEventListener("open", (event) => {
       this.lobbySocketConnected = true;
       // console.log("connected ... ", event)
