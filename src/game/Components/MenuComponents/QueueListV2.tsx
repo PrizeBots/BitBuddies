@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { parseWBTCBalanceV3 } from '../../../utils/web3_utils';
 import { useState } from 'react';
 // import { ChangeBetWindowViewState, ChangeBetingOnPlayerData } from '../../../stores/UserActions';
-import {  updateSingleBetInfOfPlayer } from '../../../utils/fight_utils';
+import {  updateBetInfOfPlayer } from '../../../utils/fight_utils';
 import { IQueueCombined } from '../../../stores/UserWebsiteStore';
 import { Box, Button, Divider, Grid, InputBase, ListItemButton } from '@mui/material';
 import { BetOnOtherPlayerAndFightId, fetchPlayerWalletInfo } from '../../../hooks/ApiCaller';
@@ -293,12 +293,12 @@ export default function QueueListV2() {
       setBetState("Confirmed")
       await fetchPlayerWalletInfo()
       setTimeout(() => {
-        updateSingleBetInfOfPlayer(fight_id_selected)
-        // updateBetInfOfPlayer()
+        // updateSingleBetInfOfPlayer(fight_id_selected)
+        updateBetInfOfPlayer()
         setBetState("Bet")
         setBetOnPlayer(0)
         setTipOnPlayer(0)
-      }, 1000)
+      }, 2000)
     } else {
       alert(data)
       setBetState("Bet")
@@ -504,7 +504,7 @@ export default function QueueListV2() {
 
                         <Grid item xs={5.5}>
                           <QueueListPlayerView 
-                            player_id={"p1"}
+                            player_id={"p2"}
                             fight_id={data.fight_id} 
                             wallet={data.p2_wallet} 
                             nick_name={data.p2_nick_name} 
