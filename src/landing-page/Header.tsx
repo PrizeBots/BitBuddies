@@ -94,7 +94,7 @@ function Header() {
   const [seconds, setSeconds] = useState(0);
 
   // const deadline = "September, 3, 2023";
-  const deadline = new Date(2023,8,3,23,59,0);
+  const deadline = new Date(2023, 8, 3, 23, 59, 0);
 
   const getTime = () => {
     const time = deadline.getTime() - Date.now();
@@ -156,7 +156,7 @@ function Header() {
     // }, 30 * 1000)
   };
 
-  
+
   useEffect(() => {
     (async function () {
       console.log("executing this..");
@@ -323,7 +323,7 @@ function Header() {
   //                 </button>
   //               </li> */}
 
-              
+
 
   //             {/* <li key={3}>
   //               <hr></hr>
@@ -404,6 +404,12 @@ function Header() {
               </Link>
             </li>
 
+            <li className="nav-item" key={uuidv4()}>
+              <Link className="nav-link" to="https://joepegs.com/collections/avalanche/bit-fighters-gen-0" target="_blank">
+                <div className="cooper-black-tab">Marketplace</div>
+              </Link>
+            </li>
+
             {/* <li className="nav-item" key={uuidv4()} >
               <Link 
                 className="nav-link" 
@@ -454,21 +460,21 @@ function Header() {
                 }}>
 
                   <li
-                  className="nav-item"
-                  key={uuidv4()}
-                  style={{
-                    color: "grey",
-                    justifyContent: "center",
-                    display: "flex",
-                    flexDirection: "row",
-                    // background: 'red'
-                  }}
-                >
-                  {currentServerLatency.toString() + "ms"}
-                </li>
+                    className="nav-item"
+                    key={uuidv4()}
+                    style={{
+                      color: "grey",
+                      justifyContent: "center",
+                      display: "flex",
+                      flexDirection: "row",
+                      // background: 'red'
+                    }}
+                  >
+                    {currentServerLatency.toString() + "ms"}
+                  </li>
                 </div>
 
-                
+
 
                 <li key={uuidv4()}>
                   <div
@@ -511,7 +517,7 @@ function Header() {
           </ul>
 
           <div className="navbar-collapse collapse w-100 order-1 dual-collapse2">
-{/* 
+            {/* 
             {HistoryPath === "gamePlay" ? (
               <div key={999999998}>
 
@@ -573,12 +579,12 @@ function Header() {
 
                 <li className="nav-item" key={uuidv4()}>
                   <Tooltip title="Follow Us on Telegram">
-                      <a
-                        href="https://t.me/+ThxhkzeHFNA3Mjdh"
-                        target="_blank"
-                      >
-                        <Telegram color="primary" />
-                      </a>
+                    <a
+                      href="https://t.me/+ThxhkzeHFNA3Mjdh"
+                      target="_blank"
+                    >
+                      <Telegram color="primary" />
+                    </a>
                   </Tooltip>
                 </li>
 
@@ -669,132 +675,132 @@ function Header() {
                     }}
                   ></div>
                 </li>
-              
+
 
                 {/* {moralisButtonUI ? moralisButtonUI : <>Cool</>} */}
 
-                  <>
-                {
-                  userAddress !== ""?
-                  <div
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      alignItems: "flex-end",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {HistoryPath === "gamePlay" ? (
-                      <li className="nav-item navbar-left dropdown" key={uuidv4()}>
-                        <div>
-                          <a
-                            href="#"
-                            onClick={() => {
-                              console.log("clicking on profile pic ", ShowMenuBoxRedux);
-                              store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
-                              store.dispatch(ChangeShowQueueBox(false));
-                            }}
-                          >
-                            <img
-                              src={selectedPlayer.data.profile_image}
-                              className="rounded-circle"
-                              alt="."
-                              height="30"
-                              width="40"
-                              style={{
-                                marginTop: "-10px",
-                              }}
-                            ></img>
-                            <ArrowDropDownIcon color="action"></ArrowDropDownIcon>
-                          </a>
-                        </div>
-                      </li>
-                    ) : (
-                      <li className="nav-item navbar-left dropdown" key={uuidv4()}>
-                        <a
-                          className="nav-link dropdown-toggle"
-                          href="#"
-                          id="navbarDropdown"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          {bitFightersTotalData.length > 0 &&
-                          bitFightersTotalData[0].data &&
-                          bitFightersTotalData[0].data.profile_image ? (
-                            <img
-                              src={bitFightersTotalData[0].data.profile_image}
-                              className="rounded-circle"
-                              alt="Cinque Terre"
-                              height="30"
-                              width="40"
-                              style={{
-                                marginTop: "-10px",
-                              }}
-                            ></img>
-                          ) : (
-                            <img
-                              src="bitfgihter_assets/paris.jpeg"
-                              className="rounded-circle"
-                              alt="Cinque Terre"
-                              height="30"
-                              width="30"
-                            ></img>
-                          )}
-                        </a>
-                        <ul
-                          className="dropdown-menu dropdown-menu-end"
-                          aria-labelledby="navbarDropdown"
-                          onClick={event => event.preventDefault()}
-                        >
-                          <li onClick={event => event.preventDefault()}>
-                            <a className="dropdown-item" href="#">
-                              {" "}
-                              Connected Wallet{" "}
-                            </a>
+                <>
+                  {
+                    userAddress !== "" ?
+                      <div
+                        style={{
+                          flex: 1,
+                          flexDirection: "row",
+                          alignItems: "flex-end",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {HistoryPath === "gamePlay" ? (
+                          <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+                            <div>
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  console.log("clicking on profile pic ", ShowMenuBoxRedux);
+                                  store.dispatch(ChangeShowMenuBox(!ShowMenuBoxRedux));
+                                  store.dispatch(ChangeShowQueueBox(false));
+                                }}
+                              >
+                                <img
+                                  src={selectedPlayer.data.profile_image}
+                                  className="rounded-circle"
+                                  alt="."
+                                  height="30"
+                                  width="40"
+                                  style={{
+                                    marginTop: "-10px",
+                                  }}
+                                ></img>
+                                <ArrowDropDownIcon color="action"></ArrowDropDownIcon>
+                              </a>
+                            </div>
                           </li>
-                          <li onClick={event => event.preventDefault()}>
-                            <a className="dropdown-item" href="#" key={2}>
-                              <span style={{ color: "red" }}>
-                                {getEllipsisTxt(userAddress)}
-                              </span>{" "}
+                        ) : (
+                          <li className="nav-item navbar-left dropdown" key={uuidv4()}>
+                            <a
+                              className="nav-link dropdown-toggle"
+                              href="#"
+                              id="navbarDropdown"
+                              role="button"
+                              data-bs-toggle="dropdown"
+                            >
+                              {bitFightersTotalData.length > 0 &&
+                                bitFightersTotalData[0].data &&
+                                bitFightersTotalData[0].data.profile_image ? (
+                                <img
+                                  src={bitFightersTotalData[0].data.profile_image}
+                                  className="rounded-circle"
+                                  alt="Cinque Terre"
+                                  height="30"
+                                  width="40"
+                                  style={{
+                                    marginTop: "-10px",
+                                  }}
+                                ></img>
+                              ) : (
+                                <img
+                                  src="bitfgihter_assets/paris.jpeg"
+                                  className="rounded-circle"
+                                  alt="Cinque Terre"
+                                  height="30"
+                                  width="30"
+                                ></img>
+                              )}
                             </a>
-                          </li>
+                            <ul
+                              className="dropdown-menu dropdown-menu-end"
+                              aria-labelledby="navbarDropdown"
+                              onClick={event => event.preventDefault()}
+                            >
+                              <li onClick={event => event.preventDefault()}>
+                                <a className="dropdown-item" href="#">
+                                  {" "}
+                                  Connected Wallet{" "}
+                                </a>
+                              </li>
+                              <li onClick={event => event.preventDefault()}>
+                                <a className="dropdown-item" href="#" key={2}>
+                                  <span style={{ color: "red" }}>
+                                    {getEllipsisTxt(userAddress)}
+                                  </span>{" "}
+                                </a>
+                              </li>
 
-                        </ul>
-                      </li>
-                    )}
-                  </div>:
-                  <>
-                    <button
-                      type="button"
-                      className="btn btn-outline-info"
-                      onClick={() => Web3Login()}
-                    >
-                      Connect
-                    </button>
-                  </>
-                }
+                            </ul>
+                          </li>
+                        )}
+                      </div> :
+                      <>
+                        <button
+                          type="button"
+                          className="btn btn-outline-info"
+                          onClick={() => Web3Login()}
+                        >
+                          Connect
+                        </button>
+                      </>
+                  }
                 </>
 
                 {
-                  userAddress !== "" ? 
-                  <div>
+                  userAddress !== "" ?
+                    <div>
 
-                    <li style={{ textAlign: "center", marginLeft: '50px' }}>
-                      <button
-                        type="button"
-                        className="btn btn-outline-danger"
-                        onClick={() => web3LogOut()}
-                      >
-                        LogOut
-                      </button>
-                    </li>
+                      <li style={{ textAlign: "center", marginLeft: '50px' }}>
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger"
+                          onClick={() => web3LogOut()}
+                        >
+                          LogOut
+                        </button>
+                      </li>
 
-                  </div>
-                  : <div></div>
+                    </div>
+                    : <div></div>
                 }
 
-                
+
               </ul>
 
             </ul>
