@@ -1,0 +1,36 @@
+Incognito support
+Google’s Incognito Mode restricts access to localStorage, so you should wrap your localStorage operations in a try/catch 
+block to avoid this problem and make your games playable on Incognito Mode.
+
+
+baddies come at you, you strike when they are in proximity, so do they!
+when you defeat baddies you get coins
+use coins to recruit team mates
+fight more baddies!
+
+
+MoM
+make more fighters
+
+brew
+get potions for you and your team
+
+item bar 
+auto use brews when gonna be dead
+
+
+ATM
+your team will unload coins here for you to pick up
+
+fight machine starts the next wave
+
+play until you die! get a high score to win!
+
+Rats
+
+When you die you come back as a dif BF out the MoM
+
+
+Gangs
+each gang has flag by name so you can see who is on whos teams
+sometimes a few gangs will all be fighting each other!
